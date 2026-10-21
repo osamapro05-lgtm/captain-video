@@ -4,6 +4,8 @@
    node 11_behind_text.js <work> build 2:6-8     → كلمات بعينها داخل جملة
    node 11_behind_text.js <work> stack 1         → «طبقات»: كلمة فوق الراس بعرض الشاشة ← كلمة/ثنتين ورا الراس ← الباقي قدّام جسمه
    node 11_behind_text.js <work> stack 3:1-5     → «طبقات» لكلمات بعينها
+   node 11_behind_text.js <work> fancy 4:3-3     → Captain Video (capStyle fancy): الكلمة الكبيرة ورا الراس
+   node 11_behind_text.js <work> faces           → Captain Video: الوش وأعلى الراس لكل الفيديو (لـcapStyle fancy)
    node 11_behind_text.js <work> cutout 23.8-26.6 → «واقف قدام اللوحة»: بلا كرت، أنت العنصر
    node 11_behind_text.js <work> headout 23.8-26.6 → «راسك برّا المستطيل»: الفيديو بكرت وراسك يطلع فوق حافته
    node 11_behind_text.js <work> person 23.8-26.6 → قصّ بس (بلا تأثير): MV.person لحركات البنك 51–61 (مدار، كسر الإطار، غلاف مجلة…)
@@ -21,6 +23,16 @@ const W=path.resolve(process.argv[2])+path.sep, MODE=process.argv[3]||'plan';
 const SC=path.dirname(path.resolve(process.argv[1]))+path.sep;
 const caps=JSON.parse(fs.readFileSync(W+'caps.json','utf8'));
 const FPS=30, MAXW=4, MINDUR=0.85;
+/* Captain Video: قصّ الشخص على ويندوز ولينكس بـpersonmask.py (MediaPipe) — نفس الأقنعة ونفس meta.json زي نسخة الماك */
+const PY=process.platform==='win32'?'python':'python3';
+function maskCmd(bin){
+  if(process.platform!=='darwin') return PY+' '+JSON.stringify(SC+'personmask.py');
+  if(!fs.existsSync(bin)){
+    try{ cp.execSync('swiftc -O -o '+JSON.stringify(bin)+' '+JSON.stringify(SC+'personmask.swift'),{stdio:'pipe'}); }
+    catch(e){ console.log('❌ ما قدرت أبني أداة القصّ — تحتاج أدوات Xcode: xcode-select --install'); process.exit(4); }
+  }
+  return JSON.stringify(bin);
+}
 
 const words=c=>c.w.map(w=>w.t).join(' ');
 if(MODE==='off'){ try{fs.unlinkSync(W+'behind.json');}catch(e){} console.log('انلغى التأثير.'); process.exit(0); }
@@ -87,16 +99,12 @@ if(MODE==='cutout'||MODE==='headout'||MODE==='person'){
   const NVF2=fs.readdirSync(W+'vfr').filter(f=>f.endsWith('.jpg')).length;
   const f0=Math.max(1,Math.floor(a*FPS)+1), f1=Math.min(NVF2,Math.ceil(b*FPS)+1);
   fs.mkdirSync(W+'bt/src',{recursive:true}); fs.mkdirSync(W+'bt/mask',{recursive:true}); fs.mkdirSync(W+'bt/person',{recursive:true});
-  const BIN2=W+'bt/personmask';
-  if(!fs.existsSync(BIN2)){
-    try{ cp.execSync('swiftc -O -o '+JSON.stringify(BIN2)+' '+JSON.stringify(SC+'personmask.swift'),{stdio:'pipe'}); }
-    catch(e){ console.log('❌ تحتاج أدوات Xcode: xcode-select --install'); process.exit(4); }
-  }
+  const MASK2=maskCmd(W+'bt/personmask');
   let n=0;
   for(let f=f0;f<=f1;f++){ const id=String(f).padStart(5,'0');
     if(fs.existsSync(W+'vfr/'+id+'.jpg')){ fs.copyFileSync(W+'vfr/'+id+'.jpg', W+'bt/src/'+id+'.jpg'); n++; } }
   console.log('فريمات القصّ:',n,'— أقصّك من الخلفية…');
-  cp.execSync(JSON.stringify(BIN2)+' '+JSON.stringify(W+'bt/src')+' '+JSON.stringify(W+'bt/mask')+' accurate 2.5',{stdio:'inherit'});
+  cp.execSync(MASK2+' '+JSON.stringify(W+'bt/src')+' '+JSON.stringify(W+'bt/mask')+' accurate 2.5',{stdio:'inherit'});
   cp.execSync('ffmpeg -v error -start_number '+f0+' -i '+JSON.stringify(W+'bt/src/%05d.jpg')+
     ' -start_number '+f0+' -i '+JSON.stringify(W+'bt/mask/%05d.png')+' -frames:v '+(f1-f0+1)+
     ' -filter_complex "[1:v]format=gray,scale=1080:1920[a];[0:v][a]alphamerge,format=rgba"'+
@@ -115,7 +123,7 @@ if(MODE==='cutout'||MODE==='headout'||MODE==='person'){
       const py='import json,os,statistics\nfrom PIL import Image\nW='+JSON.stringify(W)+';f0='+f0+';f1='+f1+'\nxs0=[];xs1=[];ys0=[];ys1=[]\n'+
         'for n in range(f0,f1+1,3):\n p=W+"bt/mask/%05d.png"%n\n if not os.path.exists(p): continue\n bb=Image.open(p).convert("L").point(lambda v:255 if v>140 else 0).getbbox()\n if not bb: continue\n xs0.append(bb[0]);ys0.append(bb[1]);xs1.append(bb[2]);ys1.append(bb[3])\n'+
         'print(json.dumps({"x0":statistics.median(xs0),"x1":statistics.median(xs1),"y0":statistics.median(ys0),"y1":statistics.median(ys1),"n":len(xs0)}) if xs0 else "null")';
-      const hb=JSON.parse(cp.execSync('python3 -c '+JSON.stringify(py),{stdio:'pipe'}).toString().trim());
+      const hb=JSON.parse(cp.execSync(PY+' -c '+JSON.stringify(py),{stdio:'pipe'}).toString().trim());
       if(hb){ prev.headbox=prev.headbox||{}; prev.headbox[String(a)]=hb; }
     }catch(e){ console.log('⚠️ ما قدرت أحسب الحدود الثابتة (يحتاج PIL) — الكرت بيتبع الجسم بكل فريم'); }
   }
@@ -124,7 +132,23 @@ if(MODE==='cutout'||MODE==='headout'||MODE==='person'){
   console.log('   ارسم: node 04_render_frames.js '+W+' range '+a+' '+b);
   process.exit(0);
 }
-if(MODE!=='build'&&MODE!=='stack'){ console.log('الأوامر: plan · build · stack · cutout · headout · person · drop · off'); process.exit(2); }
+/* Captain Video: «faces» — الوش وأعلى الراس لكل الفيديو (فريم كل 6) من غير قصّ ولا تأثير.
+   capStyle fancy بيستخدمهم عشان يحط الكلام فوق الراس أو تحت الوش من غير ما يغطيه. */
+if(MODE==='faces'){
+  if(!fs.existsSync(W+'vfr')){ console.log('❌ ما فيه مجلد vfr'); process.exit(3); }
+  const step=Math.max(1,parseInt(process.argv[4]||'6',10));
+  const all=fs.readdirSync(W+'vfr').filter(f=>f.endsWith('.jpg')).sort();
+  fs.rmSync(W+'bt/fsrc',{recursive:true,force:true}); fs.mkdirSync(W+'bt/fsrc',{recursive:true});
+  all.forEach((f,i)=>{ if(i%step===0) fs.copyFileSync(W+'vfr/'+f, W+'bt/fsrc/'+f); });
+  cp.execSync(maskCmd(W+'bt/personmask')+' '+JSON.stringify(W+'bt/fsrc')+' '+JSON.stringify(W+'bt/fmask')+' fast 0',{stdio:'inherit'});
+  const meta=JSON.parse(fs.readFileSync(W+'bt/fmask/meta.json','utf8'));
+  const prev=fs.existsSync(W+'behind.json')?JSON.parse(fs.readFileSync(W+'behind.json','utf8')):{lines:[],ranges:[]};
+  prev.faces=prev.faces||{}; prev.heads=prev.heads||{};
+  for(const m of meta){ const n=parseInt(m.f,10); if(m.face&&!prev.faces[n]) prev.faces[n]=m.face; if(m.head) prev.heads[n]=m.head; }
+  rebuildRanges(prev); fs.writeFileSync(W+'behind.json',JSON.stringify(prev,null,1));
+  console.log('✅ الوش والراس جاهزين:',meta.length,'فريم'); process.exit(0);
+}
+if(MODE!=='build'&&MODE!=='stack'&&MODE!=='fancy'){ console.log('الأوامر: plan · build · stack · fancy · cutout · headout · person · drop · off'); process.exit(2); }
 /* «2» = الجملة كاملة · «2:6-8» = الكلمات 6→8 داخل الجملة 2 */
 const pick=process.argv.slice(4).map(a=>{
   const m=String(a).match(/^(\d+)(?::(\d+)-(\d+))?$/); if(!m) return null;
@@ -136,12 +160,8 @@ if(!pick.length){ console.log('عطني أرقام الجُمل: '+MODE+' 1 9   
 if(!fs.existsSync(W+'vfr')){ console.log('❌ ما فيه مجلد vfr — استخرج الفريمات أول'); process.exit(3); }
 
 /* 1) بناء أداة القصّ مرة وحدة */
-const BIN=W+'bt/personmask';
 fs.mkdirSync(W+'bt/src',{recursive:true}); fs.mkdirSync(W+'bt/mask',{recursive:true}); fs.mkdirSync(W+'bt/person',{recursive:true});
-if(!fs.existsSync(BIN)){
-  try{ cp.execSync('swiftc -O -o '+JSON.stringify(BIN)+' '+JSON.stringify(SC+'personmask.swift'),{stdio:'pipe'}); }
-  catch(e){ console.log('❌ ما قدرت أبني أداة القصّ — تحتاج أدوات Xcode: xcode-select --install'); process.exit(4); }
-}
+const MASK=maskCmd(W+'bt/personmask');
 
 /* 2) الفريمات المطلوبة فقط (مو الفيديو كله) */
 const NVF=fs.readdirSync(W+'vfr').filter(f=>f.endsWith('.jpg')).length;
@@ -149,11 +169,12 @@ const lines=[], ranges=[];
 for(const sel of pick){
   const c=caps.cards[sel.i];
   const ws=c.w.slice(sel.from, sel.to+1);
-  const a=Math.max(0,ws[0].s-0.20), b=Math.min(caps.total,ws[ws.length-1].e+0.45);
+  const a=Math.max(0,ws[0].s-0.20), b=Math.min(caps.total,MODE==='fancy'?Math.max(ws[ws.length-1].e+0.45,c.e):ws[ws.length-1].e+0.45);   /* fancy: لآخر الجملة — الكلمة الكبيرة فاضلة لحد ما المجموعة تخلص */
   const f0=Math.max(1,Math.floor(a*FPS)+1), f1=Math.min(NVF,Math.ceil(b*FPS)+1);
   ranges.push([f0,f1]);
   const ln={card:sel.i, s:a, e:b, words:ws.map(w=>({t:w.t,s:w.s,e:w.e}))};
   if(MODE==='stack'){ ln.style='stack'; ln.umask='bt/umask_'+(sel.i+1)+'.png'; }
+  if(MODE==='fancy') ln.style='fancy';   /* Captain Video: capStyle fancy — الكلمة الكبيرة ورا الراس */
   lines.push(ln);
 }
 let copied=0;
@@ -164,7 +185,7 @@ for(const [f0,f1] of ranges) for(let f=f0;f<=f1;f++){
 console.log('فريمات التأثير:',copied,'— أقصّ الشخص فيها…');
 
 /* 3) القصّ + بيانات الوجه */
-cp.execSync(JSON.stringify(BIN)+' '+JSON.stringify(W+'bt/src')+' '+JSON.stringify(W+'bt/mask')+' accurate 2.5',{stdio:'inherit'});
+cp.execSync(MASK+' '+JSON.stringify(W+'bt/src')+' '+JSON.stringify(W+'bt/mask')+' accurate 2.5',{stdio:'inherit'});
 
 /* 4) دمج القناع كشفافية → صورة الشخص وحده (كل مدى على حدة) */
 for(const [f0,f1] of ranges){
@@ -189,9 +210,9 @@ const meta=JSON.parse(fs.readFileSync(W+'bt/mask/meta.json','utf8'));
    والنوع الثاني + cutouts/headouts يبقون. الجملة اللي انبنت بالنوع الثاني تنتقل للجديد (جملة وحدة = نوع واحد).
    تشيل جملة وحدة؟ drop <رقم>. off يمسح الكل. */
 const prev=fs.existsSync(W+'behind.json')?JSON.parse(fs.readFileSync(W+'behind.json','utf8')):{};
-const newCards=new Set(lines.map(l=>l.card)), isStack=l=>l.style==='stack';
-const kept=(Array.isArray(prev.lines)?prev.lines:[]).filter(l=>!newCards.has(l.card)&&isStack(l)!==(MODE==='stack'));
-const gone=(Array.isArray(prev.lines)?prev.lines:[]).filter(l=>!newCards.has(l.card)&&isStack(l)===(MODE==='stack'));
+const newCards=new Set(lines.map(l=>l.card)), kind=l=>l.style||'build';
+const kept=(Array.isArray(prev.lines)?prev.lines:[]).filter(l=>!newCards.has(l.card)&&kind(l)!==MODE);
+const gone=(Array.isArray(prev.lines)?prev.lines:[]).filter(l=>!newCards.has(l.card)&&kind(l)===MODE);
 if(gone.length) console.log('ℹ️  شلت الجُمل القديمة من نفس النوع:',gone.map(l=>l.card+1).join(' '),'— تبيها؟ أضفها لنفس الأمر');
 prev.lines=kept.concat(lines).sort((p,q)=>p.s-q.s);
 rebuildRanges(prev);

@@ -40,6 +40,7 @@
 | `34_phone_preview.py` | معاينة الكفر/الثمبنيل بحجمه الحقيقي بالجوال (تبويب الريلز · البروفايل · من بعيد · يوتيوب) | الكفر |
 | `40_capcut.py` | مونتاج داخل كاب كت: خطة من التفريغ ← موشن ProRes شفاف + مؤثرات ← يكتب مشروع كاب كت قابل للتعديل (`projects` · `skeleton` · `check` · `stills` · `render` · `sfx` · `write` · `all`) | كاب كت |
 | `41_review.py` + `review.TEMPLATE.html` | صفحة مراجعة الحلقة: كل الريلات والكاروسيل بصفحة وحدة (ملاحظة · اعتمد · تحميل) تنتشر خاصة على claude.ai — `references/review-page.md` | بودكاست |
+| `personmask.py` | قصّ الشخص على ويندوز ولينكس (MediaPipe) — نفس عقد `personmask.swift` (أقنعة + meta.json بالوش وأعلى الراس). `11_behind_text.js` بيستخدمه لوحده لو مش ماك | كل الأوضاع |
 | `42_style.py` | ستايلات المونتاج (`video-ad-editor/styles/` + `~/.video-ad-editor/styles/`): `list` · `show` · `apply` · `save` · `catalog` · `serve` (صفحة البلجن كاملة: الكابشن + الستايلات بالريلات + المهارات) — `references/editing-styles.md` | كل الأوضاع |
 | `../tools/majed-update.sh` | تحديثات ماجد بالدمج مش الاستبدال: `check` · `merge <tag>` · `undo` · `restore <path>` · `history` — `references/fork-updates.md` | المستودع |
 | `29_handtrack.py` + `handpose.swift` | تتبّع الكف (Vision) → `palm.js` منعّم: عنصر يمشي مع الإيد | مشترك (ماك) |

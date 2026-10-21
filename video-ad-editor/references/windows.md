@@ -12,8 +12,10 @@
   دالة `abspath` بـ`_compat.sh` تعطي `C:/…` الأصلي — **مرّر مجلد الشغل بهذا الشكل دائماً.**
 - **كروم** — يُكتشف تلقائياً (كروم ثم إيدج). للتحديد اليدوي: `export CHROME_PATH="…/chrome.exe"`.
 
-**⛔ «الكلام ورا الشخص» (`11_behind_text.js`) ما يشتغل على ويندوز** — يحتاج فصل الأشخاص
-من نظام ماك (Vision + swiftc). السكربت يوقف برسالة واضحة. **كل شي ثاني يشتغل عادي.**
+**✅ Captain Video: «الكلام ورا الشخص» (`11_behind_text.js`) بيشتغل على ويندوز** بـ`scripts/personmask.py` (MediaPipe)
+بدل Vision بتاع الماك — نفس الأقنعة ونفس `meta.json`. مرة واحدة: `python -m pip install mediapipe`،
+والموديلات بتنزل لوحدها لـ`~/.video-ad-editor/models`. اتجرّب: `build`/`fancy`/`faces`. باقي الأدوات اللي بتنادي
+`personmask.swift` مباشرة (الكولاج، الكفر `--cut`، الخلفية الباهتة، البودكاست) لسه ماك بس.
 
 لو وِسبر يشتغل على المعالج بس (torch بلا CUDA)، استخدم `--model small` بدل `medium`.
 

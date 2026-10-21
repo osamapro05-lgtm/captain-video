@@ -41,6 +41,7 @@ BRAND_KEYS = ("bg", "ink", "acc", "clay", "mut", "onAcc", "logo", "font", "handl
 LOOK_KEYS = ("family", "inOneLine", "density", "color", "shapes", "lines", "surfaces", "type", "icons",
              "motion", "timing", "placement", "brandTie")
 LAYOUT_KEYS = ("principle", "pace", "frame", "captionsVsGraphics")
+CAMERA_KEYS = ("principle", "moves", "handheld", "transitions", "grade")
 SOUND_KEYS = ("character", "role", "when", "weight", "density", "sync", "silence", "loudness", "variety")
 COPY_FROM_WORK = ("theme.json", "cut.json", "sfx.json", "facts.md", "fixes.json", "studio.json",
                   "scenes.js", "scenes-body.js", "vw-helpers.js", "style-helpers.js")
@@ -159,6 +160,11 @@ def cmd_apply(a):
     lay = s.get("layout") or {}
     if lay.get("principle"):
         print("• التقسيم: " + lay["principle"])
+    cam = s.get("camera") or {}
+    if cam.get("principle"):
+        print("• الكاميرا: " + cam["principle"] + " (studio.json ← cam)")
+    if (s.get("theme") or {}).get("capStyle") == "fancy":
+        print("• قبل الرسم: node scripts/11_behind_text.js <work> faces — وورا الراس: fancy <جملة:كلمات>")
     snd = s.get("sound") or {}
     if snd.get("when"):
         print("• الصوت: " + snd["when"])
@@ -227,6 +233,7 @@ def cmd_save(a):
         "cut": {"silence": "remove-all", "stumbles": "remove", "notes": []},
         "layout": {**{k: "" for k in LAYOUT_KEYS}, "tools": {}},
         "captions": {"style": t0.get("capStyle", "card"), "rules": []},
+        "camera": {**{k: "" for k in CAMERA_KEYS}, "avoid": []},
         "sound": {**{k: "" for k in SOUND_KEYS}, "avoid": []},
         "examples": {"note": "حاجات اتعملت في الفيديوهات الأصلية، بتوضّح المفاهيم بس. متتنسخش.",
                      "helpers": helpers, "seen": [], "seenLayout": [],
@@ -234,7 +241,7 @@ def cmd_save(a):
                                    if k != "outro"]},
     }
     write_json(d / "style.json", s)
-    print(f"✓ اتعمل ستايل «{name}» في {d} — كمّل summary و look و cut و layout و sound في style.json (مفاهيم، مش نسخ)")
+    print(f"✓ اتعمل ستايل «{name}» في {d} — كمّل summary و look و camera و cut و layout و sound في style.json (مفاهيم، مش نسخ)")
     return 0
 
 

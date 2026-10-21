@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Captain Video</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;800&family=Alexandria:wght@800;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f5f4ef;--card:#fff;--ink:#1c1c1a;--mut:#6a6963;--line:#e3e1d9;--acc:#b8860b;--chip:#efede6;
   --vbg:#081C44;--vink:#fff;--vacc:#F4C025;--vface:#4d5566;--vbody:#3d4555;--vroom:#2a3142}
@@ -43,6 +43,12 @@ code{font-family:ui-monospace,Consolas,monospace;font-size:12px;background:var(-
 .s-bar .w.on{background:var(--vacc);color:var(--vbg);text-shadow:none;padding:0 6px}
 .s-type .cap{font-size:19px;text-shadow:0 2px 5px #000}
 .s-type .w.hide{display:none}
+.s-fancy .cap{bottom:auto;top:52%;font-size:17px;text-shadow:0 2px 8px rgba(0,0,0,.5);font-family:Alexandria,"Readex Pro",Tahoma,sans-serif}
+.s-fancy .w{filter:blur(6px);opacity:0;transform:translateY(5px);transition:filter .22s,opacity .22s,transform .22s}
+.s-fancy .w.seen{filter:none;opacity:1;transform:none}
+.s-fancy .w.hot{display:block;font-size:40px;color:var(--vacc);line-height:1.1}
+.s-fancy .back{position:absolute;left:0;right:0;top:12%;text-align:center;font-size:42px;font-weight:800;color:var(--vacc);font-family:Alexandria,"Readex Pro",Tahoma,sans-serif;z-index:0}
+.s-fancy .face{z-index:1}
 .s-type .cur{display:inline-block;width:3px;height:1.1em;background:var(--vacc);vertical-align:middle;animation:blink .7s steps(1) infinite}
 .still .w{transform:none!important}
 .pop{transform:translateY(-3px) scale(1.06)}
@@ -123,7 +129,8 @@ const CAPS = [
   ['big','كلمة كبيرة','كلمة واحدة ضخمة في كل مرة'],
   ['underline','خط تحت','خط تحت الكلمة المنطوقة'],
   ['bar','شريط','شريط بلون التمييز ورا الكلمة'],
-  ['type','آلة كاتبة','بيتكتب قدامك ومعاه مؤشر']
+  ['type','آلة كاتبة','بيتكتب قدامك ومعاه مؤشر'],
+  ['fancy','فانسي','سطر أبيض والكلمة المهمة صفرا ضخمة، بضبابة، وممكن ورا الراس']
 ];
 const FX = [
   ['drop','طيحة','بتقع من فوق وترتد','خلاص'],['shake','اهتزاز','بتهتز والكادر معاها','تهتز'],
@@ -149,7 +156,8 @@ const FEATS = [
   ['صوت بمستوى المنصات','-14 LUFS، والخلفية الصوتية بتوطى لوحدها لما تتكلم'],
   ['ترجمة وكفر','ملف srt ونص البوست، وكفر بيبقى أول فريم'],
   ['تصدير كاب كت','بدل MP4 بيطلّع مشروع كاب كت تعدّل فيه بإيدك'],
-  ['الاستوديو','تايملاين تعدّل فيه بنفسك من المتصفح']
+  ['الاستوديو','تايملاين تعدّل فيه بنفسك من المتصفح'],
+  ['حركات الكاميرا','دخول، وقفزة زوم، ورجوع، ورجفة إيد، وومضة، وسحبة — على كلامك']
 ];
 const RULES = [
   'مفيش أي تعديل ألوان على صورتك إلا لو طلبت',
@@ -158,13 +166,14 @@ const RULES = [
   'مفيش كلام أو رقم على الشاشة إنت ماقلتوش',
   'الكابشن عمره ما بيتكتب على الوش',
   'التسليم ملف بس، من غير نشر ولا جدولة',
-  'على ويندوز: قص الشخص من الخلفية وتتبع الوش مش متاحين (محتاجين ماك)'
+  'الكلام ورا الشخص بيشتغل على ويندوز وماك، وباقي أنماط القص (الكولاج، والخلفية الباهتة، والبودكاست) لسه ماك بس'
 ];
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const phone = inner => `<div class="phone"><div class="face"></div><div class="body"></div>${inner}</div>`;
 
 document.getElementById('capGrid').innerHTML = CAPS.map(([id,name,desc]) => {
   const words = SENT.map((w,i) => `<span class="w" data-i="${i}">${w}</span>`).join(' ');
+  if (id === 'fancy') return `<div class="card s-fancy" data-cap="fancy"><div class="phone"><div class="back">باقة</div><div class="face"></div><div class="body"></div><div class="cap">${SENT.map((w,i) => `<span class="w${i===2?' hot':''}" data-i="${i}">${w}</span>`).join(' ')}</div></div><h3 style="margin-top:10px">${name} <code>${id}</code></h3><p class="mut">${desc}</p></div>`;
   const cap = id === 'card' ? `<div class="cap"><span class="box">${words}</span></div>`
     : id === 'big' ? `<div class="cap"><span class="w big"></span></div>`
     : `<div class="cap">${words}${id === 'type' ? '<span class="cur"></span>' : ''}</div>`;
@@ -176,6 +185,7 @@ setInterval(() => {
   const i = tick % (SENT.length + 2); tick++;
   document.querySelectorAll('[data-cap]').forEach(card => {
     const id = card.dataset.cap;
+    if (id === 'fancy') { card.querySelectorAll('.w').forEach(w => w.classList.toggle('seen', +w.dataset.i <= i && i < SENT.length)); return; }
     if (id === 'big') { const b = card.querySelector('.big'); b.textContent = SENT[Math.min(i, SENT.length - 1)]; b.classList.toggle('pop', i < SENT.length); return; }
     card.querySelectorAll('.w').forEach(w => {
       const k = +w.dataset.i;
@@ -192,12 +202,13 @@ document.getElementById('fxGrid').innerHTML = FX.map(([id,name,desc,word]) =>
 const LOOK = [['family','العيلة'],['inOneLine','في سطر'],['density','الكثافة'],['color','الألوان'],['shapes','الأشكال'],['lines','الخطوط'],
   ['surfaces','الأسطح'],['type','الخط'],['icons','الأيقونات'],['motion','الحركة'],['timing','التوقيت'],['placement','المكان'],['brandTie','رمز الهوية']];
 const LAYOUT = [['principle','المبدأ'],['pace','الإيقاع'],['frame','البداية والنهاية'],['captionsVsGraphics','الكابشن والجرافيك']];
+const CAMERA = [['principle','المبدأ'],['moves','الحركات'],['handheld','الإيد'],['transitions','الانتقالات'],['grade','الألوان']];
 const SOUND = [['character','الطابع'],['role','دوره'],['when','امتى'],['weight','القوة'],['density','الكمية'],['sync','التوقيت'],
   ['silence','السكوت'],['loudness','العلو'],['variety','التنويع']];
 const list = a => (a || []).map(x => `<li>${esc(x)}</li>`).join('');
 const dl = (o, keys) => keys.filter(([k]) => o[k]).map(([k,l]) => `<dt>${l}</dt><dd>${esc(o[k])}</dd>`).join('');
 document.getElementById('styleList').innerHTML = STYLES.length ? STYLES.map(s => {
-  const look = s.look || {}, lay = s.layout || {}, th = s.theme || {}, cut = s.cut || {}, snd = s.sound || {};
+  const look = s.look || {}, lay = s.layout || {}, th = s.theme || {}, cut = s.cut || {}, snd = s.sound || {}, cam = s.camera || {};
   const cols = Object.entries((s.brand || {}).colors || {}).map(([k,v]) => `<span class="sw" title="${esc(k)}" style="background:${esc(v)}"></span>`).join('');
   const vids = (s.previews || []).map(p => `<figure><video src="styles/${esc(s.id)}/${esc(p.video)}" ${p.poster ? `poster="styles/${esc(s.id)}/${esc(p.poster)}"` : ''} controls playsinline preload="metadata"></video><figcaption>${esc(p.title)}</figcaption></figure>`).join('');
   const lookDl = dl(look, LOOK);
@@ -213,6 +224,7 @@ document.getElementById('styleList').innerHTML = STYLES.length ? STYLES.map(s =>
         <ul>${list((s.captions || {}).rules)}</ul>
         <h3 style="margin-top:14px">القص</h3><ul>${list(cut.notes)}</ul>
         <h3 style="margin-top:14px">تقسيم الشاشة</h3><dl>${dl(lay, LAYOUT)}</dl>${tools ? `<p class="mut" style="margin-top:6px">الأشكال المتاحة:</p><ul>${tools}</ul>` : ''}
+        ${cam.principle ? `<h3 style="margin-top:14px">الكاميرا</h3><dl>${dl(cam, CAMERA)}</dl>` : ''}
         <h3 style="margin-top:14px">لغة الصوت</h3><dl>${dl(snd, SOUND)}</dl>${snd.avoid ? `<dt>ممنوع</dt><dd><ul>${list(snd.avoid)}</ul></dd>` : ''}
       </div>
     </div>
