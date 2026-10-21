@@ -49,9 +49,6 @@ code{font-family:ui-monospace,Consolas,monospace;font-size:12px;background:var(-
 .s-fancy .w.hot{display:block;font-size:40px;color:var(--vacc);line-height:1.1}
 .s-fancy .back{position:absolute;left:0;right:0;top:12%;text-align:center;font-size:42px;font-weight:800;color:var(--vacc);font-family:Alexandria,"Readex Pro",Tahoma,sans-serif;z-index:0}
 .s-fancy .face{z-index:1}
-.s-glow .cap{bottom:auto;top:54%;font-size:15px;font-weight:900;text-shadow:0 2px 8px rgba(0,0,0,.6);font-family:Cairo,Tahoma,sans-serif}
-.s-glow .hero{position:absolute;left:0;right:0;top:63%;text-align:center;font:700 34px Careem,Cairo,Tahoma,sans-serif;color:#FFA51F;text-shadow:0 0 6px rgba(255,165,31,.9),0 0 22px rgba(255,165,31,.75);opacity:0;filter:blur(6px);transition:opacity .3s,filter .3s}
-.s-glow .hero.on{opacity:1;filter:none}
 .s-type .cur{display:inline-block;width:3px;height:1.1em;background:var(--vacc);vertical-align:middle;animation:blink .7s steps(1) infinite}
 .still .w{transform:none!important}
 .pop{transform:translateY(-3px) scale(1.06)}
@@ -133,8 +130,7 @@ const CAPS = [
   ['underline','خط تحت','خط تحت الكلمة المنطوقة'],
   ['bar','شريط','شريط بلون التمييز ورا الكلمة'],
   ['type','آلة كاتبة','بيتكتب قدامك ومعاه مؤشر'],
-  ['fancy','فانسي','سطر أبيض والكلمة المهمة صفرا ضخمة، بضبابة، وممكن ورا الراس'],
-  ['glow','توهج','كلمتين تلاتة أبيض بيتبدلوا مع الكلام، والكلمة المهمة سيريف برتقالي منوّر']
+  ['fancy','فانسي','سطر أبيض والكلمة المهمة صفرا ضخمة، بضبابة، وممكن ورا الراس']
 ];
 const FX = [
   ['drop','طيحة','بتقع من فوق وترتد','خلاص'],['shake','اهتزاز','بتهتز والكادر معاها','تهتز'],
@@ -178,7 +174,6 @@ const phone = inner => `<div class="phone"><div class="face"></div><div class="b
 document.getElementById('capGrid').innerHTML = CAPS.map(([id,name,desc]) => {
   const words = SENT.map((w,i) => `<span class="w" data-i="${i}">${w}</span>`).join(' ');
   if (id === 'fancy') return `<div class="card s-fancy" data-cap="fancy"><div class="phone"><div class="back">باقة</div><div class="face"></div><div class="body"></div><div class="cap">${SENT.map((w,i) => `<span class="w${i===2?' hot':''}" data-i="${i}">${w}</span>`).join(' ')}</div></div><h3 style="margin-top:10px">${name} <code>${id}</code></h3><p class="mut">${desc}</p></div>`;
-  if (id === 'glow') return `<div class="card s-glow" data-cap="glow"><div class="phone"><div class="face"></div><div class="body"></div><div class="cap"></div><div class="hero">بتشوفها</div></div><h3 style="margin-top:10px">${name} <code>${id}</code></h3><p class="mut">${desc}</p></div>`;
   const cap = id === 'card' ? `<div class="cap"><span class="box">${words}</span></div>`
     : id === 'big' ? `<div class="cap"><span class="w big"></span></div>`
     : `<div class="cap">${words}${id === 'type' ? '<span class="cur"></span>' : ''}</div>`;
@@ -191,8 +186,6 @@ setInterval(() => {
   document.querySelectorAll('[data-cap]').forEach(card => {
     const id = card.dataset.cap;
     if (id === 'fancy') { card.querySelectorAll('.w').forEach(w => w.classList.toggle('seen', +w.dataset.i <= i && i < SENT.length)); return; }
-    if (id === 'glow') { const ch = [[0,1],[2,2],[3,4]], k = ch.findIndex(([a,b]) => i >= a && i <= b); const cap = card.querySelector('.cap');
-      cap.textContent = k < 0 || k === 1 ? '' : SENT.slice(ch[k][0], ch[k][1] + 1).join(' '); card.querySelector('.hero').classList.toggle('on', i >= 2 && i < SENT.length); return; }
     if (id === 'big') { const b = card.querySelector('.big'); b.textContent = SENT[Math.min(i, SENT.length - 1)]; b.classList.toggle('pop', i < SENT.length); return; }
     card.querySelectorAll('.w').forEach(w => {
       const k = +w.dataset.i;
