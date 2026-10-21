@@ -166,7 +166,7 @@ def cmd_apply(a):
     cam = s.get("camera") or {}
     if cam.get("principle"):
         print("• الكاميرا: " + cam["principle"] + " (studio.json ← cam)")
-    if (s.get("theme") or {}).get("capStyle") == "fancy":
+    if (s.get("theme") or {}).get("capStyle") in ("fancy", "glow"):
         print("• قبل الرسم: node scripts/11_behind_text.js <work> faces — وورا الراس: fancy <جملة:كلمات>")
     snd = s.get("sound") or {}
     if snd.get("when"):
