@@ -6,12 +6,14 @@
 #   وتنخفض تلقائياً كل ما تتكلم (sidechain) فما تزاحم صوتك.
 #   ⛔ ما نستخدم موسيقى — المقصود ملف صوتي (أصوات بشرية، أجواء، همهمة مكان).
 # • الصورة تُنسخ كما هي — لا إعادة ترميز ولا خسارة جودة.
-# متغيرات: BG · BG_GAIN (0.28) · LUFS (-14) · NO_LOUDNORM=1
+# • الذروة الحقيقية ≤ ‎-1.5 dBTP مضمونة (Captain Video): ليميتر على 192kHz بعد المعايرة، وبعد ترميز AAC
+#   بنقيس الملف النهائي، ولو عدّى بنشدّ الليميتر ونعيد (3 مرات بالكتير).
+# متغيرات: BG · BG_GAIN (0.28) · LUFS (-14) · TP_MAX (-1.5) · NO_LOUDNORM=1
 set -e
 . "$(dirname "$0")/_compat.sh"
 W="$(abspath "$1")"; IN="$2"; OUT="${3:-${IN%.mp4}-master.mp4}"
 [ -f "$IN" ] || { echo "❌ ما لقيت $IN"; exit 2; }
-G="${BG_GAIN:-${MUSIC_GAIN:-0.28}}"; I="${LUFS:--14}"
+G="${BG_GAIN:-${MUSIC_GAIN:-0.28}}"; I="${LUFS:--14}"; TPMAX="${TP_MAX:--1.5}"
 DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$IN")
 FO=$("$PY" -c "print(max(0,round($DUR-1.4,3)))")
 
@@ -45,7 +47,7 @@ else
     read -r II TP LRA TH < <("$PY" -c "
 import json,sys;d=json.loads('''$M''');print(d['input_i'],d['input_tp'],d['input_lra'],d['input_thresh'])")
     # مسار صامت (مونتاج بلا خلفية صوتية) يقيس ‎-inf، وloudnorm يرفضها ويوقف الخط كله.
-    if python3 -c "import sys;v=float('$II');sys.exit(0 if v!=v or v<-70 else 1)" 2>/dev/null; then
+    if "$PY" -c "import sys;v=float('$II');sys.exit(0 if v!=v or v<-70 else 1)" 2>/dev/null; then
       echo "🔇 المسار الصوتي صامت — تخطّيت المعايرة (حط bg-audio.mp3 إذا تبي صوتاً)."
       cp "$MIX" "$NRM"
     else
@@ -57,8 +59,18 @@ import json,sys;d=json.loads('''$M''');print(d['input_i'],d['input_tp'],d['input
   fi
 fi
 
-ffmpeg -v error -nostats -i "$IN" -i "$NRM" -map 0:v:0 -map 1:a:0 -c:v copy \
-  -c:a aac -b:a 192k -ar 48000 -movflags +faststart -y "$OUT"
-rm -f "$MIX" "$NRM"
+# ليميتر الذروة الحقيقية: الترميز (AAC) بيزوّد الذروة بين العينات، فبنبدأ بهامش ‎0.7 dB ونقيس الناتج نفسه
+LIM="$W/.master-lim.wav"; LDB=$("$PY" -c "print($TPMAX-0.7)")
+for TRY in 1 2 3; do
+  LL=$("$PY" -c "print(round(10**($LDB/20),4))")
+  ffmpeg -v error -nostats -i "$NRM" -af "aresample=192000,alimiter=limit=$LL:attack=1:release=60:level=false,aresample=48000" -y "$LIM"
+  ffmpeg -v error -nostats -i "$IN" -i "$LIM" -map 0:v:0 -map 1:a:0 -c:v copy \
+    -c:a aac -b:a 192k -ar 48000 -movflags +faststart -y "$OUT"
+  OTP=$(ffmpeg -hide_banner -nostats -i "$OUT" -map 0:a:0 -af ebur128=peak=true -f null - 2>&1 | awk '/Peak:/{p=$2}END{print p}')
+  if [ -z "$OTP" ] || "$PY" -c "import sys;sys.exit(0 if float('$OTP')<=$TPMAX else 1)" 2>/dev/null; then break; fi
+  LDB=$("$PY" -c "print(round($LDB-(float('$OTP')-($TPMAX))-0.2,2))")
+  echo "   الذروة $OTP — بشدّ الليميتر لـ$LDB dB وأعيد"
+done
+rm -f "$MIX" "$NRM" "$LIM"
 LU=$(ffmpeg -hide_banner -nostats -v info -i "$OUT" -af "loudnorm=I=$I:TP=-1.5:print_format=summary" -f null - 2>&1 | awk '/Input Integrated/{i=$3}/Input True Peak/{p=$4}END{print i" LUFS · ذروة "p}' || true)
 echo "✅ $OUT  — $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT" | awk '{printf "%.2f ث", $1}') · $LU"
