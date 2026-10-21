@@ -1,15 +1,8 @@
 {
-  "name": "majed-video",
-  "version": "6.0.1",
-  "description": "Arabic video editing for Claude Code — 5 skills: talking-head reels, 3D motion explainers, podcasts, beat-synced montage, covers & thumbnails. DaVinci Resolve is a separate add-on (majed-davinci).",
-  "author": {
-    "name": "Majed Alzaabi",
-    "url": "https://github.com/majedphotos"
-  },
-  "homepage": "https://github.com/majedphotos/video-ad-editor",
-  "repository": "https://github.com/majedphotos/video-ad-editor",
+  "name": "captain-video",
+  "version": "6.0.1-captain.1",
+  "description": "Arabic video editing for Claude Code, based on majed-video by Majed Alzaabi (MIT), plus editing styles: saved bundles of captions, visual language, cutting and layout with preview reels. 6 skills: talking-head reels, 3D motion, podcasts, montage, covers, editing styles.",
+  "author": { "name": "CAPTAIN OSAMA" },
   "license": "MIT",
-  "skills": [
-    "./"
-  ]
+  "skills": ["./"]
 }

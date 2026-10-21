@@ -1,15 +1,12 @@
 {
-  "name": "majed-video",
-  "owner": {
-    "name": "Majed Alzaabi",
-    "url": "https://github.com/majedphotos"
-  },
-  "description": "Arabic video editing plugin for Claude Code",
+  "name": "captain-plugins",
+  "owner": { "name": "CAPTAIN OSAMA" },
+  "description": "Arabic video editing plugin for Claude Code with editing styles",
   "plugins": [
     {
-      "name": "majed-video",
+      "name": "captain-video",
       "source": "./",
-      "description": "5 skills: reels from talking videos · 3D motion explainers · podcasts · beat-synced montage · covers & thumbnails"
+      "description": "6 skills: reels from talking videos · 3D motion · podcasts · beat-synced montage · covers · editing styles with preview reels"
     }
   ]
 }

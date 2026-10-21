@@ -40,6 +40,7 @@
 | `34_phone_preview.py` | معاينة الكفر/الثمبنيل بحجمه الحقيقي بالجوال (تبويب الريلز · البروفايل · من بعيد · يوتيوب) | الكفر |
 | `40_capcut.py` | مونتاج داخل كاب كت: خطة من التفريغ ← موشن ProRes شفاف + مؤثرات ← يكتب مشروع كاب كت قابل للتعديل (`projects` · `skeleton` · `check` · `stills` · `render` · `sfx` · `write` · `all`) | كاب كت |
 | `41_review.py` + `review.TEMPLATE.html` | صفحة مراجعة الحلقة: كل الريلات والكاروسيل بصفحة وحدة (ملاحظة · اعتمد · تحميل) تنتشر خاصة على claude.ai — `references/review-page.md` | بودكاست |
+| `42_style.py` | ستايلات المونتاج المحفوظة في `~/.video-ad-editor/styles/`: `list` · `show` · `apply` (ثيم + قواعد + `style-helpers.js`) · `save` (ستايل من فيديوهات خلصت) · `gallery` · `serve` (صفحة معاينة بالريلات) — `references/editing-styles.md` | كل الأوضاع |
 | `29_handtrack.py` + `handpose.swift` | تتبّع الكف (Vision) → `palm.js` منعّم: عنصر يمشي مع الإيد | مشترك (ماك) |
 | `36_facetrack.py` + `facetrack.swift` | تتبّع الوجه (Vision) → `face.js` منعّم: `MV.faceAt(t)` لحركات المعرض 85 و86 (`references/moves.md` 3د) | مشترك (ماك) |
 | `37_env.py` | علو صوته لكل فريم ← `env.js` (`window.ENV`): `MV.env(t)` لموجة/نبض يتحرك مع كلامه الحقيقي (`references/moves.md` 3و) | مشترك |
@@ -57,5 +58,5 @@
 | `moves-compose.js` | 🎞️ يشغّل حركات المعرض (`motion/moves.js` → `FX`) داخل ريل الكلام: `MV` = أدوات النص والتوقيت (من `caps.json`) والثيم فوق كانفس compose · `MV.video` · `MV.panel` · `MV.hideCaption` · `MV.scene` · `MV.ready` (`references/moves.md` §3) | الخفيف |
 
 ## ملفات مجلد الشغل
-`src.mov` · `spec.json` (حلقة ← ريل) · `a.json` (وِسبر) · `fixes.json` · `cut.json` · `caps.json` · `theme.json` · `studio.json` · `sfx.json` · `behind.json` · `safe.json` (اختياري) · `hook-card.js` + `hook_sheet.jpg` (الهوك) · `vfr/` (فريمات المصدر) · `out/` (فريمات الرسم) · `prev/` (معاينة) · `ad-final.mp4` · `ad-master.mp4/.srt/.txt`.
+`src.mov` · `spec.json` (حلقة ← ريل) · `a.json` (وِسبر) · `fixes.json` · `cut.json` · `caps.json` · `theme.json` · `studio.json` · `style.lock.json` + `style-helpers.js` (ستايل مونتاج) · `sfx.json` · `behind.json` · `safe.json` (اختياري) · `hook-card.js` + `hook_sheet.jpg` (الهوك) · `vfr/` (فريمات المصدر) · `out/` (فريمات الرسم) · `prev/` (معاينة) · `ad-final.mp4` · `ad-master.mp4/.srt/.txt`.
 **احفظ `caps.json` و`cut.json`** — أي تعديل لاحق ما يحتاج إعادة تفريغ.
