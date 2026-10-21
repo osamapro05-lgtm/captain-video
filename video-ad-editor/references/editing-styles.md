@@ -67,7 +67,7 @@ python3 scripts/42_style.py apply <id> <work>    # بعد الخطوة 0.5، ق�
 python3 scripts/42_style.py save <id> <work1> [<work2> …] --name "الاسم" --to <البلجن>/video-ad-editor/styles
 ```
 
-- `--to` للبلجن عشان يتنقل مع كل الأجهزة (على جهاز كابتن: `C:\Users\user\captain-video\video-ad-editor\styles`). من غيره بيتحفظ على الجهاز ده بس.
+- `--to` للبلجن عشان يتنقل مع كل الأجهزة (على جهاز كابتن: `Z:\AI\Captain_Video Editing_Plugin\video-ad-editor\styles`). من غيره بيتحفظ على الجهاز ده بس.
 - بينسخ الإعدادات والمشاهد، وبيطلّع معاينة 720p من `ad-master-cover.mp4`.
 - بعدها **إنت** تكمّل `style.json` من الفيديوهات نفسها:
   - `summary` و`fits`.

@@ -10,7 +10,7 @@ Captain Video مبني على `majed-video` بتاع ماجد الزعابي (ر
 
 ⛔ متشغّلش أبداً أي حاجة بتستبدل الملفات من ماجد مباشرة (zip، rsync، `00_setup.sh --update` القديم). كلها بتمسح شغلنا.
 
-المستودع: الفولدر اللي فيه `.claude-plugin/marketplace.json` (على جهاز كابتن: `C:\Users\user\captain-video`).
+المستودع: الفولدر اللي فيه `.claude-plugin/marketplace.json` (على جهاز كابتن: `Z:\AI\Captain_Video Editing_Plugin`).
 كل الأوامر من هناك.
 
 ## 1) فيه جديد؟
