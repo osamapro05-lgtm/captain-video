@@ -8,6 +8,15 @@ CF.F=(w,s)=>w+' '+s+'px "'+FONT+'"';
 CF.w=(i,j)=>{const a=wordsOf(i);return a.length?a[Math.max(0,Math.min(a.length-1,j<0?a.length+j:j))].s:0;};
 CF.S=i=>CAPS[i]?CAPS[i].s:0;
 CF.E=i=>CAPS[i]?CAPS[i].e:0;
+/* ⛔ الجرافيك فوق الراس، عمره ما ييجي على الوش (طلب المستخدم 22 أكتوبر).
+   CF.headTop(s,e) = أعلى نقطة وصلها راسه في المدة دي (من behind.json ← heads/faces، 11_behind_text.js faces).
+   CF.slot(s,e,h) = {y,sc}: مكان كارت ارتفاعه h بين أعلى المنطقة الآمنة وفوق الراس بـ24px، وبيصغر لو المساحة مش كفاية. */
+CF.headTop=(s,e)=>{const v=[];const B=typeof BEHIND!=='undefined'&&BEHIND;if(B){for(let n=Math.floor(s*30)+1;n<=Math.ceil(e*30)+1;n++){
+  const h=B.heads&&B.heads[n],f=B.faces&&B.faces[n];if(h)v.push(h.top);else if(f)v.push(f.y-f.h*0.35);}}
+  if(!v.length) return 480; v.sort((a,b)=>a-b); return v[Math.floor(v.length*0.1)];};   /* أعلى 10٪ — من غير فريمات القناع الغلط */
+CF.slot=(s,e,h)=>{const top=FANCY.safe.top,bot=CF.headTop(s,e)-24,room=bot-top,sc=cl(room/h,0.8,1);
+  return {y:top+Math.max(0,(room-h*sc)/2),sc};};   /* مايصغرش عن 80٪ — بيبدأ من أعلى المنطقة الآمنة */
+CF.place=(sl,cx)=>{X.translate(cx,sl.y);X.scale(sl.sc,sl.sc);X.translate(-cx,0);};   /* بعدها ارسم الكارت من y=0 */
 /* ظهور واختفاء بضبابة: {a, b(px), dy} */
 CF.vis=(t,s,e,d)=>{d=d||0.3;const kin=ease(cl((t-s)/d,0,1)),kout=e?ease(cl((e-t)/0.25,0,1)):1,k=Math.min(kin,kout);
   return {a:k,b:(1-k)*10,dy:(1-kin)*18};};

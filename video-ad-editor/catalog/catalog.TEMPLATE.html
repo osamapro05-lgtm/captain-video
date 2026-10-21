@@ -203,6 +203,7 @@ const LOOK = [['family','العيلة'],['inOneLine','في سطر'],['density','
   ['graphics','الجرافيك'],
   ['surfaces','الأسطح'],['type','الخط'],['icons','الأيقونات'],['motion','الحركة'],['timing','التوقيت'],['placement','المكان'],['brandTie','رمز الهوية']];
 const LAYOUT = [['principle','المبدأ'],['pace','الإيقاع'],['frame','البداية والنهاية'],['captionsVsGraphics','الكابشن والجرافيك']];
+const KEYM = [['what','إيه هي'],['count','كام مرة'],['treatment','المعاملة'],['hold','المدة'],['focus','التركيز'],['captions','الكابشن'],['sound','الصوت']];
 const CAMERA = [['principle','المبدأ'],['moves','الحركات'],['handheld','الإيد'],['transitions','الانتقالات'],['grade','الألوان']];
 const SOUND = [['character','الطابع'],['role','دوره'],['when','امتى'],['weight','القوة'],['density','الكمية'],['sync','التوقيت'],
   ['silence','السكوت'],['loudness','العلو'],['variety','التنويع']];
@@ -225,6 +226,7 @@ document.getElementById('styleList').innerHTML = STYLES.length ? STYLES.map(s =>
         <ul>${list((s.captions || {}).rules)}</ul>
         <h3 style="margin-top:14px">القص</h3><ul>${list(cut.notes)}</ul>
         <h3 style="margin-top:14px">تقسيم الشاشة</h3><dl>${dl(lay, LAYOUT)}</dl>${tools ? `<p class="mut" style="margin-top:6px">الأشكال المتاحة:</p><ul>${tools}</ul>` : ''}
+        ${(s.keyMoments||{}).what ? `<h3 style="margin-top:14px">اللحظات المهمة</h3><dl>${dl(s.keyMoments, KEYM)}</dl>` : ''}
         ${cam.principle ? `<h3 style="margin-top:14px">الكاميرا</h3><dl>${dl(cam, CAMERA)}</dl>` : ''}
         <h3 style="margin-top:14px">لغة الصوت</h3><dl>${dl(snd, SOUND)}</dl>${snd.avoid ? `<dt>ممنوع</dt><dd><ul>${list(snd.avoid)}</ul></dd>` : ''}
       </div>

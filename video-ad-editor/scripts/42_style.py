@@ -160,6 +160,9 @@ def cmd_apply(a):
     lay = s.get("layout") or {}
     if lay.get("principle"):
         print("• التقسيم: " + lay["principle"])
+    km = s.get("keyMoments") or {}
+    if km.get("what"):
+        print("• اللحظات المهمة: " + km["what"] + " — " + km.get("treatment", ""))
     cam = s.get("camera") or {}
     if cam.get("principle"):
         print("• الكاميرا: " + cam["principle"] + " (studio.json ← cam)")
@@ -233,6 +236,7 @@ def cmd_save(a):
         "cut": {"silence": "remove-all", "stumbles": "remove", "notes": []},
         "layout": {**{k: "" for k in LAYOUT_KEYS}, "tools": {}},
         "captions": {"style": t0.get("capStyle", "card"), "rules": []},
+        "keyMoments": {"what": "", "count": "", "treatment": "", "hold": "", "focus": "", "captions": "", "sound": ""},
         "camera": {**{k: "" for k in CAMERA_KEYS}, "avoid": []},
         "sound": {**{k: "" for k in SOUND_KEYS}, "avoid": []},
         "examples": {"note": "حاجات اتعملت في الفيديوهات الأصلية، بتوضّح المفاهيم بس. متتنسخش.",
