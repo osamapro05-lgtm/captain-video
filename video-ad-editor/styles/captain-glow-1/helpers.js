@@ -1,6 +1,8 @@
 /* captain glow 1 — أدوات الجرافيك بنفس لغة الستايل (Captain Video).
    فيديو غامق، والجرافيك بيتبني في الفراغ فوق الراس وعلى الصدر: زجاج غامق بحد رفيع، أبيض للكلام، ولون التمييز (برتقالي) للحاجة الواحدة المهمة،
    والتوهج بس على البطل (رقم أو كلمة) وعلى نقط النور. ألوان الأقسام (أحمر، أصفر، بنفسجي، سماوي…) جوه الخط الزمني بس.
+   ⛔ مفيش ستارة ولا تدرّج غامق على الصورة: الفيديو بيفضل زي ما هو، والنور من الحروف والنقط نفسها.
+   الخط العربي: Cairo Black للكلام، وCareem Bold للبطل (GS.hero).
    الدخول ضبابة بتنقشع وطلعة صغيرة، والخروج ضبابة وتصغير. ده أدوات، مش قالب: المشهد بيطلع من كلام الفيديو. ينضاف قبل scenes-body.js:
      cat style-helpers.js scenes-body.js > scenes.js   (وcompose.html فيه <script src="scenes.js">) */
 const GS={};
@@ -11,13 +13,6 @@ GS.w=(i,j)=>{const a=wordsOf(i);return a.length?a[Math.max(0,Math.min(a.length-1
 GS.S=i=>CAPS[i]?CAPS[i].s:0;
 GS.E=i=>CAPS[i]?CAPS[i].e:0;
 GS.safe=()=>(typeof GLOW!=='undefined'?GLOW.safe:{top:250,bottom:1480,left:80,right:930});
-/* الستارة الغامقة: الستايل عايش على فيديو غامق. لو الفيديو فاتح، طبقة فوق الصورة (مش تلوين): فوق غامق ~78٪ لحد تحت الراس
-   وبيخف لحد الصدر، وفينييت حوالين الحواف. تتسجل كطبقة فيديو: SCENE_LIST.push(['gsScrim',gsScrim,'video']) */
-GS.scrim=(a,top)=>{a=a===undefined?0.86:a;top=top||0.62;X.save();
-  const g=X.createLinearGradient(0,0,0,H*top);g.addColorStop(0,'rgba(8,8,10,'+a+')');g.addColorStop(0.7,'rgba(8,8,10,'+(a*0.75).toFixed(3)+')');g.addColorStop(1,'rgba(8,8,10,'+(a*0.35).toFixed(3)+')');
-  X.fillStyle=g;X.fillRect(0,0,W,H*top);X.fillStyle='rgba(8,8,10,'+(a*0.35).toFixed(3)+')';X.fillRect(0,H*top,W,H*(1-top));
-  const v=X.createRadialGradient(W/2,H*0.55,H*0.25,W/2,H*0.55,H*0.75);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,'+(a*0.6).toFixed(3)+')');
-  X.fillStyle=v;X.fillRect(0,0,W,H);X.restore();};
 /* ظهور واختفاء: ضبابة بتنقشع وطلعة 16px، وخروج ضبابة وتصغير لـ0.9 */
 GS.vis=(t,s,e,d)=>{d=d||0.32;const kin=ease(cl((t-s)/d,0,1)),kout=e?ease(cl((e-t)/0.3,0,1)):1,k=Math.min(kin,kout);
   return {a:k,b:(1-k)*12,dy:(1-kin)*16,sc:1-(1-kout)*0.1};};
@@ -34,7 +29,10 @@ GS.glass=(x,y,w,h,r)=>{r=r||18;X.save();X.shadowColor='rgba(0,0,0,0.45)';X.shado
   X.fillStyle='rgba(18,18,20,0.58)';rr(x,y,w,h,r);X.fill();X.restore();
   X.save();X.strokeStyle='rgba(255,255,255,0.22)';X.lineWidth=1.6;rr(x,y,w,h,r);X.stroke();X.restore();};
 /* شيب: مربع أيقونة مدور (رمادي، أو برتقالي لو on) + عنوان تقيل + سطر صغير باهت. icon = حرف/إيموجي أو دالة رسم (ctx,cx,cy,s) */
+/* الشيب بيقعد على كبسولة زجاج غامقة صغيرة (حواليه بس) عشان يتقري على أي خلفية */
 GS.chip=(x,y,title,sub,on,icon,size)=>{const s=size||1,tile=64*s;X.save();
+  { X.save();X.font=GS.F(800,34*s,title);let tw=X.measureText(title).width;if(sub){X.font=GS.F(500,23*s,sub);tw=Math.max(tw,X.measureText(sub).width);}X.restore();
+    const p=12*s,w=tile+18*s+tw+p*2,bx=GS.AR(title)?x+tile+p-w:x-p;GS.glass(bx,y-p,w,tile+p*2,18*s); }
   X.fillStyle=on?rgba(ACC,0.22):'rgba(255,255,255,0.10)';rr(x,y,tile,tile,16*s);X.fill();
   X.strokeStyle=on?rgba(ACC,0.6):'rgba(255,255,255,0.18)';X.lineWidth=1.5;rr(x,y,tile,tile,16*s);X.stroke();
   if(typeof icon==='function') icon(X,x+tile/2,y+tile/2,tile*0.5,on?ACC:'#DDDDDD');
@@ -42,19 +40,33 @@ GS.chip=(x,y,title,sub,on,icon,size)=>{const s=size||1,tile=64*s;X.save();
   const rtl=GS.AR(title), tx=rtl?x-18*s:x+tile+18*s, al=rtl?'right':'left';
   GS.text(title,tx,y+tile*0.34,800,34*s,'#FFFFFF',al);if(sub) GS.text(sub,tx,y+tile*0.78,500,23*s,'rgba(255,255,255,0.55)',al);
   X.restore();};
-/* خط زمني بيكبر: secs=[{h:'عنوان',lines:['سطر',..],at:ثانية}], color من GS.SEC بالترتيب. x,y أول عقدة. بيرجّع آخر y */
-GS.outline=(t,x,y,secs,opt)=>{opt=opt||{};const hs=opt.head||46,bs=opt.body||27,lh=bs*1.32,gap=opt.gap||26,rtl=secs.length&&GS.AR(secs[0].h);
-  const nx=rtl?x:x, tx=rtl?x-34:x+34, al=rtl?'right':'left';let yy=y,last=y;
-  secs.forEach((sc,i)=>{ if(t<sc.at) return; const k=ease(cl((t-sc.at)/0.35,0,1)),col=sc.color||GS.SEC[i%GS.SEC.length];
-    const hgt=hs+8+(sc.lines||[]).length*lh;
+/* خط زمني بيكبر: secs=[{h:'عنوان',lines:['سطر',..],at:ثانية}], color من GS.SEC بالترتيب. x,y أول عقدة. بيرجّع آخر y.
+   opt: head · body · gap · tail · panel:false (من غير لوح) · keep:2 (آخر كام قسم بيفضل بسطره، والأقدم عنوان بس)
+   · max (أقصى عدد أقسام ظاهرة؛ الأقدم بيتقفل لصف مربعات صغيرة بألوانه فوق — للفيديو اللي المساحة فوق راسه قليلة)
+   ⛔ عمره ما ييجي على الوش: لو آخره هيوصل للراس، الخط الزمني كله بيصغر من فوق لحد ما يقف قبل الراس بـ24px */
+GS.outline=(t,x,y,secs,opt)=>{opt=opt||{};const hs=opt.head||46,bs=opt.body||27,lh=bs*1.32,gap=opt.gap||26,keep=opt.keep||2,rtl=secs.length&&GS.AR(secs[0].h);
+  const nx=x, tx=rtl?x-34:x+34, al=rtl?'right':'left';
+  const all=secs.map((sc,i)=>({...sc,i})).filter(sc=>t>=sc.at); if(!all.length) return y;
+  const mx=opt.max||99, done=all.slice(0,Math.max(0,all.length-mx)), vis=all.slice(-mx), row=done.length?34:0;
+  vis.forEach((sc,j)=>{ sc.ls=j>=vis.length-keep?(sc.lines||[]):[]; sc.hgt=hs+8+sc.ls.length*lh; });
+  const total=vis.reduce((s,sc)=>s+sc.hgt+gap,0)-gap+40+row;
+  let ww=0;X.save();vis.forEach(sc=>{X.font=GS.F(800,hs,sc.h);ww=Math.max(ww,X.measureText(sc.h).width);X.font=GS.F(500,bs,sc.h);sc.ls.forEach(l=>ww=Math.max(ww,X.measureText(l).width));});X.restore();
+  const pw=ww+34+60, x0=rtl?x+26-pw:x-26, hd=typeof _fancyHead==='function'?_fancyHead(t):null;
+  const hit=hd&&hd.cx+130>x0&&hd.cx-130<x0+pw, maxY=hit?hd.top+30:1e9, sc0=cl((maxY-(y-34))/total,0.7,1);
+  X.save();X.translate(x,y-34);X.scale(sc0,sc0);X.translate(-x,-(y-34));
+  if(opt.panel!==false){ const k=ease(cl((t-vis[0].at)/0.35,0,1));X.save();X.globalAlpha*=k;GS.glass(x0,y-34,pw,total,20);X.restore(); }
+  done.forEach((sc,j)=>{ const col=sc.color||GS.SEC[sc.i%GS.SEC.length]; X.save();X.fillStyle=col;X.shadowColor=rgba(col,0.6);X.shadowBlur=10;
+    X.fillRect(rtl?nx-10-j*30:nx-10+j*30,y-14,20,20);X.restore(); });
+  let yy=y+row,last=y+row;
+  vis.forEach(sc=>{ const k=ease(cl((t-sc.at)/0.35,0,1)),col=sc.color||GS.SEC[sc.i%GS.SEC.length];
     X.save();X.globalAlpha*=k;if(k<1)X.filter='blur('+((1-k)*8).toFixed(1)+'px)';X.translate(0,(1-k)*12);
     X.fillStyle=col;X.shadowColor=rgba(col,0.6);X.shadowBlur=12;X.fillRect(nx-10,yy-10,20,20);X.shadowBlur=0;
     GS.text(sc.h,tx,yy,800,hs,'#FFFFFF',al);
-    (sc.lines||[]).forEach((ln,j)=>GS.text(ln,tx,yy+hs*0.75+lh*(j+0.5),500,bs,col,al));
-    X.restore(); last=yy+hgt; yy+=hgt+gap; });
-  /* الخط المتقطع بيمشي لتحت لحد آخر قسم ظاهر وشوية */
-  if(last>y){X.save();X.strokeStyle='rgba(255,255,255,0.75)';X.lineWidth=2.5;X.setLineDash([9,9]);X.beginPath();X.moveTo(nx,y+14);X.lineTo(nx,last+(opt.tail||60));X.stroke();X.restore();}
-  return last;};
+    sc.ls.forEach((ln,j)=>GS.text(ln,tx,yy+hs*0.75+lh*(j+0.5),500,bs,col,al));
+    X.restore(); last=yy+sc.hgt; yy+=sc.hgt+gap; });
+  /* الخط المتقطع بيمشي لتحت لحد آخر قسم ظاهر */
+  X.save();X.strokeStyle='rgba(255,255,255,0.75)';X.lineWidth=2.5;X.setLineDash([9,9]);X.beginPath();X.moveTo(nx,y+row+14);X.lineTo(nx,last+(opt.tail===undefined?20:opt.tail));X.stroke();X.restore();
+  X.restore(); return y-34+(last-y+34)*sc0;};
 /* إطار نقط النور: n نقطة بيضا وكهرمانية بتطير من أماكن متفرقة (ثابتة بالبذرة) وتقفل في قوسين حوالين الصندوق {x,y,w,h}.
    k = تقدم الدخول 0..1 (حوالي ثانية)، والنقط بتلمع بهدوء بعد ما تقفل */
 GS.dots=(t,box,k,n,seed)=>{n=n||36;seed=seed||7;const rnd=i=>{const v=Math.sin((i+1)*12.9898*seed)*43758.5453;return v-Math.floor(v);};
@@ -81,5 +93,3 @@ GS.link=(x0,y0,x1,y1,bend,k)=>{X.save();X.strokeStyle='rgba(255,255,255,0.85)';X
 GS.comment=(x,y,name,body,w)=>{w=w||560;const rtl=GS.AR(body);GS.glass(x,y,w,78,16);
   X.save();X.fillStyle=rgba(ACC,0.85);X.beginPath();X.arc(rtl?x+w-40:x+40,y+39,20,0,7);X.fill();X.restore();
   const tx=rtl?x+w-74:x+74,al=rtl?'right':'left';GS.text(name,tx,y+26,600,20,'rgba(255,255,255,0.55)',al);GS.text(body,tx,y+54,700,26,'#FFFFFF',al);};
-/* الستارة كطبقة جاهزة: studio.json ← "sceneFx":["gsScrim"] (الستايل بيحطها). فيديو غامق أصلاً؟ شيلها من sceneFx */
-function gsScrim(t){ GS.scrim(); } gsScrim.layer='video';

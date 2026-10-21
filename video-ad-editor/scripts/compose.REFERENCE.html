@@ -427,30 +427,41 @@ function fancyCaption(c,t){
 }
 /* ═══ 🆕 Captain Video — capStyle 'glow' (ستايل captain glow 1) ═══
    كابشن حرفي صغير: 1 لـ3 كلمات أبيض نص-تقيل من غير أي شكل حواليه، بيتبدل مع الكلام (قطع مش أنيميشن)، على صدره تحت الدقن.
-   الكلمة المهمة (hot) = «البطل»: خط سيريف مايل (Instrument Serif، وفي العربي Amiri عريض) بلون التمييز وتوهج برتقالي،
+   الكلمة المهمة (hot) = «البطل»: في العربي Careem Bold، وفي الإنجليزي سيريف مايل (Instrument Serif)، بلون التمييز وتوهج،
    سطر لوحده تحت الكابشن، وبيفضل لحد آخر الجملة والكابشن الأبيض كمّل فوقه. واحد بس على الشاشة.
+   الكابشن الأبيض العربي Cairo Black. ⛔ مفيش ستارة ولا تدرّج غامق على الصورة (طلب المستخدم 22 أكتوبر): التوهج نوره من الحروف نفسها
+   (قلب فاتح وحافة أغمق وهالة)، وظل غامق ناعم لاصق في الحروف بس عشان يتقري على خلفية فاتحة.
    ورا الراس: 11_behind_text.js fancy <جملة:كلمات> → البطل ورا الراس (نفس بيانات fancy) والراس فوقه.
-   ⛔ هوامش السوشيال: كله جوه GLOW.safe. theme.json أو studio.json ← glow:{fs,hero,heroBehind,words,glow,blur,safe,latin,serif,arSerif} */
-let GLOW={fs:56,hero:150,heroBehind:210,words:3,glow:34,blur:10,overlap:0.3,safe:{top:250,bottom:1480,left:80,right:930},
-  latin:'Inter',serif:'Instrument Serif',arSerif:'Amiri'};
+   ⛔ هوامش السوشيال: كله جوه GLOW.safe. theme.json أو studio.json ← glow:{fs,hero,heroBehind,words,glow,blur,safe,latin,serif,arBody,arBodyW,arHero,arHeroUrl} */
+let GLOW={fs:56,hero:150,heroBehind:210,words:3,glow:30,blur:10,overlap:0.3,safe:{top:250,bottom:1480,left:80,right:930},
+  latin:'Inter',serif:'Instrument Serif',arBody:'Cairo',arBodyW:900,arHero:'Careem',arHeroUrl:''};
 const _AR=/[؀-ۿ]/;
 function glowFontsLink(){ if(document.getElementById('glowFonts')) return; const l=document.createElement('link'); l.id='glowFonts'; l.rel='stylesheet';
-  l.href='https://fonts.googleapis.com/css2?family='+[GLOW.latin+':wght@500;600;700',GLOW.serif+':ital@0;1',GLOW.arSerif+':wght@400;700'].map(f=>f.replace(/ /g,'+')).join('&family=')+'&display=swap';
+  l.href='https://fonts.googleapis.com/css2?family='+[GLOW.latin+':wght@500;600;700',GLOW.serif+':ital@0;1',GLOW.arBody+':wght@700;'+GLOW.arBodyW].map(f=>f.replace(/ /g,'+')).join('&family=')+'&display=swap';
   document.head.appendChild(l); }
+/* Careem مش على جوجل: بيتحمّل من الخطوط المتسطبة على الجهاز (local)، أو من ملف لو glow.arHeroUrl متكتب. مش موجود؟ بيرجع لـCairo Black */
 function glowFontsReady(){ const l=document.getElementById('glowFonts');
   const sheet=(l&&!l.sheet)?new Promise(r=>{l.addEventListener('load',r);l.addEventListener('error',r);}):Promise.resolve();
-  const go=()=>Promise.all(['600 60px "'+GLOW.latin+'"','italic 400 60px "'+GLOW.serif+'"','700 60px "'+GLOW.arSerif+'"'].map(f=>document.fonts.load(f,'Aa 123 عربي'))).catch(()=>0);
-  return Promise.race([sheet.then(go),new Promise(r=>setTimeout(r,10000))]); }
+  const src=["local('"+GLOW.arHero+" Bold')","local('"+GLOW.arHero+"-Bold')","local('"+GLOW.arHero+"')"].concat(GLOW.arHeroUrl?["url('"+GLOW.arHeroUrl+"')"]:[]).join(',');
+  const hero=new FontFace(GLOW.arHero,src,{weight:'700'}).load().then(f=>{document.fonts.add(f);}).catch(()=>{ console.error('⚠️ خط '+GLOW.arHero+' مش متسطب — البطل العربي بـ'+GLOW.arBody); GLOW.arHero=GLOW.arBody; });
+  const go=()=>Promise.all(['600 60px "'+GLOW.latin+'"','italic 400 60px "'+GLOW.serif+'"',GLOW.arBodyW+' 60px "'+GLOW.arBody+'"'].map(f=>document.fonts.load(f,'Aa 123 عربي'))).catch(()=>0);
+  return Promise.race([Promise.all([sheet.then(go),hero]),new Promise(r=>setTimeout(r,10000))]); }
 /* خط الكابشن الأبيض والبطل حسب لغة الكلمة */
-const _gBody=(s,fs)=>_AR.test(s)?'700 '+Math.round(fs*1.08)+'px "'+FONT+'"':'600 '+fs+'px "'+GLOW.latin+'"';
-const _gHero=(s,fs)=>_AR.test(s)?'700 '+Math.round(fs*0.82)+'px "'+GLOW.arSerif+'"':'italic 400 '+fs+'px "'+GLOW.serif+'"';
-/* نص بتوهج: طبقتين نور بلون التمييز + الحروف نفسها. k = قوة التوهج (0..1) */
+const _gBody=(s,fs)=>_AR.test(s)?GLOW.arBodyW+' '+Math.round(fs*1.05)+'px "'+GLOW.arBody+'"':'600 '+fs+'px "'+GLOW.latin+'"';
+const _gHero=(s,fs)=>_AR.test(s)?'700 '+Math.round(fs*0.8)+'px "'+GLOW.arHero+'","'+GLOW.arBody+'"':'italic 400 '+fs+'px "'+GLOW.serif+'"';
+/* نص بتوهج — نوره من الحروف نفسها: ظل غامق لاصق (يفصلها عن أي خلفية) ← هالة واسعة ← هالة قريبة ← الحروف بتدرّج
+   (فاتح من فوق للون التمييز تحت) ← لمعة رفيعة في القلب. k = قوة التوهج (0..1) */
 function glowText(s,x,y,font,color,k,maxW){ X.save(); X.font=font; X.textAlign='center'; X.textBaseline='middle'; X.direction=_AR.test(s)?'rtl':'ltr';
   const w=X.measureText(s).width; if(maxW&&w>maxW){ const f=maxW/w; X.translate(x,y); X.scale(f,f); X.translate(-x,-y); }
-  X.fillStyle=color;
-  if(k>0){ X.shadowColor=rgba(color,0.85*k); X.shadowBlur=GLOW.glow*1.6; X.fillText(s,x,y);
-    X.shadowColor=rgba(color,0.9*k); X.shadowBlur=GLOW.glow*0.45; X.fillText(s,x,y); }
-  X.shadowColor='rgba(0,0,0,0.35)'; X.shadowBlur=10; X.shadowOffsetY=2; X.fillText(s,x,y); X.restore(); }
+  const m=X.measureText(s), up=m.actualBoundingBoxAscent||40, dn=m.actualBoundingBoxDescent||20;
+  const c=hx(color), lite='rgb('+c.map((v,i)=>Math.round(v+(255-v)*(i===0?0.5:0.3))).join(',')+')', deep='rgb('+c.map(v=>Math.round(v*0.82)).join(',')+')';
+  const g=X.createLinearGradient(0,y-up,0,y+dn); g.addColorStop(0,lite); g.addColorStop(0.55,color); g.addColorStop(1,deep);
+  X.fillStyle=deep; X.shadowColor='rgba(0,0,0,0.5)'; X.shadowBlur=18; X.shadowOffsetY=3; X.fillText(s,x,y); X.shadowOffsetY=0;
+  if(k>0){ X.shadowColor=rgba(color,0.75*k); X.shadowBlur=GLOW.glow*1.5; X.fillText(s,x,y);
+    X.shadowColor=rgba(color,0.95*k); X.shadowBlur=GLOW.glow*0.35; X.fillText(s,x,y); }
+  X.shadowColor='transparent'; X.shadowBlur=0; X.fillStyle=g; X.fillText(s,x,y);
+  if(k>0){ X.globalAlpha*=0.22*k; X.globalCompositeOperation='lighter'; X.fillStyle='rgba(255,200,130,1)'; X.shadowColor='rgba(255,190,110,0.9)'; X.shadowBlur=6; X.fillText(s,x,y); }
+  X.restore(); }
 function _glowChunks(c){
   if(c._gc) return c._gc; const C=[]; let cur=null;
   c.w.forEach(w=>{ const hero=!!w.hot;   /* كلمات hot ورا بعض = بطل واحد · الأبيض 3 كلمات بالكتير ويقفل عند علامة ترقيم */

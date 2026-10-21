@@ -1,26 +1,26 @@
-/* captain glow 1 — تجربة: بيكنج صودا ولمون لتبييض السنان (أبو هشام). */
-function gsScrim(t){ GS.scrim(); } gsScrim.layer='video';
-/* اللي عمله المريض: شيبسين فوق الراس، التاني بيتنور مع «لمون» */
-function gsTried(t){ const s=GS.w(0,7), e=GS.E(0); if(t<s||t>e+0.3) return;
-  const v=GS.vis(t,s,e+0.3); GS.begin(v,540,330);
-  GS.chip(940-77,290,'بيكنج صودا','بودرة بيضا',false,'🧂',1.2);
-  if(t>=GS.w(0,9)){ const v2=GS.vis(t,GS.w(0,9),0); GS.begin(v2); GS.chip(450-77,290,'لمون','حامض',true,'🍋',1.2); GS.end(); }
-  GS.end(); }
-/* الخط الزمني بيكبر مع القصة، وبيمشي عند الدعوة */
-function gsStory(t){ const s=GS.S(1), e=GS.S(5); if(t<s||t>e+0.3) return;
-  const v=GS.vis(t,s,e+0.3); GS.begin(v,540,420);
-  GS.outline(t,960,300,[
-    {h:'اللي عمله',lines:['بيكنج صودا ولمون كل يوم'],at:s},
-    {h:'النتيجة',lines:['سنان متحسسة، وألم'],at:GS.w(2,4)},
-    {h:'الحل',lines:['روتين صح لتبييض آمن'],at:GS.S(4)}],{head:44,body:27});
-  GS.end(); }
-/* الدعوة: كلمة «روتين» في كارت تعليق، ونقط النور بتقفل حواليه */
-function gsCta(t){ const s=GS.S(5), e=GS.E(5); if(t<s) return;
-  const box={x:270,y:400,w:540,h:120}, k=cl((t-s)/1.0,0,1);
-  GS.dots(t,box,k,44,5);
-  const v=GS.vis(t,GS.w(5,1),0); GS.begin(v,540,460);
+/* captain glow 1 — بيطري فيجن: «5 حاجات قبل عملية التعقيم». */
+/* الهوك: كارت زجاج «قبل عملية التعقيم» ونقط النور بتقفل حواليه */
+function gvHook(t){ const e=GS.S(1); if(t>e+0.3) return;
+  const box={x:290,y:300,w:500,h:110}, v=GS.vis(t,0.15,e+0.3);
+  GS.begin(v,540,355); GS.dots(t,box,cl(t/1.1,0,1),40,3);
   GS.glass(box.x,box.y,box.w,box.h,22);
-  GS.text('اكتب في التعليقات',box.x+box.w-36,box.y+38,600,26,'rgba(255,255,255,0.6)','right');
-  GS.text('روتين',box.x+box.w-36,box.y+82,800,44,'#FFFFFF','right');
+  GS.text('قبل عملية التعقيم',box.x+box.w/2,box.y+box.h/2+4,900,46,'#FFFFFF');
   GS.end(); }
-[['gsScrim',gsScrim,'video'],['gsTried',gsTried],['gsStory',gsStory],['gsCta',gsCta]].forEach(x=>SCENE_LIST.push(x));
+/* الخط الزمني: بند مع كل «رقم»، بيكبر لحد آخر الفيديو */
+const GV_SEC=[[1,'مكان تثق فيه','عيادة إنت واثق فيها'],[3,'كشف كامل','من الحرارة لضربات القلب'],[5,'تحليل دم','قبل ما يدخل العملية'],
+  [15,'بعد العملية','تحافظ على مكان العملية'],[17,'متابعة','بعد 10 لـ14 يوم']];
+function gvList(t){ const s=GS.S(1); if(t<s) return;
+  const v=GS.vis(t,s,0); GS.begin(v,780,420);
+  GS.outline(t,935,272,GV_SEC.map(([c,h,l])=>({h,lines:[l],at:GS.w(c,1)})),{head:40,body:26,gap:16,max:2,keep:1});
+  GS.end(); }
+/* تحليل الدم: الكبد والكلى والقلب في خطر — شيبس على الشمال بتتنور واحدة واحدة */
+function gvOrgans(t){ const s=GS.w(7,2), e=GS.E(9); if(t<s-0.1||t>e+0.3) return;
+  const v=GS.vis(t,s-0.1,e+0.3); GS.begin(v,240,420);
+  [[7,'الكبد','في خطر'],[8,'الكلى','في خطر'],[9,'القلب','في خطر']].forEach(([c,h,sb],i)=>{ const at=GS.w(c,1); if(t<at-0.05) return;
+    const v2=GS.vis(t,at-0.05,0); GS.begin(v2); GS.chip(330-64,300+i*96,h,sb,t>=GS.w(c,1)&&t<GS.S(c+1),'!',1); GS.end(); });
+  GS.end(); }
+/* اللحظة المهمة: «حياة وروح» — نقط النور بتقفل حوالين البطل */
+function gvLife(t){ const s=GS.w(12,1), e=GS.E(12); if(t<s||t>e+0.3) return;
+  const hd=_fancyHead(t), y=(hd?hd.chin+40:1000)+GLOW.fs*0.7+GLOW.hero*0.62;
+  const v=GS.vis(t,s,e+0.3); GS.begin(v,540,y); GS.dots(t,{x:250,y:y-70,w:580,h:140},cl((t-s)/1.0,0,1),36,9); GS.end(); }
+[['gvHook',gvHook],['gvList',gvList],['gvOrgans',gvOrgans],['gvLife',gvLife]].forEach(x=>SCENE_LIST.push(x));
