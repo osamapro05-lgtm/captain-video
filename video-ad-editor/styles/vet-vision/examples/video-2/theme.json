@@ -1,0 +1,16 @@
+{
+  "font": "Readex Pro",
+  "capStyle": "big",
+  "pace": "calm",
+  "logo": "logo.jpg",
+  "grade": false,
+  "badgeUntil": 0,
+  "faceAnchor": 0.3,
+  "bg": "#081C44",
+  "ink": "#FFFFFF",
+  "acc": "#F4C025",
+  "clay": "#C39A1E",
+  "mut": "#9AA6BD",
+  "onAcc": "#081C44",
+  "hookZoom": 5.28
+}

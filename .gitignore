@@ -10,3 +10,5 @@ video-ad-editor/scripts/hdr2sdr
 video-ad-editor/scripts/facetrack
 # deep-filter بايناري ينزل محلياً (--extras) — ما يدخل المستودع
 video-ad-editor/bin/
+# editing styles ship with their preview reels
+!video-ad-editor/styles/*/*.mp4

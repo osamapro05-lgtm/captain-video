@@ -40,7 +40,8 @@
 | `34_phone_preview.py` | معاينة الكفر/الثمبنيل بحجمه الحقيقي بالجوال (تبويب الريلز · البروفايل · من بعيد · يوتيوب) | الكفر |
 | `40_capcut.py` | مونتاج داخل كاب كت: خطة من التفريغ ← موشن ProRes شفاف + مؤثرات ← يكتب مشروع كاب كت قابل للتعديل (`projects` · `skeleton` · `check` · `stills` · `render` · `sfx` · `write` · `all`) | كاب كت |
 | `41_review.py` + `review.TEMPLATE.html` | صفحة مراجعة الحلقة: كل الريلات والكاروسيل بصفحة وحدة (ملاحظة · اعتمد · تحميل) تنتشر خاصة على claude.ai — `references/review-page.md` | بودكاست |
-| `42_style.py` | ستايلات المونتاج المحفوظة في `~/.video-ad-editor/styles/`: `list` · `show` · `apply` (ثيم + قواعد + `style-helpers.js`) · `save` (ستايل من فيديوهات خلصت) · `gallery` · `serve` (صفحة معاينة بالريلات) — `references/editing-styles.md` | كل الأوضاع |
+| `42_style.py` | ستايلات المونتاج (`video-ad-editor/styles/` + `~/.video-ad-editor/styles/`): `list` · `show` · `apply` · `save` · `catalog` · `serve` (صفحة البلجن كاملة: الكابشن + الستايلات بالريلات + المهارات) — `references/editing-styles.md` | كل الأوضاع |
+| `../tools/majed-update.sh` | تحديثات ماجد بالدمج مش الاستبدال: `check` · `merge <tag>` · `undo` · `restore <path>` · `history` — `references/fork-updates.md` | المستودع |
 | `29_handtrack.py` + `handpose.swift` | تتبّع الكف (Vision) → `palm.js` منعّم: عنصر يمشي مع الإيد | مشترك (ماك) |
 | `36_facetrack.py` + `facetrack.swift` | تتبّع الوجه (Vision) → `face.js` منعّم: `MV.faceAt(t)` لحركات المعرض 85 و86 (`references/moves.md` 3د) | مشترك (ماك) |
 | `37_env.py` | علو صوته لكل فريم ← `env.js` (`window.ENV`): `MV.env(t)` لموجة/نبض يتحرك مع كلامه الحقيقي (`references/moves.md` 3و) | مشترك |

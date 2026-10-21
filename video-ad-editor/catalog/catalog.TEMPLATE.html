@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Captain Video</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4ef;--card:#fff;--ink:#1c1c1a;--mut:#6a6963;--line:#e3e1d9;--acc:#b8860b;--chip:#efede6;
+  --vbg:#081C44;--vink:#fff;--vacc:#F4C025;--vface:#4d5566;--vbody:#3d4555;--vroom:#2a3142}
+@media (prefers-color-scheme:dark){:root{--bg:#141413;--card:#1e1e1c;--ink:#f0efe9;--mut:#a4a39c;--line:#33322e;--acc:#e0b84a;--chip:#2a2926}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Readex Pro",Tahoma,sans-serif;line-height:1.65}
+main{max-width:1120px;margin:0 auto;padding:28px 16px 64px}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .in{max-width:1120px;margin:0 auto;padding:10px 16px;display:flex;gap:18px;align-items:center;overflow-x:auto;white-space:nowrap}
+nav b{font-weight:800}
+nav a{color:var(--mut);text-decoration:none;font-size:14px}
+nav a:hover{color:var(--ink)}
+h1{font-size:34px;font-weight:800;margin:8px 0 6px}
+h2{font-size:24px;font-weight:800;margin:56px 0 4px}
+h3{font-size:16px;font-weight:600;margin:0 0 6px}
+.lead{color:var(--mut);margin:0 0 20px;max-width:720px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+code{font-family:ui-monospace,Consolas,monospace;font-size:12px;background:var(--chip);padding:2px 6px;border-radius:6px;direction:ltr;unicode-bidi:isolate}
+.mut{color:var(--mut);font-size:14px;margin:4px 0 0}
+.phone{position:relative;aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:var(--vroom);direction:rtl}
+.phone .face{position:absolute;left:50%;top:22%;width:28%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:var(--vface)}
+.phone .body{position:absolute;left:50%;top:44%;width:56%;height:60%;transform:translateX(-50%);border-radius:40% 40% 0 0;background:var(--vbody)}
+.cap{position:absolute;left:8px;right:8px;bottom:13%;text-align:center;font-weight:800;color:#fff;line-height:1.5}
+.w{display:inline-block;margin:0 .12em;transition:color .12s,transform .12s}
+.s-card .box{display:inline-block;background:var(--vbg);padding:6px 10px;border-radius:12px;font-size:17px}
+.s-card .w.on{background:var(--vacc);color:var(--vbg);border-radius:8px;padding:0 5px}
+.s-shadow .cap{font-size:21px;text-shadow:0 2px 6px #000}
+.s-shadow .w.on{color:var(--vacc)}
+.s-big .cap{font-size:40px;text-shadow:0 3px 8px #000}
+.s-underline .cap{font-size:19px;text-shadow:0 2px 5px #000}
+.s-underline .w{border-bottom:4px solid transparent;padding-bottom:1px}
+.s-underline .w.on{border-color:var(--vacc)}
+.s-bar .cap{font-size:19px;text-shadow:0 2px 5px #000}
+.s-bar .w.on{background:var(--vacc);color:var(--vbg);text-shadow:none;padding:0 6px}
+.s-type .cap{font-size:19px;text-shadow:0 2px 5px #000}
+.s-type .w.hide{display:none}
+.s-type .cur{display:inline-block;width:3px;height:1.1em;background:var(--vacc);vertical-align:middle;animation:blink .7s steps(1) infinite}
+.still .w{transform:none!important}
+.pop{transform:translateY(-3px) scale(1.06)}
+@keyframes blink{50%{opacity:0}}
+.fx .phone{aspect-ratio:1/1}
+.fx .word{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800;color:#fff}
+.fx-drop .word span{animation:drop 1.8s cubic-bezier(.3,1.4,.5,1) infinite}
+@keyframes drop{0%{transform:translateY(-120px);opacity:0}25%{transform:none;opacity:1}85%{opacity:1}100%{opacity:0}}
+.fx-shake .word span{animation:shake 1.6s infinite}
+@keyframes shake{0%,100%{transform:none}10%,30%,50%{transform:translateX(-6px) rotate(-2deg)}20%,40%{transform:translateX(6px) rotate(2deg)}60%{transform:none}}
+.fx-crack .word span{animation:shake 1.6s infinite}
+.fx-crack .word::after{content:"";position:absolute;inset:18%;background:linear-gradient(115deg,transparent 48%,#fff 49%,transparent 51%),linear-gradient(40deg,transparent 58%,#fff 59%,transparent 60%);opacity:0;animation:crack 1.6s infinite}
+@keyframes crack{0%,15%{opacity:0}20%,70%{opacity:.8}100%{opacity:0}}
+.fx-type .word span{clip-path:inset(0 0 0 100%);animation:typ 1.8s steps(12) infinite}
+@keyframes typ{0%{clip-path:inset(0 0 0 100%)}60%,100%{clip-path:inset(0 0 0 0)}}
+.fx-pulse .word span{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.18)}}
+.fx-stretch .word span{color:var(--vacc);animation:str 2s ease-in-out infinite}
+@keyframes str{0%,100%{letter-spacing:0}50%{transform:scaleX(1.25)}}
+.fx-slam .word span{animation:slam 1.8s cubic-bezier(.2,.9,.3,1) infinite}
+@keyframes slam{0%{transform:scale(3);opacity:0}20%{transform:scale(1.3);opacity:1}35%{transform:scale(1)}90%{opacity:1}100%{opacity:0}}
+.style{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:20px}
+.style header{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline}
+.style h3{font-size:22px;font-weight:800}
+.vids{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0}
+.vids figure{margin:0;width:min(250px,100%)}
+.vids video{width:100%;aspect-ratio:9/16;border-radius:12px;background:#000;display:block}
+.vids figcaption{font-size:13px;color:var(--mut);text-align:center;margin-top:6px}
+.cols{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:8px}
+dl{margin:0;font-size:14px}
+dt{font-weight:600;margin-top:8px}
+dd{margin:0;color:var(--mut)}
+ul{margin:0;padding-inline-start:18px;font-size:14px}
+li{margin:3px 0}
+.sw{display:inline-block;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);vertical-align:middle;margin-inline-end:4px}
+.tag{display:inline-block;font-size:12px;background:var(--chip);border-radius:20px;padding:2px 10px;margin:2px}
+.say{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:14px}
+.skill h3{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.rules li{margin:5px 0}
+.empty{color:var(--mut)}
+</style>
+</head>
+<body>
+<nav><div class="in"><b>Captain Video</b><a href="#captions">الكابشن</a><a href="#fx">حركات الكلمة</a><a href="#styles">ستايلات المونتاج</a><a href="#skills">المهارات</a><a href="#features">أهم المزايا</a><a href="#rules">القواعد</a></div></nav>
+<main>
+<h1>Captain Video</h1>
+<p class="lead">بلجن مونتاج عربي لـClaude Code. بتديله الفيديو وبيطلّعلك ريل جاهز بالكابشن والجرافيك والصوت. الصفحة دي فيها كل اللي تقدر تختاره.</p>
+
+<h2 id="captions">ستايلات الكابشن</h2>
+<p class="lead">بتختار واحد منهم في الثيم (<code>capStyle</code>). الكلمة اللي بتتقال بتتلوّن لحظة نطقها.</p>
+<div class="grid" id="capGrid"></div>
+<p class="mut">ولأي ستايل منهم: <code>"capStill": true</code> بيخلي الكابشن ثابت من غير حركة، ويظهر ويختفي بالشفافية بس.</p>
+
+<h2 id="fx">حركات الكلمة</h2>
+<p class="lead">حركة لكلمة معينة لحظة ما بيقولها، والحروف بتفضل متصلة.</p>
+<div class="grid" id="fxGrid"></div>
+
+<h2 id="styles">ستايلات المونتاج</h2>
+<p class="lead">كل ستايل باقة كاملة: الكابشن، واللغة البصرية للجرافيك، وطريقة القص، وتقسيم الشاشة، والمؤثرات. الفيديوهات دي اتعملت بيه.</p>
+<div id="styleList"></div>
+
+<h2 id="skills">المهارات الست</h2>
+<p class="lead">كل مهارة بتشتغل لوحدها لما تقول الكلام اللي يخصها.</p>
+<div class="grid" id="skillGrid"></div>
+
+<h2 id="features">أهم المزايا</h2>
+<div class="grid" id="featGrid"></div>
+
+<h2 id="rules">قواعد ثابتة</h2>
+<div class="card"><ul class="rules" id="rules"></ul></div>
+</main>
+<script>
+const STYLES = /*STYLES_JSON*/[];
+const SENT = ['كل','حاجة','بتشوفها','في','الفيديو'];
+const CAPS = [
+  ['card','كارت','الافتراضي، كارت بلون هويتك'],
+  ['shadow','ظل','أبيض كبير بظل، من غير كارت'],
+  ['big','كلمة كبيرة','كلمة واحدة ضخمة في كل مرة'],
+  ['underline','خط تحت','خط تحت الكلمة المنطوقة'],
+  ['bar','شريط','شريط بلون التمييز ورا الكلمة'],
+  ['type','آلة كاتبة','بيتكتب قدامك ومعاه مؤشر']
+];
+const FX = [
+  ['drop','طيحة','بتقع من فوق وترتد','خلاص'],['shake','اهتزاز','بتهتز والكادر معاها','تهتز'],
+  ['crack','انكسار','اهتزاز وشقوق على الشاشة','تكسر'],['type','كتابة','بتتكتب من اليمين','متصلة'],
+  ['pulse','نبضة','بتكبر وترجع','مهم'],['stretch','تمدد','بتتمط بالكشيدة','تتمـــد'],
+  ['slam','ضربة','بتنزل ضخمة وتثبت','مجانية']
+];
+const SKILLS = [
+  ['video-ad-editor','ريل من فيديو كلام','«منتج المقطع ده»، «شيّل السكتات»','قص السكتات، كابشن بتوقيت الكلمة، موشن وجرافيك، صوت مظبوط'],
+  ['editing-style','ستايلات المونتاج','«وريني الستايلات»، «بستايل بيطري فيجن»','يطبّق ستايل محفوظ، أو يحفظ فيديو خلص كستايل جديد'],
+  ['podcast-video','بودكاست ومقابلات','«بودكاست»، «ريلات من الحلقة»','كاميرتين أو أكتر، ريلات بهوك مكتوب، أو الحلقة كاملة بالعرض'],
+  ['motion-video','موشن من غير تصوير','«فيديو موشن»، «اشرح الموقع ده»','فيلم 3D من نص أو فكرة، وشرح موقع أو تطبيق جوه موبايل'],
+  ['montage-video','مونتاج على الإيقاع','«مونتاج من المقاطع دي»','بيختار أحلى لحظة من كل مقطع ويقطع على النبضة'],
+  ['thumbnail-video','كفر وثمبنيل','«اعمل كفر»، «ثمبنيل يوتيوب»','كفر أول فريم بيتقري في شبكة البروفايل، و3 أفكار ثمبنيل']
+];
+const FEATS = [
+  ['قص السكتات والتهتهة','كل سكتة وكل بداية غلط بتتشال قبل أول رسم'],
+  ['كابشن بتوقيت الكلمة','Whisper بيفرّغ، وClaude بيصحح العامية كلمة كلمة'],
+  ['مراجعة النص قبل المونتاج','بتشوف كلامك مرقّم وتشيل الجمل اللي مش عاجباك'],
+  ['تقسيم الشاشة','ملء الشاشة، أو جرافيك فوق وإنت تحت، أو جرافيك بس'],
+  ['بنك حركات','لوحة حركات لكل فيديو: 3 أساسية بيدور حواليها ولمسات للحظات المهمة'],
+  ['مؤثرات صوتية بمعنى','بتتحط في لحظة ليها معنى، مش على كل كلمة'],
+  ['صوت بمستوى المنصات','-14 LUFS، والخلفية الصوتية بتوطى لوحدها لما تتكلم'],
+  ['ترجمة وكفر','ملف srt ونص البوست، وكفر بيبقى أول فريم'],
+  ['تصدير كاب كت','بدل MP4 بيطلّع مشروع كاب كت تعدّل فيه بإيدك'],
+  ['الاستوديو','تايملاين تعدّل فيه بنفسك من المتصفح']
+];
+const RULES = [
+  'مفيش أي تعديل ألوان على صورتك إلا لو طلبت',
+  'الأرقام إنجليزي دايماً (0-9)',
+  'الألوان من الثيم بس',
+  'مفيش كلام أو رقم على الشاشة إنت ماقلتوش',
+  'الكابشن عمره ما بيتكتب على الوش',
+  'التسليم ملف بس، من غير نشر ولا جدولة',
+  'على ويندوز: قص الشخص من الخلفية وتتبع الوش مش متاحين (محتاجين ماك)'
+];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const phone = inner => `<div class="phone"><div class="face"></div><div class="body"></div>${inner}</div>`;
+
+document.getElementById('capGrid').innerHTML = CAPS.map(([id,name,desc]) => {
+  const words = SENT.map((w,i) => `<span class="w" data-i="${i}">${w}</span>`).join(' ');
+  const cap = id === 'card' ? `<div class="cap"><span class="box">${words}</span></div>`
+    : id === 'big' ? `<div class="cap"><span class="w big"></span></div>`
+    : `<div class="cap">${words}${id === 'type' ? '<span class="cur"></span>' : ''}</div>`;
+  return `<div class="card s-${id}" data-cap="${id}">${phone(cap)}<h3 style="margin-top:10px">${name} <code>${id}</code></h3><p class="mut">${desc}</p></div>`;
+}).join('');
+
+let tick = 0;
+setInterval(() => {
+  const i = tick % (SENT.length + 2); tick++;
+  document.querySelectorAll('[data-cap]').forEach(card => {
+    const id = card.dataset.cap;
+    if (id === 'big') { const b = card.querySelector('.big'); b.textContent = SENT[Math.min(i, SENT.length - 1)]; b.classList.toggle('pop', i < SENT.length); return; }
+    card.querySelectorAll('.w').forEach(w => {
+      const k = +w.dataset.i;
+      w.classList.toggle('on', k === i);
+      w.classList.toggle('pop', k === i && id !== 'card');
+      if (id === 'type') w.classList.toggle('hide', k > i);
+    });
+  });
+}, 520);
+
+document.getElementById('fxGrid').innerHTML = FX.map(([id,name,desc,word]) =>
+  `<div class="card fx fx-${id}"><div class="phone"><div class="word"><span>${word}</span></div></div><h3 style="margin-top:10px">${name} <code>${id}</code></h3><p class="mut">${desc}</p></div>`).join('');
+
+const LOOK = [['family','العيلة'],['inOneLine','في سطر'],['density','الكثافة'],['color','الألوان'],['shapes','الأشكال'],['lines','الخطوط'],
+  ['surfaces','الأسطح'],['type','الخط'],['icons','الأيقونات'],['motion','الحركة'],['timing','التوقيت'],['placement','المكان'],['brandTie','رمز الهوية']];
+const list = a => (a || []).map(x => `<li>${esc(x)}</li>`).join('');
+document.getElementById('styleList').innerHTML = STYLES.length ? STYLES.map(s => {
+  const look = s.look || {}, lay = s.layout || {}, th = s.theme || {}, cut = s.cut || {}, sfx = s.sfx || {};
+  const cols = Object.entries((s.brand || {}).colors || {}).map(([k,v]) => `<span class="sw" title="${esc(k)}" style="background:${esc(v)}"></span>`).join('');
+  const vids = (s.previews || []).map(p => `<figure><video src="styles/${esc(s.id)}/${esc(p.video)}" ${p.poster ? `poster="styles/${esc(s.id)}/${esc(p.poster)}"` : ''} controls playsinline preload="metadata"></video><figcaption>${esc(p.title)}</figcaption></figure>`).join('');
+  const lookDl = LOOK.filter(([k]) => look[k]).map(([k,l]) => `<dt>${l}</dt><dd>${esc(look[k])}</dd>`).join('');
+  const modes = Object.entries(lay.modes || {}).map(([k,v]) => `<li><code>${esc(k)}</code> ${esc(v)}</li>`).join('');
+  const sfxUse = Object.entries(sfx.use || {}).map(([k,v]) => `<li><code>${esc(k)}</code> ${esc(v)}</li>`).join('');
+  return `<section class="style" id="style-${esc(s.id)}">
+    <header><h3>${esc(s.name)}</h3><code>${esc(s.id)}</code><span class="tag">نسخة ${esc(s.version || 1)}</span>${s.fits ? `<span class="tag">${esc(s.fits)}</span>` : ''}</header>
+    <p class="mut">${esc(s.summary)}</p>
+    <div class="vids">${vids}</div>
+    <div class="cols">
+      <div><h3>اللغة البصرية</h3><dl>${lookDl}</dl>${look.avoid ? `<dt>ممنوع</dt><dd><ul>${list(look.avoid)}</ul></dd>` : ''}</div>
+      <div>
+        <h3>الكابشن</h3><p class="mut"><code>${esc(th.capStyle)}</code> · ${esc(th.font)} · إيقاع ${esc(th.pace || 'عادي')} ${cols}</p>
+        <ul>${list((s.captions || {}).rules)}</ul>
+        <h3 style="margin-top:14px">القص</h3><ul>${list(cut.notes)}</ul>
+        <h3 style="margin-top:14px">تقسيم الشاشة</h3><ul>${modes}</ul><p class="mut">${esc(lay.rhythm)}</p>
+        <h3 style="margin-top:14px">المؤثرات الصوتية</h3><ul>${sfxUse}</ul>
+      </div>
+    </div>
+    <p class="say">استخدمه: قول لـClaude «منتج الفيديو ده بستايل ${esc(s.name)}»</p>
+  </section>`;
+}).join('') : '<p class="empty">مفيش ستايلات لسه. خلّص فيديو وقول «احفظه كستايل».</p>';
+
+document.getElementById('skillGrid').innerHTML = SKILLS.map(([id,name,say,what]) =>
+  `<div class="card skill"><h3>${name}</h3><p class="mut"><code>${id}</code></p><p style="font-size:14px;margin:8px 0 4px">${what}</p><p class="mut">${say}</p></div>`).join('');
+document.getElementById('featGrid').innerHTML = FEATS.map(([t,d]) => `<div class="card"><h3>${t}</h3><p class="mut">${d}</p></div>`).join('');
+document.getElementById('rules').innerHTML = list(RULES);
+</script>
+</body>
+</html>
