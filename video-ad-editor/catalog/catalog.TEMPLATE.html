@@ -101,7 +101,7 @@ li{margin:3px 0}
 <div class="grid" id="fxGrid"></div>
 
 <h2 id="styles">ستايلات المونتاج</h2>
-<p class="lead">كل ستايل باقة كاملة: الكابشن، واللغة البصرية للجرافيك، وطريقة القص، وتقسيم الشاشة، والمؤثرات. الفيديوهات دي اتعملت بيه.</p>
+<p class="lead">كل ستايل مفاهيم مش قالب: اللغة البصرية، وطريقة القص، ومنطق تقسيم الشاشة، ولغة الصوت، والكابشن. كل فيديو جديد بيطلع بعناصره هو من كلامه، بنفس الروح. الفيديوهات دي اتعملت بيه.</p>
 <div id="styleList"></div>
 
 <h2 id="skills">المهارات الست</h2>
@@ -191,14 +191,17 @@ document.getElementById('fxGrid').innerHTML = FX.map(([id,name,desc,word]) =>
 
 const LOOK = [['family','العيلة'],['inOneLine','في سطر'],['density','الكثافة'],['color','الألوان'],['shapes','الأشكال'],['lines','الخطوط'],
   ['surfaces','الأسطح'],['type','الخط'],['icons','الأيقونات'],['motion','الحركة'],['timing','التوقيت'],['placement','المكان'],['brandTie','رمز الهوية']];
+const LAYOUT = [['principle','المبدأ'],['pace','الإيقاع'],['frame','البداية والنهاية'],['captionsVsGraphics','الكابشن والجرافيك']];
+const SOUND = [['character','الطابع'],['role','دوره'],['when','امتى'],['weight','القوة'],['density','الكمية'],['sync','التوقيت'],
+  ['silence','السكوت'],['loudness','العلو'],['variety','التنويع']];
 const list = a => (a || []).map(x => `<li>${esc(x)}</li>`).join('');
+const dl = (o, keys) => keys.filter(([k]) => o[k]).map(([k,l]) => `<dt>${l}</dt><dd>${esc(o[k])}</dd>`).join('');
 document.getElementById('styleList').innerHTML = STYLES.length ? STYLES.map(s => {
-  const look = s.look || {}, lay = s.layout || {}, th = s.theme || {}, cut = s.cut || {}, sfx = s.sfx || {};
+  const look = s.look || {}, lay = s.layout || {}, th = s.theme || {}, cut = s.cut || {}, snd = s.sound || {};
   const cols = Object.entries((s.brand || {}).colors || {}).map(([k,v]) => `<span class="sw" title="${esc(k)}" style="background:${esc(v)}"></span>`).join('');
   const vids = (s.previews || []).map(p => `<figure><video src="styles/${esc(s.id)}/${esc(p.video)}" ${p.poster ? `poster="styles/${esc(s.id)}/${esc(p.poster)}"` : ''} controls playsinline preload="metadata"></video><figcaption>${esc(p.title)}</figcaption></figure>`).join('');
-  const lookDl = LOOK.filter(([k]) => look[k]).map(([k,l]) => `<dt>${l}</dt><dd>${esc(look[k])}</dd>`).join('');
-  const modes = Object.entries(lay.modes || {}).map(([k,v]) => `<li><code>${esc(k)}</code> ${esc(v)}</li>`).join('');
-  const sfxUse = Object.entries(sfx.use || {}).map(([k,v]) => `<li><code>${esc(k)}</code> ${esc(v)}</li>`).join('');
+  const lookDl = dl(look, LOOK);
+  const tools = Object.entries(lay.tools || {}).map(([k,v]) => `<li><code>${esc(k)}</code> ${esc(v)}</li>`).join('');
   return `<section class="style" id="style-${esc(s.id)}">
     <header><h3>${esc(s.name)}</h3><code>${esc(s.id)}</code><span class="tag">نسخة ${esc(s.version || 1)}</span>${s.fits ? `<span class="tag">${esc(s.fits)}</span>` : ''}</header>
     <p class="mut">${esc(s.summary)}</p>
@@ -209,8 +212,8 @@ document.getElementById('styleList').innerHTML = STYLES.length ? STYLES.map(s =>
         <h3>الكابشن</h3><p class="mut"><code>${esc(th.capStyle)}</code> · ${esc(th.font)} · إيقاع ${esc(th.pace || 'عادي')} ${cols}</p>
         <ul>${list((s.captions || {}).rules)}</ul>
         <h3 style="margin-top:14px">القص</h3><ul>${list(cut.notes)}</ul>
-        <h3 style="margin-top:14px">تقسيم الشاشة</h3><ul>${modes}</ul><p class="mut">${esc(lay.rhythm)}</p>
-        <h3 style="margin-top:14px">المؤثرات الصوتية</h3><ul>${sfxUse}</ul>
+        <h3 style="margin-top:14px">تقسيم الشاشة</h3><dl>${dl(lay, LAYOUT)}</dl>${tools ? `<p class="mut" style="margin-top:6px">الأشكال المتاحة:</p><ul>${tools}</ul>` : ''}
+        <h3 style="margin-top:14px">لغة الصوت</h3><dl>${dl(snd, SOUND)}</dl>${snd.avoid ? `<dt>ممنوع</dt><dd><ul>${list(snd.avoid)}</ul></dd>` : ''}
       </div>
     </div>
     <p class="say">استخدمه: قول لـClaude «منتج الفيديو ده بستايل ${esc(s.name)}»</p>

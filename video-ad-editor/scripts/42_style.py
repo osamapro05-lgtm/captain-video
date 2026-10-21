@@ -40,6 +40,8 @@ LOCAL = HOME / "styles"
 BRAND_KEYS = ("bg", "ink", "acc", "clay", "mut", "onAcc", "logo", "font", "handle")
 LOOK_KEYS = ("family", "inOneLine", "density", "color", "shapes", "lines", "surfaces", "type", "icons",
              "motion", "timing", "placement", "brandTie")
+LAYOUT_KEYS = ("principle", "pace", "frame", "captionsVsGraphics")
+SOUND_KEYS = ("character", "role", "when", "weight", "density", "sync", "silence", "loudness", "variety")
 COPY_FROM_WORK = ("theme.json", "cut.json", "sfx.json", "facts.md", "fixes.json", "studio.json",
                   "scenes.js", "scenes-body.js", "vw-helpers.js", "style-helpers.js")
 
@@ -155,9 +157,13 @@ def cmd_apply(a):
     for n in (s.get("cut") or {}).get("notes", []):
         print("• القص: " + n)
     lay = s.get("layout") or {}
-    if lay.get("rhythm"):
-        print("• التقسيم: " + lay["rhythm"])
-    print(f"• اللغة البصرية كاملة في look (show {s['id']}). الأمثلة في {d / 'examples'} — أمثلة، مش قالب.")
+    if lay.get("principle"):
+        print("• التقسيم: " + lay["principle"])
+    snd = s.get("sound") or {}
+    if snd.get("when"):
+        print("• الصوت: " + snd["when"])
+    print(f"• look و layout و sound مفاهيم: طبّقها على كلام الفيديو ده (show {s['id']}). "
+          f"examples في {d / 'examples'} — اتعملت مرة، متتنسخش.")
     return 0
 
 
@@ -219,14 +225,16 @@ def cmd_save(a):
         "studio": read_json(works[0] / "studio.json", {}) if works else {},
         "look": {**{k: "" for k in LOOK_KEYS}, "avoid": []},
         "cut": {"silence": "remove-all", "stumbles": "remove", "notes": []},
-        "layout": {"modes": {}, "rhythm": ""},
+        "layout": {**{k: "" for k in LAYOUT_KEYS}, "tools": {}},
         "captions": {"style": t0.get("capStyle", "card"), "rules": []},
-        "sfx": {"palette": sorted({k for w in works for k in (read_json(w / "sfx.json", {}) or {}) if k != "outro"}),
-                "use": {}},
-        "examples": {"note": "أمثلة توضّح اللغة البصرية، مش قالب.", "helpers": helpers, "seen": []},
+        "sound": {**{k: "" for k in SOUND_KEYS}, "avoid": []},
+        "examples": {"note": "حاجات اتعملت في الفيديوهات الأصلية، بتوضّح المفاهيم بس. متتنسخش.",
+                     "helpers": helpers, "seen": [], "seenLayout": [],
+                     "seenSound": [f"{k}: {v}" for w in works for k, v in (read_json(w / "sfx.json", {}) or {}).items()
+                                   if k != "outro"]},
     }
     write_json(d / "style.json", s)
-    print(f"✓ اتعمل ستايل «{name}» في {d} — كمّل summary و look و cut و layout و sfx.use في style.json")
+    print(f"✓ اتعمل ستايل «{name}» في {d} — كمّل summary و look و cut و layout و sound في style.json (مفاهيم، مش نسخ)")
     return 0
 
 
