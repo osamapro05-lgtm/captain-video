@@ -38,7 +38,7 @@ TEMPLATE = SKILL / "catalog" / "catalog.TEMPLATE.html"
 HOME = Path(os.environ.get("VAE_HOME") or (Path.home() / ".video-ad-editor"))
 LOCAL = HOME / "styles"
 BRAND_KEYS = ("bg", "ink", "acc", "clay", "mut", "onAcc", "logo", "font", "handle")
-LOOK_KEYS = ("family", "inOneLine", "density", "color", "shapes", "lines", "surfaces", "type", "icons",
+LOOK_KEYS = ("family", "inOneLine", "density", "color", "shapes", "lines", "graphics", "surfaces", "type", "icons",
              "motion", "timing", "placement", "brandTie")
 LAYOUT_KEYS = ("principle", "pace", "frame", "captionsVsGraphics")
 CAMERA_KEYS = ("principle", "moves", "handheld", "transitions", "grade")

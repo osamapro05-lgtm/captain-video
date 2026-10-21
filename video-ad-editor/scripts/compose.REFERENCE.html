@@ -52,10 +52,11 @@ function init(d){
     if(Array.isArray(st.stickers)) STICK=st.stickers;
     BEHIND_OFF=Array.isArray(st.behindOff)?st.behindOff:[];
     CAM=Array.isArray(st.cam)?st.cam:[];   /* 🎥 Captain Video: حركات الكاميرا */
+    if(st.track&&typeof st.track==='object') TRACK={...TRACK,on:true,...st.track};
     if(st.fancy&&typeof st.fancy==='object') FANCY={...FANCY,...st.fancy};
     if(st.brNeed&&typeof BR_NEED==='object'){ for(const k in st.brNeed) BR_NEED[k]=st.brNeed[k]; }
     if(Array.isArray(st.gen)) GEN=st.gen.map(g=>({...g})); if(st.genFrames) GEN_FR=st.genFrames; }
-  if(t.fancy&&typeof t.fancy==='object') FANCY={...FANCY,...t.fancy};   /* 🆕 Captain Video: capStyle 'fancy' — شوف fancyCaption */
+  if(t.fancy&&typeof t.fancy==='object') FANCY={...FANCY,...t.fancy,...((d.studio&&d.studio.fancy)||{})};   /* studio.json (المشروع) بيكسب الثيم (الستايل) */   /* 🆕 Captain Video: capStyle 'fancy' — شوف fancyCaption */
   if(t.stack&&typeof t.stack==='object') STK={...STK,...t.stack};   /* «طبقات» — theme.json ← stack:{fill,shade,accent,font,weight} */
   return Promise.all([preloadBroll(),preloadGen(),preloadStack(),fontReady()]);   /* يرجّع Promise — المحرّك ينتظر تحميل لقطات البي-رول وأقنعة «طبقات» (إن وُجدت) */
 }
@@ -185,6 +186,18 @@ function vcrop(R,sw,shh){
    shake: إيد ماسكة الكاميرا (amp بكسل) · flash: ومضة بيضا على اللحمة · whip: سحبة سريعة بضبابة اتجاهية (dir:±1)
    cx,cy = مركز الزوم (الافتراضي وجهه من behind.json أو 540,760) · rot = ميل بالدرجات. نفس التحويل بيتطبق على قناع الشخص. */
 let CAM=[];
+/* 🎯 تتبع الوش (طلب المستخدم 22 أكتوبر): studio.json ← track:{on,zoom,x,y,strength,smooth}
+   الكادر بيتحرك بنعومة ناحية راس المتكلم ويحطه قريب من (x,y)، وكل زوم بيبقى حوالين راسه. محتاج behind.json ← heads/faces
+   (11_behind_text.js faces). zoom = زوم أساسي بيدي مساحة للتحريك · strength 0..1 · smooth = نافذة التنعيم بالثواني */
+let TRACK={on:false,zoom:1.08,x:540,y:640,strength:0.85,smooth:0.8};
+const _TRC=new Map();
+function _trackHead(t){
+  if(!BEHIND||(!BEHIND.heads&&!BEHIND.faces)) return null;
+  const key=Math.round(t*30); if(_TRC.has(key)) return _TRC.get(key);
+  const fr0=Math.floor(t*30)+1, win=Math.round(TRACK.smooth*30), sg=win/2; let sx=0,sy=0,sw=0;
+  for(let d=-win; d<=win; d++){ const n=fr0+d, h=BEHIND.heads&&BEHIND.heads[n], f=BEHIND.faces&&BEHIND.faces[n]; if(!h&&!f) continue;
+    const x=f?f.x+f.w/2:(h.x0+h.x1)/2, y=f?f.y+f.h/2:h.top+110, w=Math.exp(-(d*d)/(2*sg*sg)); sx+=x*w; sy+=y*w; sw+=w; }
+  const r=sw?{x:sx/sw,y:sy/sw}:null; _TRC.set(key,r); return r; }
 function _camC(o){ if(typeof o.cx==='number') return [o.cx,o.cy]; return hookCenter(); }
 function camState(t){
   let s=1,dx=0,dy=0,rot=0,cx=540,cy=760,on=false;
@@ -197,7 +210,11 @@ function camState(t){
     else if(o.type==='whip'){ const d=o.dir||1, p=Math.sin(k*Math.PI); dx+=d*120*p; s*=1+0.25*p; }   /* زوم + إزاحة صغيرة بدون ما حافة الفريم تبان، والضبابة في camAfter */
     if(o.rot) rot+=o.rot*(o.type==='push'||o.type==='pull'?eio(k):1);
   }
-  return on?{s,dx,dy,rot,cx,cy}:null;
+  if(TRACK.on){ const h=_trackHead(t); if(h){ on=true; s*=TRACK.zoom; cx=h.x; cy=h.y; dx+=(TRACK.x-h.x)*TRACK.strength; dy+=(TRACK.y-h.y)*TRACK.strength; } }
+  if(!on) return null;
+  /* الفريم دايماً مغطي الشاشة: الإزاحة متتعداش اللي الزوم سامح بيه (من غير حواف سودا) */
+  dx=cl(dx,(W-cx)*(1-s),cx*(s-1)); dy=cl(dy,(H-cy)*(1-s),cy*(s-1));
+  return {s,dx,dy,rot,cx,cy};
 }
 function camTransform(ctx,st){ ctx.translate(st.cx+st.dx,st.cy+st.dy); ctx.rotate(st.rot*Math.PI/180); ctx.scale(st.s,st.s); ctx.translate(-st.cx,-st.cy); }
 function camApply(t){ const st=camState(t); if(!st) return false; camTransform(X,st); return true; }
@@ -321,7 +338,7 @@ function _capRest(c,t){
    ورا الشخص: 11_behind_text.js fancy <جملة:كلمات> → الكلمة الكبيرة على مستوى الراس والراس بيغطيها (قناع الشخص).
    ⛔ هوامش السوشيال: النص كله جوه المنطقة الآمنة (FANCY.safe) — فوق زرار انستقرام وتحت شريطه ويسار عمود الأزرار.
    theme.json أو studio.json ← fancy:{fs,big,safe:{top,bottom,left,right},blur,place} */
-let FANCY={fs:62,big:132,blur:12,safe:{top:250,bottom:1480,left:80,right:930},place:'auto'};
+let FANCY={fs:62,big:132,bigBehind:200,overlap:0.38,blur:12,safe:{top:250,bottom:1480,left:80,right:930},place:'auto'};
 function _fancyGroups(c){
   if(c._fg) return c._fg;
   const isNum=w=>/^[0-9٠-٩][0-9٠-٩,.%٪]*$/.test(w.t), G=[], gap=18, maxW=(FANCY.safe.right-FANCY.safe.left)-40;
@@ -357,13 +374,16 @@ function _fancyPerson(t,box){   /* الشخص فوق الكلمة: نفس قصّ
 function fancyCaption(c,t){
   const G=_fancyGroups(c), sf=FANCY.safe;
   let gi=-1; G.forEach((g,i)=>{ if(t>=g.s-0.02) gi=i; }); if(gi<0) return; const g=G[gi];
-  const out=cl((g.e-t)/0.14,0,1); if(out<=0) return;
-  const bl=(fallback)=>BEHIND&&Array.isArray(BEHIND.lines)&&BEHIND.lines.find(l=>l.style==='fancy'&&l.card===CAPS.indexOf(c)&&!BEHIND_OFF.includes(l.card)&&t>=l.s&&t<=l.e);
-  const BL=PRS_OK&&isFull(vrect(t))?bl():null, bkeys=new Set(BL?(BL.words||[]).map(w=>Number(w.s).toFixed(2)):[]);
+  const out=cl((g.e-t)/0.14,0,1);
+  /* ورا الراس مستقل عن مجموعات الكابشن: الكلمة بتفضل لحد آخر مدتها (behind.json) حتى لو المجموعة اتغيرت */
+  const BL=PRS_OK&&isFull(vrect(t))&&BEHIND&&Array.isArray(BEHIND.lines)?BEHIND.lines.find(l=>l.style==='fancy'&&l.card===CAPS.indexOf(c)&&!BEHIND_OFF.includes(l.card)&&t>=l.s&&t<=l.e):null;
+  const bkeys=new Set(BL?(BL.words||[]).map(w=>Number(w.s).toFixed(2)):[]), outB=BL?cl((BL.e-t)/0.2,0,1):0;
+  if(out<=0&&!BL) return;
   const hs=l=>l.big?Math.round(FANCY.big*1.02):Math.round(FANCY.fs*1.2);
   const hd=_fancyHead(t), R=vtarget(t), low=R.y>700&&!R.off;
-  const front=g.lines.filter(l=>!(l.big&&l.items.every(i=>bkeys.has(Number(i.s).toFixed(2)))));
-  const back=g.lines.filter(l=>!front.includes(l));
+  const isB=i=>bkeys.has(Number(i.s).toFixed(2));
+  const front=out>0?g.lines.map(l=>({...l,items:l.items.filter(i=>!isB(i))})).filter(l=>l.items.length):[];
+  const back=BL?[{big:true,items:(BL.words||[]).map(w=>({...w}))}]:[];
   const blockH=front.reduce((a,l)=>a+hs(l),0);
   /* مكان المجموعة القدّامية — ثابت طول المجموعة (من أول كلمة فيها) عشان ميرجفش مع حركة راسه */
   if(!g._cy||g._cyT!==Math.round(g.s*100)){
@@ -375,13 +395,13 @@ function fancyCaption(c,t){
     g._cy=cl(y,sf.top+blockH/2,sf.bottom-blockH/2); g._cyT=Math.round(g.s*100); }
   const cy=g._cy;
   const cxF=(sf.left+sf.right)/2;
-  const drawLine=(ln,yc,a0,cxL)=>{ const cx=cxL||cxF; X.font=(ln.big?'900 '+FANCY.big:'800 '+FANCY.fs)+'px '+FONT;
-    let fs=ln.big?FANCY.big:FANCY.fs; const maxW=sf.right-sf.left-20;
+  const drawLine=(ln,yc,a0,cxL,bigFs)=>{ const cx=cxL||cxF, BIG=bigFs||FANCY.big; X.font=(ln.big?'900 '+BIG:'800 '+FANCY.fs)+'px '+FONT;
+    let fs=ln.big?BIG:FANCY.fs; const maxW=sf.right-sf.left-20;
     const vis=ln.items.filter(i=>t>=i.s-0.02); if(!vis.length) return;   /* السطر بيتسنتر على اللي اتقال بس — بيكبر من النص زي المرجع */
-    const mw=()=>vis.reduce((a,i)=>a+X.measureText(i.t).width,0)+Math.round(18*fs/(ln.big?FANCY.big:FANCY.fs))*(vis.length-1);
+    const mw=()=>vis.reduce((a,i)=>a+X.measureText(i.t).width,0)+Math.round(18*fs/(ln.big?BIG:FANCY.fs))*(vis.length-1);
     let w=mw();   /* العرض وقت الرسم (الخط اتحمّل) — مش من التقسيم */
     if(w>maxW){ fs=Math.round(fs*maxW/w); X.font=(ln.big?'900 ':'800 ')+fs+'px '+FONT; w=mw(); }
-    let x=cx+w/2; const gap=Math.round(18*fs/(ln.big?FANCY.big:FANCY.fs));
+    let x=cx+w/2; const gap=Math.round(18*fs/(ln.big?BIG:FANCY.fs));
     for(const i of vis){ const iw=X.measureText(i.t).width; const k=cl((t-i.s)/0.22,0,1);
       if(k>0){ const a=ease(k)*a0, b=(1-ease(k))*FANCY.blur+(1-a0)*FANCY.blur;
         X.save(); X.globalAlpha=a; if(b>0.3) X.filter='blur('+b.toFixed(1)+'px)';
@@ -392,12 +412,12 @@ function fancyCaption(c,t){
       x-=iw+gap; } };
   X.save(); X.textAlign='right'; X.textBaseline='middle';
   if(back.length){   /* ورا الراس: على مستوى الراس، وبعدين الشخص فوقها */
-    const bh=back.reduce((a,l)=>a+hs(l),0), h0=_fancyHead(g.s)||hd;   /* نص الكلمة فوق الراس ونصها التاني وراه */
-    /* الراس بيغطي حوالي تلت الكلمة من تحت — الكلمة لازم تفضل مقروءة. وسطها على وسط الراس جوه الهوامش */
-    let by=cl((h0?h0.top+bh*0.2:560)-bh/2,sf.top,sf.bottom-bh), y0=by;
-    X.font='900 '+FANCY.big+'px '+FONT; const bw=Math.max(...back.map(l=>l.items.reduce((a,i)=>a+X.measureText(i.t).width,0)));
+    /* ⛔ طلب المستخدم 22 أكتوبر: الكلمة ورا الراس كبيرة وظاهرة — الراس بيغطي حتة صغيرة من تحتها بس (FANCY.overlap ≈ خُمس) */
+    const BB=FANCY.bigBehind, hb=Math.round(BB*1.02), bh=back.length*hb, h0=_fancyHead(g.s)||hd;
+    let by=cl((h0?h0.top-bh*(1-FANCY.overlap):560-bh/2),sf.top,sf.bottom-bh), y0=by;
+    X.font='900 '+BB+'px '+FONT; const bw=Math.min(sf.right-sf.left-20,Math.max(...back.map(l=>l.items.reduce((a,i)=>a+X.measureText(i.t).width,0))));
     const bcx=cl(h0?h0.cx:cxF, sf.left+bw/2+10, sf.right-bw/2-10);
-    back.forEach(l=>{ drawLine(l,y0+hs(l)/2,out,bcx); y0+=hs(l); });
+    back.forEach(l=>{ drawLine(l,y0+hb/2,outB,bcx,BB); y0+=hb; });
     _fancyPerson(t,{x:0,y:by-40,w:W,h:bh+80}); }
   let y=cy-blockH/2; front.forEach(l=>{ drawLine(l,y+hs(l)/2,out); y+=hs(l); });
   X.restore();

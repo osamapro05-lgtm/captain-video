@@ -200,6 +200,7 @@ document.getElementById('fxGrid').innerHTML = FX.map(([id,name,desc,word]) =>
   `<div class="card fx fx-${id}"><div class="phone"><div class="word"><span>${word}</span></div></div><h3 style="margin-top:10px">${name} <code>${id}</code></h3><p class="mut">${desc}</p></div>`).join('');
 
 const LOOK = [['family','العيلة'],['inOneLine','في سطر'],['density','الكثافة'],['color','الألوان'],['shapes','الأشكال'],['lines','الخطوط'],
+  ['graphics','الجرافيك'],
   ['surfaces','الأسطح'],['type','الخط'],['icons','الأيقونات'],['motion','الحركة'],['timing','التوقيت'],['placement','المكان'],['brandTie','رمز الهوية']];
 const LAYOUT = [['principle','المبدأ'],['pace','الإيقاع'],['frame','البداية والنهاية'],['captionsVsGraphics','الكابشن والجرافيك']];
 const CAMERA = [['principle','المبدأ'],['moves','الحركات'],['handheld','الإيد'],['transitions','الانتقالات'],['grade','الألوان']];
