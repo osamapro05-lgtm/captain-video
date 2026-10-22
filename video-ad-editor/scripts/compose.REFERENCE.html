@@ -57,8 +57,11 @@ function init(d){
     if(st.brNeed&&typeof BR_NEED==='object'){ for(const k in st.brNeed) BR_NEED[k]=st.brNeed[k]; }
     if(Array.isArray(st.gen)) GEN=st.gen.map(g=>({...g})); if(st.genFrames) GEN_FR=st.genFrames; }
   if(t.fancy&&typeof t.fancy==='object') FANCY={...FANCY,...t.fancy,...((d.studio&&d.studio.fancy)||{})};   /* studio.json (المشروع) بيكسب الثيم (الستايل) */   /* 🆕 Captain Video: capStyle 'fancy' — شوف fancyCaption */
+  if(t.gold&&typeof t.gold==='object') GOLD={...GOLD,...t.gold};
+  if(d.studio&&d.studio.gold&&typeof d.studio.gold==='object') GOLD={...GOLD,...d.studio.gold};   /* 🆕 Captain Video: capStyle 'gold' — شوف goldCaption */
+  if(CAPSTYLE==='gold') goldFontsLink();
   if(t.stack&&typeof t.stack==='object') STK={...STK,...t.stack};   /* «طبقات» — theme.json ← stack:{fill,shade,accent,font,weight} */
-  return Promise.all([preloadBroll(),preloadGen(),preloadStack(),fontReady()]);   /* يرجّع Promise — المحرّك ينتظر تحميل لقطات البي-رول وأقنعة «طبقات» (إن وُجدت) */
+  return Promise.all([preloadBroll(),preloadGen(),preloadStack(),fontReady(),CAPSTYLE==='gold'?goldFontsReady():0]);   /* يرجّع Promise — المحرّك ينتظر تحميل لقطات البي-رول وأقنعة «طبقات» (إن وُجدت) */
 }
 /* ⛔ 28 سبتمبر: خط الثيم لازم يكتمل **بحروفه العربية** قبل أول رسم — قوقل فونتس يقسم الخط لأجزاء، و document.fonts.load
    بلا نص عربي ينزّل الجزء اللاتيني بس؛ فأي قياس (طبقات، كشيدة، التفاف الكابشن) ينحسب بخط بديل أضيق ~20٪.
@@ -422,6 +425,74 @@ function fancyCaption(c,t){
   let y=cy-blockH/2; front.forEach(l=>{ drawLine(l,y+hs(l)/2,out); y+=hs(l); });
   X.restore();
 }
+/* ═══ 🆕 Captain Video — capStyle 'gold' (ستايل Caption + Animation 1) ═══
+   سطر أبيض صغير بيتبني كلمة كلمة في مكانه النهائي (من غير ما يتسنتر من جديد)، وتحته الكلمة المهمة (hot) كبيرة جداً وتقيلة بلون التمييز
+   (دهبي #E2C36B)، بتدخل «شبح»: باهتة ومفرودة ومضببة، وبعدين بتقعد في مكانها بنطّة صغيرة. وتحتها بيكمّل سطر أبيض صغير لازق فيها.
+   المجموعة على الصدر تحت الدقن، وبتمشي بضبابة سريعة لما المجموعة اللي بعدها تبدأ. تحتها مكان الويدجت (GOLD_box(t).bottom).
+   CAP_OFF = [[من,لحد],…] فترات من غير كابشن (المشاهد اللي بتاخد الشاشة بتكتب كلامها بنفسها).
+   ⛔ هوامش السوشيال: كله جوه GOLD.safe. theme.json أو studio.json ← gold:{fs,hero,lead,tail,gap,safe,latin,arBody,arHero,arHeroUrl,heroW} */
+let GOLD={fs:50,hero:150,lead:7,tail:4,gap:26,safe:{top:250,bottom:1480,left:80,right:930},latin:'Inter',arBody:'Cairo',arHero:'Careem',arHeroUrl:'',heroW:900};
+let CAP_OFF=[];
+function goldFontsLink(){ if(document.getElementById('goldFonts')) return; const l=document.createElement('link'); l.id='goldFonts'; l.rel='stylesheet';
+  l.href='https://fonts.googleapis.com/css2?family='+[GOLD.latin+':wght@400;500;600;800;900',GOLD.arBody+':wght@500;600;700;900'].map(x=>x.replace(/ /g,'+')).join('&family=')+'&display=swap';
+  document.head.appendChild(l); }
+/* Careem مش على جوجل: من الخطوط المتسطبة (local) أو gold.arHeroUrl. مش موجود؟ البطل العربي بـCairo Black */
+function goldFontsReady(){ const l=document.getElementById('goldFonts');
+  const sheet=(l&&!l.sheet)?new Promise(r=>{l.addEventListener('load',r);l.addEventListener('error',r);}):Promise.resolve();
+  const src=["local('"+GOLD.arHero+" Bold')","local('"+GOLD.arHero+"-Bold')","local('"+GOLD.arHero+"')"].concat(GOLD.arHeroUrl?["url('"+GOLD.arHeroUrl+"')"]:[]).join(',');
+  const hero=new FontFace(GOLD.arHero,src,{weight:'700'}).load().then(f=>document.fonts.add(f)).catch(()=>{ console.error('⚠️ خط '+GOLD.arHero+' مش متسطب — البطل العربي بـ'+GOLD.arBody+' Black'); GOLD.arHero=GOLD.arBody; });
+  const go=()=>Promise.all(['400 50px "'+GOLD.latin+'"','900 50px "'+GOLD.latin+'"','600 50px "'+GOLD.arBody+'"','900 50px "'+GOLD.arBody+'"'].map(x=>document.fonts.load(x,'Aa 123 عربي'))).catch(()=>0);
+  return Promise.race([Promise.all([sheet.then(go),hero]),new Promise(r=>setTimeout(r,10000))]); }
+const _GAR=/[؀-ۿ]/;
+/* البطل: Inter Black للإنجليزي، Careem Bold للعربي. السطر الأبيض: Inter 400 للإنجليزي، Cairo SemiBold للعربي */
+const goldFont=(s,size,hero)=>_GAR.test(s)?(hero?(GOLD.arHero===GOLD.arBody?'900 ':'700 ')+Math.round(size*0.86)+'px "'+GOLD.arHero+'","'+GOLD.arBody+'"':'600 '+Math.round(size*1.05)+'px "'+GOLD.arBody+'"')
+  :(hero?GOLD.heroW+' '+size+'px "'+GOLD.latin+'"':'400 '+size+'px "'+GOLD.latin+'"');
+const _gSpring=k=>{ k=cl(k,0,1); const s=1.6; return 1+(s+1)*Math.pow(k-1,3)+s*Math.pow(k-1,2); };   /* نطّة صغيرة (~6٪) وبعدين ثبات */
+function _goldBlocks(c){
+  if(c._gb) return c._gb; const B=[]; let cur=null;
+  const open=()=>{ cur={lead:[],hero:[],tail:[]}; B.push(cur); };
+  c.w.forEach((w,i)=>{ const p=/[،,.؟?!:;]$/.test(w.t);
+    if(w.hot){ if(!cur||cur.closed||cur.tail.length||(cur.hero.length&&!c.w[i-1].hot)) open(); cur.hero.push(w); }
+    else { if(!cur||cur.closed||(cur.hero.length&&cur.tail.length>=GOLD.tail)||(!cur.hero.length&&cur.lead.length>=GOLD.lead)) open();
+      (cur.hero.length?cur.tail:cur.lead).push(w); }
+    if(p) cur.closed=true; });
+  B.forEach((b,i)=>{ const first=x=>[...x.lead,...x.hero,...x.tail][0]; b.s=first(b).s; b.e=i+1<B.length?first(B[i+1]).s:c.e; });
+  return (c._gb=B); }
+/* شكل المجموعة النهائي: ثابت من أول كلمة فيها، تحت الدقن */
+function _goldGeo(c,b){
+  if(b._geo) return b._geo; const sf=GOLD.safe, maxW=sf.right-sf.left-30, cx=(sf.left+sf.right)/2;
+  X.save(); const lines=[];
+  const wrap=(ws,hero)=>{ let ln=null; const size=hero?GOLD.hero:GOLD.fs; ws.forEach(w=>{ X.font=goldFont(w.t,size,hero); const ww=X.measureText(w.t).width, sp=(hero?0.22:0.28)*size;
+      if(!ln||(!hero&&ln.w+sp+ww>maxW)){ ln={hero,items:[],w:0}; lines.push(ln); } ln.items.push({...w,w:ww}); ln.w+=(ln.items.length>1?sp:0)+ww; }); };
+  wrap(b.lead,false); wrap(b.hero,true); wrap(b.tail,false); X.restore();
+  const lh=l=>l.hero?GOLD.hero*0.92:GOLD.fs*1.22; const H=lines.reduce((a,l)=>a+lh(l),0);
+  const h0=_fancyHead(b.s); let top=(h0?h0.chin+GOLD.gap:930); const R=vtarget(b.s); if(R.y>700&&!R.off) top=R.y-60-H;
+  top=cl(top,sf.top,sf.bottom-H-140);
+  let y=top; lines.forEach(l=>{ l.y=y+lh(l)/2; y+=lh(l); l.scale=Math.min(1,maxW/Math.max(1,l.w)); });
+  return (b._geo={lines,top,bottom:y,cx}); }
+/* للمشاهد: شكل المجموعة الظاهرة دلوقتي (الويدجت بتقعد تحت .bottom) */
+function GOLD_box(t){ const c=CAPS.find(c=>t>=c.s&&t<c.e); if(!c) return null; const b=_goldBlocks(c).filter(b=>t>=b.s-0.02).pop(); return b?_goldGeo(c,b):null; }
+function goldCaption(c,t){
+  if(CAP_OFF.some(r=>t>=r[0]&&t<r[1])) return;
+  const b=_goldBlocks(c).filter(b=>t>=b.s-0.02).pop(); if(!b) return;
+  const g=_goldGeo(c,b), out=cl((b.e-t)/0.16,0,1); if(out<=0) return;
+  X.save(); X.textBaseline='middle';
+  g.lines.forEach(l=>{ const rtl=_GAR.test(l.items.map(i=>i.t).join(' ')), size=l.hero?GOLD.hero:GOLD.fs, sp=(l.hero?0.22:0.28)*size;
+    X.save(); X.translate(g.cx,l.y); X.scale(l.scale,l.scale); X.translate(-g.cx,-l.y);
+    let x=rtl?g.cx+l.w/2:g.cx-l.w/2;
+    l.items.forEach(i=>{ const k=cl((t-i.s+0.03)/(l.hero?0.42:0.16),0,1), mid=rtl?x-i.w/2:x+i.w/2;
+      if(k>0){ X.save(); X.font=goldFont(i.t,size,l.hero); X.textAlign='center'; X.direction=rtl?'rtl':'ltr';
+        let a=ease(k)*out; const blur=(1-ease(k))*(l.hero?7:4)+(1-out)*8, dy=l.hero?0:(1-ease(k))*8;
+        if(l.hero){ /* شبح بيقعد: الإنجليزي حروفه مفرودة وبتتلم، والعربي (مينفعش يتفرد) بيصغر من 1.14 */
+          const ar=_GAR.test(i.t), sc=ar?(1.14-0.14*_gSpring(k)):(0.94+0.06*_gSpring(k)); a=(0.3+0.7*ease(k))*out;
+          if(!ar) X.letterSpacing=((1-ease(k))*0.28*size).toFixed(1)+'px';
+          X.translate(mid,l.y); X.scale(sc,sc); X.translate(-mid,-l.y); }
+        X.globalAlpha=a; if(blur>0.3) X.filter='blur('+blur.toFixed(1)+'px)';
+        X.shadowColor='rgba(0,0,0,0.38)'; X.shadowBlur=l.hero?16:10; X.shadowOffsetY=2;
+        X.fillStyle=l.hero?ACC:'#FFFFFF'; X.fillText(i.t,mid,l.y+dy); X.restore(); }
+      x+=(rtl?-1:1)*(i.w+sp); });
+    X.restore(); });
+  X.restore(); }
 function caption(t){
   if(SCENES.some(sc=>sc.nocap&&t>=sc.s&&t<sc.e)) return;   /* {s,e,m,nocap:true}: مشهد بلا كابشن — لما اللوحة فوق فيها النص نفسه (قرار المستخدم 8 سبتمبر) */
   /* لا تكرّر: لو الكلام يمرّ ورا الشخص بهاللحظة، كرت الكابشن يختفي */
@@ -429,6 +500,7 @@ function caption(t){
   if(collageActive(t)) return;   /* الكولاج يرسم كلماته قصاصات */
   let c=CAPS.find(c=>t>=c.s&&t<c.e); if(!c)return;
   if(CAPSTYLE==='fancy'){ fancyCaption(c,t); return; }
+  if(CAPSTYLE==='gold'){ goldCaption(c,t); return; }
   c=_capRest(c,t); if(!c) return;   /* 6.0: الكلمات اللي طلعت ورا الشخص/«طبقات» ما تنعاد بالكابشن */
   const lt=t-c.s,rt=c.e-t;let a=1,dy=0,sc=1;   /* capStill: الدخول والطلعة بالشفافية بس — بلا صعود ولا تكبير */
   if(lt<0.2){const k=lt/0.2;a=ease(k);if(!CAP_STILL){dy=(1-ease(k))*28;sc=0.93+0.07*back(k);}}

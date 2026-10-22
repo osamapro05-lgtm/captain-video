@@ -1,0 +1,31 @@
+{
+  "font": "Cairo",
+  "capStyle": "gold",
+  "grade": false,
+  "badgeUntil": 0,
+  "bar": false,
+  "faceAnchor": 0.3,
+  "gold": {
+    "fs": 50,
+    "hero": 150,
+    "lead": 7,
+    "tail": 4,
+    "gap": 26,
+    "safe": {
+      "top": 250,
+      "bottom": 1480,
+      "left": 80,
+      "right": 930
+    },
+    "latin": "Inter",
+    "arBody": "Cairo",
+    "arHero": "Careem",
+    "heroW": 900
+  },
+  "bg": "#0D0D13",
+  "ink": "#FFFFFF",
+  "acc": "#E2C36B",
+  "clay": "#B89A4A",
+  "mut": "#ABABAB",
+  "onAcc": "#1E1A10"
+}
