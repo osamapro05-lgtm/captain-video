@@ -8,6 +8,18 @@ const W=path.resolve(process.argv[2])+path.sep;
 const CFG=JSON.parse(fs.readFileSync(W+'sfx.json','utf8'));       // فيه outro
 const THEME=fs.existsSync(W+'theme.json')?JSON.parse(fs.readFileSync(W+'theme.json','utf8')):{};
 const BEHIND=fs.existsSync(W+'behind.json')?JSON.parse(fs.readFileSync(W+'behind.json','utf8')):null;  // الكلام ورا الشخص
+/* 🧩 طبقات HyperFrames (references/hyperframes.md): hf.json = [{frames:"hf/<id>/frames", start, fps?, z?, x?,y?,w?,h?, o?, hold?}]
+   (أو {layers:[…]}) — كل طبقة مجلد PNG شفاف frame_000001.png… يبدأ عند start (ثواني من أول الريل) */
+const HF=(()=>{ if(!fs.existsSync(W+'hf.json')) return [];
+  const j=JSON.parse(fs.readFileSync(W+'hf.json','utf8')), L=Array.isArray(j)?j:(j.layers||[]);
+  return L.map((l,i)=>{ const dir=path.resolve(W,l.frames||'');
+    const files=fs.existsSync(dir)?fs.readdirSync(dir).filter(f=>/\.png$/i.test(f)).sort():[];
+    if(!files.length) console.log('⚠️ HyperFrames: طبقة '+(l.id||i)+' بلا فريمات بـ'+dir+' — بتتخطّى');
+    else console.log('🧩 HyperFrames: '+(l.id||i)+' · '+files.length+' فريم من '+Number(l.start||0)+'ث · '+(l.z||'under-captions'));
+    return {...l,start:Number(l.start||0),fps:Number(l.fps||30),dir,files}; }).filter(l=>l.files.length); })();
+const hfAt=t=>HF.map(l=>{ let k=Math.round((t-l.start)*l.fps);
+    if(k<0) return null; if(k>=l.files.length){ if(!l.hold) return null; k=l.files.length-1; }
+    return {z:l.z,x:l.x,y:l.y,w:l.w,h:l.h,o:l.o,src:fileURL(path.join(l.dir,l.files[k]))}; }).filter(Boolean);
 const HASCOVER=fs.existsSync(W+'cover');   // خلفية باهتة: cover/NNNNN.png لكل فريم (يبنيها 14_backdrop.py) — اختيارية
 /* 6.0: sfx.json بلا "outro" كان يطلّع المدة NaN و«0 فريم من NaN» ويخرج نجاح بصمت — الافتراضي 0 (بلا كرت ختام) */
 const OUT_D=(CFG.outro===undefined||CFG.outro===null)?0:Number(CFG.outro), FPS=30;
@@ -81,6 +93,7 @@ async function movesInject(p){ if(await p.evaluate(()=>!!(window.FX&&window.MV))
   }
   const STUDIO=fs.existsSync(W+'studio.json')?JSON.parse(fs.readFileSync(W+'studio.json','utf8')):null;   // 📱 تعديلات استوديو الجوال
   await p.evaluate((c,o,t,b,st)=>window.init({cards:c.cards,total:c.total,outro:o,theme:t,behind:b,studio:st}),caps,OUT_D,THEME,BEHIND,STUDIO);
+  if(HF.length) await p.addScriptTag({path:path.join(__dirname,'hf-layer.js')});   /* 🧩 بعد init: يلفّ window.draw ويضيف نفسه لـAFTER_PERSON */
   /* ⚠️ انتظار الخط لازم يجي **بعد** init: الخط اللي مو Cairo يُحقن داخل init نفسها،
      فانتظاره قبلها = انتظار لا شي، والنتيجة أول الفيديو بخط بديل ثم ينقلب بالنص.
      وكل الأوزان تُحمّل — الوزن 600 كان ناقصاً فيطلع بخط بديل لحاله. */
@@ -106,6 +119,7 @@ async function movesInject(p){ if(await p.evaluate(()=>!!(window.FX&&window.MV))
       const ok=inR&&fs.existsSync(pf);
       await p.evaluate((s,f)=>window.setPerson(s,f), ok?fileURL(pf):null, (BEHIND.faces&&BEHIND.faces[i])||null);
     }
+    if(HF.length) await p.evaluate(l=>window.HFL.set(l),hfAt(t));
     if(HASCOVER){const cf=W+'cover/'+id+'.png';await p.evaluate(s=>window.setCover?window.setCover(s):0, fs.existsSync(cf)?('file://'+cf):null);}
     /* 62–73: MV.frameAt/personAt (فريم بوقت ثاني) يحمّل أول ما ينطلب — ننتظره ونعيد الرسم عشان اللقطة ما تطلع بالبديل */
     const d=await p.evaluate(async(t,q)=>{window.draw(t);if(window.MV&&MV.pending&&MV.pending()){await MV.settle();window.draw(t);}return window.shot(q);},t,q);
@@ -126,6 +140,7 @@ async function movesInject(p){ if(await p.evaluate(()=>!!(window.FX&&window.MV))
       for(const f of fs.readdirSync(W).sort()) if(/\.(html|js|json)$/.test(f)&&!['shots.json','sfx.json','fixes.json','a.json','words.json','safe.json'].includes(f)) h.update(f).update(fs.readFileSync(W+f));
       const ext=(fs.readFileSync(W+'compose.html','utf8').match(/src="(\.\.\/[^"]+\.js)"/g)||[]).map(m=>m.slice(5,-1));
       for(const e of ext){ try{ h.update(e).update(fs.readFileSync(W+e)); }catch(_){} }
+      for(const l of HF) h.update(l.dir+'|'+l.files.length+'|'+fs.statSync(path.join(l.dir,l.files[0])).mtimeMs);   /* 🧩 إعادة رندر HyperFrames = تصميم جديد */
       return h.digest('hex'); })();
     let fpOld=''; try{ fpOld=fs.readFileSync(FPF,'utf8').trim(); }catch(_){}
     if(mode==='all'){
