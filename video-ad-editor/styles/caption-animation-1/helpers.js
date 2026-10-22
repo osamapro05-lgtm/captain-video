@@ -20,6 +20,25 @@ GA.pop=(t,s,e,d)=>{d=d||0.38;const kin=cl((t-s)/d,0,1),kout=e?cl((e-t)/0.2,0,1):
   return {a:Math.min(ease(kin),ease(kout)),b:(1-ease(kin))*6+(1-ease(kout))*8,sc:(0.86+0.14*GA.spring(kin))*(1-(1-ease(kout))*0.06)};};
 GA.begin=(v,cx,cy)=>{X.save();X.globalAlpha*=v.a;if(v.b>0.3)X.filter='blur('+v.b.toFixed(1)+'px)';X.translate(cx,cy);X.scale(v.sc,v.sc);X.translate(-cx,-cy);};
 GA.end=()=>X.restore();
+/* ═══ جدول الويدجت: كل ويدجت تاخد وقتها، ومن غير ما تبوّظ اللي بعدها (طلب المستخدم 23 أكتوبر) ═══
+   GA.add({s,e,last,h,draw:(t,y)=>…}) — s ظهورها، e آخر جملتها، last آخر عنصر بيطلع جواها، h طولها.
+   مدة الثبات: بتفضل لحد last+GA.HOLD على الأقل (وقت كفاية تتشاف)، ولحد e+GA.EXTRA بالكتير،
+   وبتمشي قبل الويدجت اللي بعدها أو مشهد الشاشة الكاملة بـGA.GAP. مكانها تحت كل كابشن هيظهر وهي موجودة
+   (ثابت، مش بيقفز)؛ لو مفيش مكان تحت هامش السوشيال، بتمشي قبل الكابشن اللي هيزاحمها.
+   noGap:1 = بتفضل لحد اللي بعدها بالظبط من غير خروج (زي الشريط اللي بيكبر للكارت الدهبي).
+   GA.setup=()=>{…} بيتنادى مرة قبل أول فريم (سجّل فيه الويدجت والمشاهد)، وSCENE_LIST.push(['gaRun',GA.run]). */
+GA.HOLD=1.6; GA.EXTRA=1.6; GA.GAP=0.15; GA.WID=[]; GA.TAKE=[];
+GA.add=sp=>{GA.WID.push(sp);return sp;};
+GA.take=(s,e)=>{GA.TAKE.push([s,e]);CAP_OFF.push([s,e]);};
+GA._bottom=(a,b)=>{let m=0;for(let t=a;t<=b;t+=0.05){const g=typeof GOLD_box==='function'?GOLD_box(t):null;if(g)m=Math.max(m,g.bottom);}return m;};
+GA.plan=()=>{const W2=GA.WID.sort((a,b)=>a.s-b.s),bot=typeof GOLD!=='undefined'?GOLD.safe.bottom:1480;
+  W2.forEach((sp,i)=>{const last=sp.last!==undefined?sp.last:sp.s,next=[...(W2[i+1]?[W2[i+1].s]:[]),...GA.TAKE.map(r=>r[0]).filter(x=>x>sp.s+0.05)];
+    let end=Math.min(Math.max(sp.e,last+GA.HOLD),sp.e+GA.EXTRA);next.forEach(n=>{end=Math.min(end,n-(sp.noGap?0:GA.GAP));});end=Math.max(end,Math.min(sp.e,last+0.6));
+    let y=GA._bottom(sp.s,end)+34;
+    if(y+sp.h>bot){let t=sp.s;for(;t<=end;t+=0.05){if(GA._bottom(sp.s,t)+34+sp.h>bot)break;}end=Math.max(Math.min(end,t-0.1),last+0.6);y=Math.min(GA._bottom(sp.s,end)+34,bot-sp.h);}
+    sp._end=end;sp._y=y;});};
+GA.run=t=>{if(!GA._ok){GA._ok=1;if(GA.setup)GA.setup();GA.plan();}
+  GA.WID.forEach(sp=>{if(t<sp.s||t>=sp._end)return;const v=GA.pop(t,sp.s,sp.noGap?0:sp._end,sp.pop);GA.begin(v,GA.cx(),sp._y+sp.h/2);sp.draw(t,sp._y);GA.end();});};
 /* نص صغير — الاتجاه من الكلام نفسه */
 GA.text=(s,x,y,w,size,color,al)=>{X.save();X.font=GA.F(w,size,s);X.fillStyle=color||'#FFFFFF';X.textAlign=al||'center';X.textBaseline='middle';X.direction=GA.AR(s)?'rtl':'ltr';X.fillText(String(s),x,y);X.restore();};
 /* أرقام إنجليزي بفاصلة الآلاف */
