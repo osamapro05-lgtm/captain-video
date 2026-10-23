@@ -19,7 +19,7 @@ const HF=(()=>{ if(!fs.existsSync(W+'hf.json')) return [];
     return {...l,start:Number(l.start||0),fps:Number(l.fps||30),dir,files}; }).filter(l=>l.files.length); })();
 const hfAt=t=>HF.map(l=>{ let k=Math.round((t-l.start)*l.fps);
     if(k<0) return null; if(k>=l.files.length){ if(!l.hold) return null; k=l.files.length-1; }
-    return {z:l.z,x:l.x,y:l.y,w:l.w,h:l.h,o:l.o,src:fileURL(path.join(l.dir,l.files[k]))}; }).filter(Boolean);
+    return {id:l.id,z:l.z,x:l.x,y:l.y,w:l.w,h:l.h,o:l.o,src:fileURL(path.join(l.dir,l.files[k]))}; }).filter(Boolean);
 const HASCOVER=fs.existsSync(W+'cover');   // خلفية باهتة: cover/NNNNN.png لكل فريم (يبنيها 14_backdrop.py) — اختيارية
 /* 6.0: sfx.json بلا "outro" كان يطلّع المدة NaN و«0 فريم من NaN» ويخرج نجاح بصمت — الافتراضي 0 (بلا كرت ختام) */
 const OUT_D=(CFG.outro===undefined||CFG.outro===null)?0:Number(CFG.outro), FPS=30;
