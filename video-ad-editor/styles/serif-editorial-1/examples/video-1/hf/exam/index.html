@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "AmiriBI"; src: url("assets/fonts/Amiri-BoldItalic.ttf"); font-weight: 700; font-style: italic; }
+      @font-face { font-family: "Cairo"; src: url("assets/fonts/Cairo-VF.ttf"); font-weight: 200 1000; }
+      :root { --paper: #EFE4D2; --ink: #2A2422; --acc: #E9A23B; --red: #9E2A1E; --cream: #FAF4EB; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root { position: relative; width: 1080px; height: 1920px; }
+      #scene { position: absolute; inset: 0; overflow: hidden; perspective: 1800px; }
+      #bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 55% at 50% 46%, #F7EEE1 0%, var(--paper) 55%, #DCCBB2 100%); }
+      .bok { position: absolute; border-radius: 50%; }
+      #lead { position: absolute; top: 300px; left: 0; right: 0; text-align: center; font: 600 50px "Cairo"; color: var(--ink); }
+      #lead span { display: inline-block; margin: 0 8px; opacity: 0; }
+      #big { position: absolute; top: 400px; left: -100px; right: -100px; text-align: center; font: italic 700 270px/1 "AmiriBI"; color: var(--acc); opacity: 0.5; white-space: nowrap; }
+      #big span { display: inline-block; opacity: 0; }
+      .card { position: absolute; border-radius: 36px; overflow: hidden; box-shadow: 0 40px 80px rgba(60,35,15,0.35), 0 8px 18px rgba(60,35,15,0.2); }
+      .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      #c1 { left: 240px; top: 650px; width: 600px; height: 720px; }
+      #c2 { left: -10px; top: 760px; width: 400px; height: 500px; }
+      #c3 { left: 690px; top: 760px; width: 400px; height: 500px; }
+      .tag { position: absolute; top: 1400px; display: flex; align-items: center; gap: 18px; padding: 22px 34px 22px 30px; border-radius: 30px; background: rgba(250,244,235,0.94); box-shadow: 0 26px 50px rgba(60,35,15,0.28); opacity: 0; }
+      .tag b { font: italic 700 58px/1 "AmiriBI"; color: var(--red); white-space: nowrap; }
+      #t1 { right: 560px; }
+      #t2 { left: 560px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5.1" data-width="1080" data-height="1920">
+      <div id="scene" class="clip" data-start="0" data-duration="5.1" data-track-index="0" data-layout-allow-overflow data-layout-allow-overlap>
+        <div id="bg"></div>
+        <div class="bok" id="b1" style="left:-120px;top:180px;width:520px;height:520px;background:#E9C79A;filter:blur(70px);opacity:.55"></div>
+        <div class="bok" id="b2" style="left:640px;top:1300px;width:560px;height:560px;background:#D9A97A;filter:blur(80px);opacity:.45"></div>
+        <div class="bok" id="b3" style="left:700px;top:240px;width:300px;height:300px;background:#F3D9B4;filter:blur(50px);opacity:.6"></div>
+        <div id="lead"><span>القط</span><span>يتكشف</span><span>عليه</span><span>بشكل</span><span>كامل</span></div>
+        <div id="big"><span id="w1">كشف</span> <span id="w2">كامل</span></div>
+        <div class="card" id="c2"><img src="assets/cat2.jpg" alt="" /></div>
+        <div class="card" id="c3"><img src="assets/cat3.jpg" alt="" /></div>
+        <div class="card" id="c1"><img src="assets/cat1.jpg" alt="" /></div>
+        <div class="tag" id="t1">
+          <svg width="44" height="96" viewBox="0 0 44 96"><defs><linearGradient id="mg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#C0392B"/><stop offset="1" stop-color="#E9A23B"/></linearGradient></defs>
+            <rect x="12" y="4" width="20" height="66" rx="10" fill="#fff" stroke="#9E2A1E" stroke-width="3"/><circle cx="22" cy="78" r="15" fill="url(#mg)" stroke="#9E2A1E" stroke-width="3"/>
+            <rect id="merc" x="17" y="22" width="10" height="56" rx="5" fill="url(#mg)"/></svg>
+          <b>درجة الحرارة</b>
+        </div>
+        <div class="tag" id="t2">
+          <svg width="120" height="70" viewBox="0 0 120 70"><path id="ecg" d="M2 38 H30 L40 38 L48 10 L58 62 L66 26 L72 38 H118" fill="none" stroke="#9E2A1E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="200" stroke-dashoffset="200"/></svg>
+          <b>ضربات القلب</b>
+        </div>
+        <div class="bok" id="f1" style="left:-160px;top:1500px;width:380px;height:380px;background:#C9945F;filter:blur(46px);opacity:.5"></div>
+        <div class="bok" id="f2" style="left:900px;top:420px;width:260px;height:260px;background:#E8B97F;filter:blur(40px);opacity:.45"></div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const D = 5.1;
+      // دخول المشهد: ضبابة وتكبير خفيف، وخروج بضبابة وتكبير (بيكشف الفيديو تحته)
+      tl.fromTo("#scene", { opacity: 0, scale: 1.05, filter: "blur(12px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.32, ease: "power3.out" }, 0);
+      tl.to("#scene", { opacity: 0, scale: 1.06, filter: "blur(14px)", duration: 0.26, ease: "power2.in" }, D - 0.27);
+      // عمق: الخلفية بتتحرك أبطأ، والقدام أسرع (parallax)
+      tl.fromTo(["#b1", "#b3"], { y: 40 }, { y: -40, duration: D, ease: "none" }, 0);
+      tl.fromTo("#b2", { y: 60 }, { y: -60, duration: D, ease: "none" }, 0);
+      tl.fromTo(["#f1", "#f2"], { y: 160, x: 20 }, { y: -160, x: -20, duration: D, ease: "none" }, 0);
+      // السطر الصغير كلمة كلمة على الصوت
+      [0.05, 0.41, 0.93, 1.23, 1.69].forEach((at, i) =>
+        tl.fromTo(`#lead span:nth-child(${i + 1})`, { opacity: 0, y: 10, filter: "blur(6px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, at));
+      // الكلمة الضخمة الشفافة ورا الصورة: كل كلمة على نطقها، ومعاها انجراف بطيء
+      tl.fromTo("#w1", { opacity: 0, scale: 1.25, filter: "blur(18px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.55, ease: "back.out(1.6)" }, 0.41);
+      tl.fromTo("#w2", { opacity: 0, scale: 1.25, filter: "blur(18px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.55, ease: "back.out(1.6)" }, 1.69);
+      tl.fromTo("#big", { x: -20 }, { x: 20, duration: D, ease: "none" }, 0);
+      // الكروت: الورا مضببة وبعيدة، والأساسي جاي من العمق ويقعد حاد، والكاميرا بتقرب ببطء
+      tl.fromTo("#c2", { x: -260, rotationY: 34, z: -500, filter: "blur(16px)", opacity: 0 }, { x: 0, rotationY: 26, z: -340, filter: "blur(9px)", opacity: 0.9, duration: 0.7, ease: "power3.out" }, 0.08);
+      tl.fromTo("#c3", { x: 260, rotationY: -34, z: -500, filter: "blur(16px)", opacity: 0 }, { x: 0, rotationY: -26, z: -340, filter: "blur(9px)", opacity: 0.9, duration: 0.7, ease: "power3.out" }, 0.14);
+      tl.fromTo("#c1", { z: -700, rotationY: -14, rotationX: 6, filter: "blur(20px)", opacity: 0 }, { z: 0, rotationY: -6, rotationX: 3, filter: "blur(0px)", opacity: 1, duration: 0.7, ease: "back.out(1.3)" }, 0.12);
+      tl.to("#c1", { z: 90, rotationY: 4, duration: D - 0.9, ease: "sine.inOut" }, 0.85);
+      tl.to(["#c2", "#c3"], { z: -280, duration: D - 0.9, ease: "sine.inOut" }, 0.85);
+      // التسميات جاية من قدام الكاميرا (كبيرة ومضببة) وبتقعد حادة
+      const fly = (sel, at) => tl.fromTo(sel, { opacity: 0, scale: 1.7, y: 140, filter: "blur(18px)" }, { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 0.48, ease: "back.out(1.4)" }, at);
+      fly("#t1", 2.97); tl.fromTo("#merc", { attr: { y: 70, height: 8 } }, { attr: { y: 22, height: 56 }, duration: 0.9, ease: "power2.out" }, 3.15);
+      fly("#t2", 3.95); tl.to("#ecg", { strokeDashoffset: 0, duration: 0.5, ease: "power1.inOut" }, 4.1);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

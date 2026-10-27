@@ -24,7 +24,8 @@ const SC=path.dirname(path.resolve(process.argv[1]))+path.sep;
 const caps=JSON.parse(fs.readFileSync(W+'caps.json','utf8'));
 const FPS=30, MAXW=4, MINDUR=0.85;
 /* Captain Video: قصّ الشخص على ويندوز ولينكس بـpersonmask.py (MediaPipe) — نفس الأقنعة ونفس meta.json زي نسخة الماك */
-const PY=process.platform==='win32'?'python':'python3';
+/* ويندوز: «python» ممكن يبقى اختصار متجر مايكروسوفت الفاضي، فبنجرب py الأول */
+const PY=process.platform!=='win32'?'python3':(['py','python'].find(c=>{ try{ return cp.spawnSync(c,['-c','1'],{stdio:'ignore'}).status===0; }catch(e){ return false; } })||'python');
 function maskCmd(bin){
   if(process.platform!=='darwin') return PY+' '+JSON.stringify(SC+'personmask.py');
   if(!fs.existsSync(bin)){
@@ -56,14 +57,14 @@ if(MODE==='drop'){
   process.exit(0);
 }
 
-/* ── ماك فقط (مضاف): القصّ يعتمد على Vision عبر swiftc ── */
+/* ── القصّ: ماك بـVision (swiftc)، وويندوز ولينكس بـpersonmask.py (MediaPipe) ── */
 if(['build','stack','cutout','headout','person'].indexOf(MODE)>=0){
   let hasSwift=false;
-  if(process.platform==='darwin'){
-    try{ hasSwift = cp.spawnSync('swiftc',['--version'],{stdio:'ignore'}).status===0; }catch(e){ hasSwift=false; }
-  }
+  try{ hasSwift = process.platform==='darwin'
+    ? cp.spawnSync('swiftc',['--version'],{stdio:'ignore'}).status===0
+    : cp.spawnSync(PY,['-c','import mediapipe,PIL,numpy'],{stdio:'ignore'}).status===0; }catch(e){ hasSwift=false; }
   if(!hasSwift){
-    console.log('⛔ «الكلام ورا الشخص» يحتاج ماك + swiftc — نظامك: '+process.platform);
+    console.log(process.platform==='darwin'?'⛔ «الكلام ورا الشخص» يحتاج swiftc (xcode-select --install)':'⛔ «الكلام ورا الشخص» يحتاج: '+PY+' -m pip install mediapipe pillow numpy');
     console.log('   بقية السكل يشتغل عادي: الكابشن والموشن قرافكس والمؤثرات والختام.');
     process.exit(20);
   }

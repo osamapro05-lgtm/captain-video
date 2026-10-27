@@ -1,0 +1,5 @@
+[
+  { "id": "exam", "frames": "hf/exam/frames", "start": 8.29, "z": "under-captions" },
+  { "id": "bad", "frames": "hf/bad/frames", "start": 14.66, "z": "manual" },
+  { "id": "organs", "frames": "hf/organs/frames", "start": 18.19, "z": "under-captions" }
+]

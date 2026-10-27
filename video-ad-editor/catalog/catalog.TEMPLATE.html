@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Captain Video</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;800&family=Alexandria:wght@800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;800&family=Alexandria:wght@800;900&family=Amiri:ital,wght@1,700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f5f4ef;--card:#fff;--ink:#1c1c1a;--mut:#6a6963;--line:#e3e1d9;--acc:#b8860b;--chip:#efede6;
   --vbg:#081C44;--vink:#fff;--vacc:#F4C025;--vface:#4d5566;--vbody:#3d4555;--vroom:#2a3142}
@@ -56,6 +56,12 @@ code{font-family:ui-monospace,Consolas,monospace;font-size:12px;background:var(-
 .s-gold .w.hot.seen{letter-spacing:0;opacity:1;filter:none}
 .s-gold .wid{position:absolute;left:18%;right:18%;top:76%;height:22px;border-radius:12px;background:rgba(13,13,19,.86);border:1px solid rgba(255,255,255,.14);color:#E2C36B;font:800 12px Inter,sans-serif;display:flex;align-items:center;justify-content:center;gap:3px;transform:scale(.86);opacity:0;transition:transform .38s cubic-bezier(.34,1.56,.64,1),opacity .2s}
 .s-gold .wid.on{transform:scale(1);opacity:1}
+.s-serif .cap{bottom:auto;top:50%;font-size:12px;font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.5);font-family:Cairo,Tahoma,sans-serif;line-height:1.2}
+.s-serif .w{opacity:0;filter:blur(3px);transition:opacity .16s,filter .16s}
+.s-serif .w.seen{opacity:1;filter:none}
+.s-serif .w.hot{display:block;font:italic 700 38px Amiri,serif;color:#E9A23B;text-shadow:0 0 14px rgba(233,162,59,.55);line-height:1.15;transform:scale(.94);transition:opacity .45s,filter .45s,transform .45s cubic-bezier(.34,1.56,.64,1)}
+.s-serif .w.hot.seen{transform:none}
+.s-serif .w.wb{background:#fff;color:#2A2422;padding:0 3px;text-shadow:none}
 .s-type .cur{display:inline-block;width:3px;height:1.1em;background:var(--vacc);vertical-align:middle;animation:blink .7s steps(1) infinite}
 .still .w{transform:none!important}
 .pop{transform:translateY(-3px) scale(1.06)}
@@ -138,7 +144,8 @@ const CAPS = [
   ['bar','شريط','شريط بلون التمييز ورا الكلمة'],
   ['type','آلة كاتبة','بيتكتب قدامك ومعاه مؤشر'],
   ['fancy','فانسي','سطر أبيض والكلمة المهمة صفرا ضخمة، بضبابة، وممكن ورا الراس'],
-  ['gold','دهبي','سطر أبيض بيتبني، والكلمة المهمة دهبي ضخمة بتدخل شبح وتقعد بنطّة، وتحتها ويدجت']
+  ['gold','دهبي','سطر أبيض بيتبني، والكلمة المهمة دهبي ضخمة بتدخل شبح وتقعد بنطّة، وتحتها ويدجت'],
+  ['serif','سيريف','سطر أبيض رفيع، والكلمة المهمة سيريف مايل ضخم برتقالي أو كريمي بتوهج، وكلمة ممكن تتحط في مربع أبيض']
 ];
 const FX = [
   ['drop','طيحة','بتقع من فوق وترتد','خلاص'],['shake','اهتزاز','بتهتز والكادر معاها','تهتز'],
@@ -182,6 +189,7 @@ const phone = inner => `<div class="phone"><div class="face"></div><div class="b
 document.getElementById('capGrid').innerHTML = CAPS.map(([id,name,desc]) => {
   const words = SENT.map((w,i) => `<span class="w" data-i="${i}">${w}</span>`).join(' ');
   if (id === 'fancy') return `<div class="card s-fancy" data-cap="fancy"><div class="phone"><div class="back">باقة</div><div class="face"></div><div class="body"></div><div class="cap">${SENT.map((w,i) => `<span class="w${i===2?' hot':''}" data-i="${i}">${w}</span>`).join(' ')}</div></div><h3 style="margin-top:10px">${name} <code>${id}</code></h3><p class="mut">${desc}</p></div>`;
+  if (id === 'serif') return `<div class="card s-serif" data-cap="serif"><div class="phone"><div class="face"></div><div class="body"></div><div class="cap">${SENT.map((w,i) => `<span class="w${i===2?' hot':''}${i===0?' wb':''}" data-i="${i}">${w}</span>`).join(' ')}</div></div><h3 style="margin-top:10px">${name} <code>${id}</code></h3><p class="mut">${desc}</p></div>`;
   if (id === 'gold') return `<div class="card s-gold" data-cap="gold"><div class="phone"><div class="face"></div><div class="body"></div><div class="cap">${SENT.map((w,i) => `<span class="w${i===2?' hot':''}" data-i="${i}">${w}</span>`).join(' ')}</div><div class="wid">★★★★★ 5.0</div></div><h3 style="margin-top:10px">${name} <code>${id}</code></h3><p class="mut">${desc}</p></div>`;
   const cap = id === 'card' ? `<div class="cap"><span class="box">${words}</span></div>`
     : id === 'big' ? `<div class="cap"><span class="w big"></span></div>`
@@ -195,6 +203,7 @@ setInterval(() => {
   document.querySelectorAll('[data-cap]').forEach(card => {
     const id = card.dataset.cap;
     if (id === 'fancy') { card.querySelectorAll('.w').forEach(w => w.classList.toggle('seen', +w.dataset.i <= i && i < SENT.length)); return; }
+    if (id === 'serif') { card.querySelectorAll('.w').forEach(w => w.classList.toggle('seen', +w.dataset.i <= i && i < SENT.length)); return; }
     if (id === 'gold') { card.querySelectorAll('.w').forEach(w => w.classList.toggle('seen', +w.dataset.i <= i && i < SENT.length)); card.querySelector('.wid').classList.toggle('on', i >= 3 && i < SENT.length); return; }
     if (id === 'big') { const b = card.querySelector('.big'); b.textContent = SENT[Math.min(i, SENT.length - 1)]; b.classList.toggle('pop', i < SENT.length); return; }
     card.querySelectorAll('.w').forEach(w => {

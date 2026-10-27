@@ -80,6 +80,11 @@ GA.add({s:0.48, e:GA.E(0), last:3.5, h:252, draw:(t,y)=>{ if(window.HFL) HFL.dra
 ```
 GA يحسب مكانها تحت الكابشن ومدتها وحركة دخولها وخروجها، والفريم يجي من HyperFrames. `h` = طول الويدجت + المسافة عن الكابشن.
 
+**عنوان ورا المتكلم (`z:"manual"`)** — زي «مصيبة» في ستايل Serif Editorial 1: قصّ المتكلم الأول (`node scripts/11_behind_text.js <work> person <من>-<لحد>`)، ورندر العنوان شاشة كاملة شفافة، ومشهدك يرسمه وبعدين المتكلم فوقه:
+```js
+SE.behind(t, () => { if (window.HFL) HFL.draw1('bad', 0, 0, W, H); });   // = HFL.draw1 ثم _fancyPerson(t, الشاشة كاملة)
+```
+
 ⚠️ الاستوديو (`studio.html`) و`08_safe_check.js` وتصدير كاب كت **ما يشوفون** طبقة HyperFrames — قله بسطر لو استخدمها.
 
 ## 3. فوق فيديو جاهز (بودكاست · مونتاج · موشن · أي MP4) — `43_hf_overlay.sh`
