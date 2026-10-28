@@ -1,6 +1,6 @@
 /* عروض عيادة — دوال الرسم (اتعملت في فيديو Vision & Wisdom «عرض الصيف + 50% على العمليات»، 28 أكتوبر 2026).
-   scenes-body.js بتاع كل فيديو بيعرّف الداتا بس: CARDS_ON · WORDS · PHONE · PHONE_SUB · END_S · CTA، وبعدين يسجّل المشاهد:
-   [['offerCard',offerCard],['offerWord',offerWord],['offerPhone',offerPhone],['offerEnd',offerEnd]].forEach(x=>SCENE_LIST.push(x));
+   ⛔ سجّل offerTail أول مشهد. scenes-body.js بتاع كل فيديو بيعرّف الداتا بس: CARDS_ON · WORDS · PHONE · PHONE_SUB · END_S · CTA، وبعدين يسجّل المشاهد:
+   [['offerTail',offerTail],['offerCard',offerCard],['offerWord',offerWord],['offerPhone',offerPhone],['offerEnd',offerEnd]].forEach(x=>SCENE_LIST.push(x));
    CARDS_ON: [[من، لحد، {title,sub,pills,prices:[[label,price]×2]}، أوقات الكبسولات أو null، أوقات نطّة السعر]]
    WORDS: [{s,e,w,c}] كلمة · [{s,e,lab,price,hit}] سعر لوحده · اختياري: fs, dir:'ltr', strip/stripAt/stripC, price/priceAt */
 CAP_OFF=[[0,9999]];
@@ -35,12 +35,17 @@ function oStrip(s,cx,cy,fs,col){                    /* سطر صغير في شر
 
 /* ═══ كارت العرض الكامل — نفس الشكل والمكان كل مرة ═══ */
 function offerCard(t){
-  const c=CARDS_ON.find(c=>t>=c[0]&&t<c[1]); if(!c) return; const [s,,C,pt,pp]=c;
+  const c=CARDS_ON.find(c=>t>=c[0]&&t<c[1]); if(!c) return; const [s,,C,pt,pp,mode]=c;
   oScale(oPop(t,s),OCX,640,()=>{
     oText(C.title,OCX,330,oFit(C.title,900,OF.titleFs||92,OMAXW),OC.white,900);
     oText(C.sub,OCX,425,oFit(C.sub,900,OF.subFs||54,OMAXW),OC.teal,900,'ltr');
-    C.pills.forEach((p,i)=>{ const at=pt?pt[i]-0.05:(s===0?0:s+0.10+i*0.08); if(t<at) return;   /* أول فريم = الكفر: العرض كامل من أول فريم */
-      oScale(oPop(t,at,0.18),OCX,515+i*64,()=>oPill(i+1,p,OCX,515+i*64,OF.pillFs||34)); });
+    C.pills.forEach((p,i)=>{ const at=pt?pt[i]-0.05:(s===0?0:s+0.10+i*0.08), y=515+i*64;   /* أول فريم = الكفر: العرض كامل من أول فريم */
+      if(mode==='lit'){                              /* «بتنور»: الكبسولات كلها ظاهرة باهتة، وكل واحدة بتنور وتنط لما تتقال */
+        if(t<at){ X.save(); X.globalAlpha=0.38; oPill(i+1,p,OCX,y,OF.pillFs||34); X.restore(); }
+        else oScale(oPop(t,at,0.18)*(t<at+0.6?1.06:1),OCX,y,()=>oPill(i+1,p,OCX,y,OF.pillFs||34));
+        return; }
+      if(t<at) return;
+      oScale(oPop(t,at,0.18),OCX,y,()=>oPill(i+1,p,OCX,y,OF.pillFs||34)); });
     C.prices.forEach(([lab,pr],i)=>{ const cx=i===0?OCX+215:OCX-215;        /* RTL: الأول يمين */
       oText(lab,cx,860,oFit(lab,800,34,400),OC.white,800);
       const hit=pp.find(x=>t>=x&&t<x+0.3); oBar(pr,cx,925,400,OF.priceFs||58,hit?oPop(t,hit,0.2):1); });
@@ -50,6 +55,11 @@ function offerCard(t){
 /* ═══ مقطع الكلمة: كلمة ضخمة بلون فاقع (متكررش نفس اللون ورا بعض) + سطر أو سعر اختياري ═══ */
 function offerWord(t){
   const m=WORDS.find(m=>t>=m.s&&t<m.e); if(!m) return; const y=m.lab?560:520;
+  if(m.pair){                                        /* سعرين جنب بعض في لقطة واحدة: كل عمود بيطلع وبينط لما يتقال */
+    m.pair.forEach(([lab,pr,at],i)=>{ if(t<at-0.1) return; const cx=i===0?OCX+220:OCX-220, sc=oPop(t,at-0.1);
+      oScale(sc,cx,470,()=>oText(lab,cx,470,oFit(lab,900,64,410),OC.white,900));
+      oBar(pr,cx,575,430,78,sc*(t>=at&&t<at+0.3?oPop(t,at,0.2):1)); });
+    return; }
   if(m.w){ const fs=oFit(m.w,900,m.fs||OF.wordFs||120,OMAXW);
     oScale(oPop(t,m.s),OCX,y,()=>oText(m.w,OCX,y,fs,m.c,900,m.dir||'rtl')); }
   if(m.lab){ oScale(oPop(t,m.s),OCX,470,()=>oText(m.lab,OCX,470,oFit(m.lab,900,96,OMAXW),OC.white,900));
@@ -65,8 +75,9 @@ function oPhone(cx,cy,fs,sub){ X.save(); X.font=oF(900,fs); const w=X.measureTex
 function offerPhone(t){ if(t>=END_S) return; oPhone(OCX,1395,OF.phoneFs||40,28); }
 
 /* ═══ الختام: الشعار فوق، وسطر CTA أخضر، والرقم كبير ═══ */
+/* المحرّك بيوقف رسم الفيديو بعد caps.total — offerTail بيرسمه تاني، ولازم يتسجل أول مشهد (تحت الكارت والختام) */
+function offerTail(t){ if(t>=VEND&&VF.naturalWidth) X.drawImage(VF,0,0,W,H); }
 function offerEnd(t){ if(t<END_S) return;
-  if(VF.naturalWidth) X.drawImage(VF,0,0,W,H);          /* المحرّك بيوقف رسم الفيديو بعد آخر كلمة — لقطة العيادة من برة تحت الختام */
   if(LOGO.naturalWidth){ const sc=oPop(t,END_S,0.3), L=300;
     oScale(sc,OCX,440,()=>{ X.save(); X.shadowColor='rgba(0,0,0,0.5)'; X.shadowBlur=30; X.shadowOffsetY=8; rr(OCX-L/2,290,L,L,28); X.clip();
       X.drawImage(LOGO,OCX-L/2,290,L,L); X.restore(); }); }
