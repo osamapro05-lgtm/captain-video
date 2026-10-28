@@ -1,0 +1,42 @@
+{
+ "font": "Cairo",
+ "capStyle": "shadow",
+ "grade": false,
+ "badgeUntil": 0,
+ "bar": false,
+ "cutPlan": {
+  "minSilence": 0.15,
+  "pad": 0.05,
+  "merge": 0.1,
+  "tail": 0.25
+ },
+ "offer": {
+  "safe": {
+   "top": 250,
+   "bottom": 1500,
+   "left": 90,
+   "right": 990
+  },
+  "teal": "#5CF0E6",
+  "green": "#6CF58A",
+  "pink": "#F2A8F5",
+  "yellow": "#F4F46A",
+  "white": "#FFFFFF",
+  "darkInk": "#0B1B1B",
+  "glow": 0.6,
+  "titleFs": 92,
+  "subFs": 54,
+  "pillFs": 34,
+  "priceFs": 58,
+  "wordFs": 120,
+  "phoneFs": 40,
+  "phoneFsEnd": 70
+ },
+ "bg": "#0E1414",
+ "ink": "#FFFFFF",
+ "acc": "#5CF0E6",
+ "clay": "#6CF58A",
+ "mut": "#F2A8F5",
+ "onAcc": "#0B2A2A",
+ "logo": "logo.jpg"
+}

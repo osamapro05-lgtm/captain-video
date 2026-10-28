@@ -18,6 +18,11 @@ import subprocess, re, json, sys, os
 W = os.path.abspath(sys.argv[1]); SRC = os.path.join(W, "src.mov")
 NOISE, MIND, PAD, MERGE = "-32dB", 0.35, 0.13, 0.20
 TAIL = 0.7   # سكتة بآخر الفيديو بعد آخر كلمة (الصوت ما ينقص فجأة) — يمسك آخر فريم ويسكت
+# الستايل يقدر يغيّرهم (theme.json ← "cutPlan": {"minSilence","pad","merge","tail","noise"}) — مثلاً «صفر سكتات» في عروض عيادة
+try: _cp = json.load(open(os.path.join(W, "theme.json"))).get("cutPlan") or {}
+except Exception: _cp = {}
+NOISE = _cp.get("noise", NOISE); MIND = _cp.get("minSilence", MIND); PAD = _cp.get("pad", PAD)
+MERGE = _cp.get("merge", MERGE); TAIL = _cp.get("tail", TAIL)
 
 dur = float(subprocess.run(["ffprobe","-v","error","-show_entries","format=duration",
     "-of","csv=p=0", SRC], capture_output=True, text=True).stdout.strip())
