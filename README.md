@@ -11,11 +11,11 @@
 ## التركيب
 
 1. Claude (الديسكتوب أو claude.ai) ← **Customize** ← **Plugins** ← **Add marketplace**.
-2. الصق رابط المستودع ده على GitHub.
+2. الصق الرابط ده: `https://github.com/osamapro05-lgtm/captain-video`
 3. فعّل **captain-video**. لو `majed-video` متركّب، اقفله عشان المهارات متتكررش.
 4. افتح جلسة جديدة وقول: «وريني صفحة البلجن».
 
-من الترمينال: `/plugin marketplace add <رابط المستودع>` ثم `/plugin install captain-video@captain-plugins`.
+من الترمينال: `/plugin marketplace add osamapro05-lgtm/captain-video` ثم `/plugin install captain-video@captain-plugins`.
 
 ## إيه المستخدم في البلجن؟
 
