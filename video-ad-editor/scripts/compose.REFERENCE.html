@@ -1138,23 +1138,25 @@ function cutoutActive(t){
 }
 function personStage(t){
   if(!cutoutActive(t)) return false;
-  _MX.clearRect(0,0,W,H); _MX.drawImage(PRS,0,0,W,H);
+  const CO=window.CUTOUT||{};                              /* 🆕 الستايل يقدر يصغّره ويحطه في ركن: {h:760, cx:770} («Beauty Cutout») */
+  const CL=(CO.clip||[]).find(c=>t>=c[0]&&t<c[1]), YM=CL?CL[2]:H;   /* clip:[[من,إلى,y]] = اقطع الشخص عند y (حاجة محروقة على صدره) */
+  _MX.clearRect(0,0,W,H); _MX.drawImage(PRS,0,0,W,YM,0,0,W,YM);
   let x0=W,x1=-1,y0=H,y1=-1;
   try{
     const d=_MX.getImageData(0,0,W,H).data;
-    for(let y=0;y<H;y+=4){ const row=y*W*4;
+    for(let y=0;y<YM;y+=4){ const row=y*W*4;
       for(let x=0;x<W;x+=4){ if(d[row+x*4+3]>140){ if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; } } }
   }catch(e){ return false; }
   if(x1<0) return false;
   const ph=Math.max(1,y1-y0), pw=Math.max(1,x1-x0);
-  const TARGET_H=900, sc=Math.min(2.0, TARGET_H/ph);      /* طوله ~1010 بكسل — يخلي مجالاً للكابشن فوق راسه */
+  const TARGET_H=(CL&&CO.clipH)||CO.h||900, sc=Math.min(2.0, TARGET_H/ph);      /* طوله ~1010 بكسل — يخلي مجالاً للكابشن فوق راسه */
   const cx=(x0+x1)/2;
-  const dx=540-cx*sc, dy=(H+30)-y1*sc;                     /* أسفله يلامس أسفل الشاشة */
+  const dx=(CO.cx||540)-cx*sc, dy=(H+30)-y1*sc;            /* أسفله يلامس أسفل الشاشة */
   PTOP=dy+y0*sc;
   X.save();
   sh(60,10,0.22);                                          /* ظل خفيف يفصله عن اللوحة */
   X.translate(dx,dy); X.scale(sc,sc);
-  X.drawImage(PRS,0,0,W,H);
+  X.drawImage(PRS,0,0,W,YM,0,0,W,YM);
   X.restore(); nsh();
   return true;
 }

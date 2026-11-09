@@ -1,0 +1,102 @@
+<!doctype html>
+<!-- CREATOR AD STYLE 1 — أوفرلاي «التوثيق»: الفيديوهات اللي ضربت في كروت 3D بعدد مشاهداتها، ورقم كبير بيعدّ.
+     انسخ المجلد لـ<work>/hf/views، حط سكرينات الفيديوهات في assets/v1.jpg v2.jpg v3.jpg، وعدّل DATA بس (الأرقام من facts.md). -->
+<html lang="ar" dir="rtl" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Cairo"; src: url("assets/fonts/Cairo-VF.ttf"); font-weight: 200 1000; }
+      :root { --bg: #0B1414; --ink: #FFFFFF; --yellow: #F4F46A; --blue: #3FB4F0; --green: #6CF58A; --pink: #F2A8F5; --dark: #0B1B1B; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root { position: relative; width: 1080px; height: 1920px; }
+      #scene { position: absolute; inset: 0; overflow: hidden; perspective: 1700px; }
+      #bg { position: absolute; inset: 0; background: radial-gradient(ellipse 85% 55% at 50% 50%, #123A3C 0%, #0D1E20 55%, var(--bg) 100%); }
+      .bok { position: absolute; border-radius: 50%; }
+      #ghost { position: absolute; top: 700px; left: -200px; right: -200px; text-align: center; font: 900 330px/1 "Cairo"; color: var(--blue); opacity: 0.13; white-space: nowrap; }
+      #lead { position: absolute; top: 285px; left: 90px; right: 90px; text-align: center; font: 800 46px/1.2 "Cairo"; color: var(--ink); text-shadow: 0 4px 10px rgba(0,0,0,.55); }
+      #lead span { display: inline-block; margin: 0 7px; opacity: 0; }
+      #count { position: absolute; top: 360px; left: 0; right: 0; text-align: center; font: 900 190px/1 "Cairo"; color: var(--yellow); direction: ltr;
+               text-shadow: 0 6px 14px rgba(0,0,0,.6), 0 0 40px rgba(244,244,106,.55); }
+      #unit { position: absolute; top: 575px; left: 0; right: 0; display: flex; justify-content: center; opacity: 0; }
+      #unit b { font: 800 44px/1 "Cairo"; color: var(--dark); background: var(--green); padding: 12px 30px 16px; border-radius: 6px; box-shadow: 0 0 26px rgba(108,245,138,.55); }
+      .card { position: absolute; width: 360px; height: 640px; border-radius: 34px; overflow: hidden;
+              box-shadow: 0 50px 90px rgba(0,0,0,.6), 0 0 0 3px rgba(255,255,255,.12); background: #1a2a2a; }
+      .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .card .v { position: absolute; z-index: 2; left: 22px; bottom: 26px; display: flex; align-items: center; gap: 10px; direction: ltr;
+                 font: 900 46px/1 "Cairo"; color: #fff; text-shadow: 0 3px 10px rgba(0,0,0,.8); }
+      .card .v svg { width: 34px; height: 34px; }
+      #c1 { left: 360px; top: 670px; }
+      #c2 { left: 70px; top: 720px; }
+      #c3 { left: 650px; top: 720px; }
+      #tag { position: absolute; top: 1150px; left: 90px; right: 90px; display: flex; justify-content: center; opacity: 0; }
+      #tag b { font: 900 50px/1.15 "Cairo"; color: #fff; text-align: center; padding: 18px 34px 22px; border-radius: 22px;
+               background: linear-gradient(180deg, #4CC3FF 0%, #1D6FE0 100%); box-shadow: 0 26px 50px rgba(0,0,0,.45), 0 0 30px rgba(63,180,240,.5); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="clip" data-start="0" data-duration="5" data-track-index="0" data-layout-allow-overflow data-layout-allow-overlap>
+        <div id="bg"></div>
+        <div class="bok" id="b1" style="left:-140px;top:200px;width:520px;height:520px;background:#1FA7A0;filter:blur(90px);opacity:.35"></div>
+        <div class="bok" id="b2" style="left:660px;top:1250px;width:560px;height:560px;background:#2A6BE0;filter:blur(100px);opacity:.3"></div>
+        <div id="ghost" data-layout-allow-occlusion>مليون</div>
+        <div id="lead"></div>
+        <div id="count">0</div>
+        <div id="unit"><b></b></div>
+        <div class="card" id="c2" data-layout-allow-occlusion><img src="assets/v2.jpg" alt="" /><div class="v" data-layout-allow-occlusion><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z" fill="#fff"/></svg><span data-layout-allow-occlusion></span></div></div>
+        <div class="card" id="c3" data-layout-allow-occlusion><img src="assets/v3.jpg" alt="" /><div class="v" data-layout-allow-occlusion><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z" fill="#fff"/></svg><span data-layout-allow-occlusion></span></div></div>
+        <div class="card" id="c1"><img src="assets/v1.jpg" alt="" /><div class="v" data-layout-allow-occlusion><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z" fill="#fff"/></svg><span data-layout-allow-occlusion></span></div></div>
+        <div id="tag"><b></b></div>
+        <div class="bok" id="f1" style="left:-180px;top:1500px;width:380px;height:380px;background:#3FB4F0;filter:blur(60px);opacity:.35"></div>
+      </div>
+    </div>
+    <script>
+      /* ═══ DATA — كل اللي بيتغير من فيديو للتاني. الأوقات بالثواني من بداية الأوفرلاي (= وقت نطق الكلمة في caps.json ناقص start) ═══ */
+      const DATA = {
+        D: 5,                                                     // مدة الأوفرلاي = لآخر جملة التوثيق
+        lead: [["حالياً", 0.05], ["أشهر", 0.35], ["عيادة", 0.7], ["ودكتور", 1.0], ["بيطري", 1.35]],
+        count: { to: 20, suf: "M+", at: 1.9, d: 1.3 },            // الرقم من facts.md بس
+        unit: ["مشاهدة كل شهر", 2.6],
+        cards: [["4.2M", 0.1], ["2.8M", 0.2], ["3.5M", 0.25]],   // مشاهدات كل فيديو (v1 النص، v2 يمين، v3 شمال) — من العميل بس، ولو مش معروفة سيبها ""
+        tag: ["في الوطن العربي", 1.6]
+      };
+      document.getElementById("lead").innerHTML = DATA.lead.map(([w]) => `<span>${w}</span>`).join("");
+      document.querySelector("#unit b").textContent = DATA.unit[0];
+      document.querySelector("#tag b").textContent = DATA.tag[0];
+      ["#c1", "#c2", "#c3"].forEach((s, i) => { const v = DATA.cards[i]; const e = document.querySelector(s + " .v");
+        if (!v || !v[0]) e.style.display = "none"; else e.querySelector("span").textContent = v[0]; });
+
+      const tl = gsap.timeline({ paused: true }), D = DATA.D;
+      // دخول المشهد بضبابة وتكبير خفيف، وخروجه بضبابة (بيكشف الفيديو تحته)
+      tl.fromTo("#scene", { opacity: 0, scale: 1.05, filter: "blur(12px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.3, ease: "power3.out" }, 0);
+      tl.to("#scene", { opacity: 0, scale: 1.06, filter: "blur(14px)", duration: 0.26, ease: "power2.in" }, D - 0.27);
+      // عمق: الخلفية أبطأ والقدام أسرع
+      tl.fromTo(["#b1", "#b2"], { y: 50 }, { y: -50, duration: D, ease: "none" }, 0);
+      tl.fromTo("#f1", { y: 180, x: 20 }, { y: -180, x: -20, duration: D, ease: "none" }, 0);
+      tl.fromTo("#ghost", { opacity: 0, scale: 1.2, x: -30 }, { opacity: 0.13, scale: 1, x: 30, duration: D, ease: "power1.out" }, 0);
+      // السطر الصغير كلمة كلمة على الصوت
+      DATA.lead.forEach(([, at], i) => tl.fromTo(`#lead span:nth-child(${i + 1})`, { opacity: 0, y: 10, filter: "blur(6px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, at));
+      // الكروت: الجانبية بعيدة ومضببة، واللي في النص جاي من العمق ويقعد حاد، والكاميرا بتقرب ببطء
+      const [k1, k2, k3] = DATA.cards.map(c => c[1]);
+      tl.fromTo("#c2", { x: -280, rotationY: 36, z: -520, filter: "blur(16px)", opacity: 0 }, { x: 0, rotationY: 24, z: -320, filter: "blur(7px)", opacity: 0.92, duration: 0.7, ease: "power3.out" }, k2);
+      tl.fromTo("#c3", { x: 280, rotationY: -36, z: -520, filter: "blur(16px)", opacity: 0 }, { x: 0, rotationY: -24, z: -320, filter: "blur(7px)", opacity: 0.92, duration: 0.7, ease: "power3.out" }, k3);
+      tl.fromTo("#c1", { z: -760, rotationY: -12, rotationX: 6, filter: "blur(20px)", opacity: 0 }, { z: 0, rotationY: -5, rotationX: 3, filter: "blur(0px)", opacity: 1, duration: 0.7, ease: "back.out(1.3)" }, k1);
+      tl.to("#c1", { z: 110, rotationY: 4, duration: D - 0.9, ease: "sine.inOut" }, 0.85);
+      tl.to(["#c2", "#c3"], { z: -260, duration: D - 0.9, ease: "sine.inOut" }, 0.85);
+      // الرقم بيعدّ ويقف بنطّة
+      const n = { v: 0 }, C = DATA.count, el = document.getElementById("count");
+      tl.fromTo("#count", { opacity: 0, scale: 1.4, filter: "blur(14px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.35, ease: "power3.out" }, C.at - 0.1);
+      tl.fromTo(n, { v: 0 }, { v: C.to, duration: C.d, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(n.v) + C.suf; } }, C.at);
+      tl.fromTo("#count", { scale: 1 }, { scale: 1.12, duration: 0.12, yoyo: true, repeat: 1, ease: "power2.out" }, C.at + C.d);
+      tl.fromTo("#unit", { opacity: 0, y: 20, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(2)" }, DATA.unit[1]);
+      // التسمية جاية من قدام الكاميرا وتقعد حادة
+      tl.fromTo("#tag", { opacity: 0, scale: 1.7, y: 140, filter: "blur(18px)" }, { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 0.48, ease: "back.out(1.4)" }, DATA.tag[1]);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

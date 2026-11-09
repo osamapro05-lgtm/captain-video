@@ -1,0 +1,11 @@
+[
+ {"t": 0.03, "type": "whoosh", "len": 0.5},
+ {"t": 6.25, "type": "coin"},
+ {"t": 8.38, "type": "whoosh", "len": 0.4, "g": 0.7},
+ {"t": 14.15, "type": "chime", "g": 0.7},
+ {"t": 16.70, "type": "hit"},
+ {"t": 21.28, "type": "coin"},
+ {"t": 26.00, "type": "whoosh", "len": 0.4, "g": 0.7},
+ {"t": 33.60, "type": "whoosh", "len": 0.5},
+ {"t": 33.65, "type": "chime"}
+]
