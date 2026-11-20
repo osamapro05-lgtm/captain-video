@@ -1,7 +1,7 @@
 {
   "name": "captain-video",
-  "version": "6.0.1-captain.1",
-  "description": "Arabic video editing for Claude Code, based on majed-video by Majed Alzaabi (MIT), plus editing styles: saved bundles of captions, visual language, cutting and layout with preview reels. 6 skills: talking-head reels, 3D motion, podcasts, montage, covers, editing styles.",
+  "version": "6.0.1-captain.2",
+  "description": "Arabic video editing for Claude Code, based on majed-video by Majed Alzaabi (MIT), plus editing styles: saved bundles of captions, visual language, cutting and layout with preview reels. 7 skills: talking-head reels, 3D motion, podcasts, montage, covers, editing styles, Instagram carousels.",
   "author": { "name": "CAPTAIN OSAMA" },
   "license": "MIT",
   "skills": ["./"]

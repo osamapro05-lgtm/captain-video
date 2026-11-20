@@ -12,3 +12,6 @@ video-ad-editor/scripts/facetrack
 video-ad-editor/bin/
 # editing styles ship with their preview reels
 !video-ad-editor/styles/*/*.mp4
+
+# كاروسيلات المستخدم (شغل مش جزء من البلقن)
+carousels/

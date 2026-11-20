@@ -4,10 +4,12 @@ set -e
 . "$(dirname "$0")/_compat.sh"
 W="$(abspath "$1")"; OUT="${2:-$W/ad-final.mp4}"
 DUR=$("$PY" -c "import json;c=json.load(open('$W/caps.json'));s=json.load(open('$W/sfx.json'));print(round(c['total']+float(s.get('outro',0) or 0),3))")
-FADE=$("$PY" -c "print(round($DUR-0.6,3))")
+# من غير كرت نهاية الفيد 0.6ث كان بياكل آخر كلمة (الشتا) ← الفيد يقع في سكتة النهاية بس
+FL=$("$PY" -c "import json;s=json.load(open('$W/sfx.json'));print(0.6 if float(s.get('outro',0) or 0)>=0.6 else 0.12)")
+FADE=$("$PY" -c "print(round($DUR-$FL,3))")
 echo "🎞  أجمّع الفريمات والصوت… (بلا عدّاد)"
 ffmpeg -v error -nostats -framerate 30 -i "$W/out/%05d.jpg" -i "$W/cutz.mp4" -i "$W/sfx.wav" \
- -filter_complex "[0:v]scale=in_range=pc:out_range=tv:out_color_matrix=bt709,format=yuv420p[vo];[1:a]apad=pad_dur=8[a0];[a0][2:a]amix=inputs=2:duration=first:normalize=0[am];[am]atrim=0:$DUR,asetpts=PTS-STARTPTS,afade=t=out:st=$FADE:d=0.6[ao]" \
+ -filter_complex "[0:v]scale=in_range=pc:out_range=tv:out_color_matrix=bt709,format=yuv420p[vo];[1:a]apad=pad_dur=8[a0];[a0][2:a]amix=inputs=2:duration=first:normalize=0[am];[am]atrim=0:$DUR,asetpts=PTS-STARTPTS,afade=t=out:st=$FADE:d=$FL[ao]" \
  -map "[vo]" -map "[ao]" -c:v libx264 -preset slow -crf 21 -maxrate 6M -bufsize 12M \
  -profile:v high -level 4.0 -pix_fmt yuv420p -color_range tv -colorspace bt709 -color_primaries bt709 -color_trc bt709 -r 30 -c:a aac -b:a 160k -ar 48000 \
  -movflags +faststart -y "$OUT"
