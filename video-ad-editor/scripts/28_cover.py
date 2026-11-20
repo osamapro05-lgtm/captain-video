@@ -26,6 +26,7 @@ import numpy as np
 from PIL import Image
 
 SQ0, SQ1 = 420, 1500          # المربع الآمن 1:1 بنص 9:16
+VF_FRAMES, VF_ENCODE = [__import__("re").search(_n + r"='([^']+)'", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "_compat.sh"), encoding="utf-8").read()).group(1) for _n in ("VF_FRAMES", "VF_ENCODE")]   # 🎨 ألوان مطابقة للأصل — المصدر الواحد _compat.sh
 
 def arg(n, d):
     return type(d)(sys.argv[sys.argv.index(n) + 1]) if n in sys.argv else d
@@ -104,7 +105,7 @@ def main():
     if video and os.path.exists(video):
         t = arg("--t", -1.0); t = t if t >= 0 else pick(video, arg("--n", 16), cache)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{t:.2f}", "-i", video, "-frames:v", "1",
-                        "-vf", "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920", frame], check=True)
+                        "-vf", "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,scale=in_color_matrix=bt709:flags=accurate_rnd+full_chroma_int+full_chroma_inp+bicubic,format=rgb24", frame], check=True)   # 🎨 فك دقيق — العادي يغمّق صورته درجتين
     elif not photo:
         sys.exit("❌ ما لقيت الفيديو — اعطه --video أو --photo")
     if cut and not photo:   # صورته من الفيديو نفسه، مقصوصة — نفس الثانية لو حددها
@@ -195,7 +196,12 @@ def main():
                     "--virtual-time-budget=5000", f"--screenshot={png}", "--window-size=1080,1920", "file://" + hp],
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=120)   # بلا capture: عملية كروم المساعدة تمسك الأنبوب فيتعلّق السكربت
     im = Image.open(png).convert("RGB").crop((0, 0, 1080, 1920)); os.remove(png)
-    cj = os.path.join(W, "cover.jpg"); im.save(cj, quality=92)
+    # 🎨 الكفر ينحفظ بملف ألوان sRGB: هو أول فريم بالريل، ومنه ياخذ ملف التسليم ملف ألوانه (colr prof).
+    # بلاه مشغّل أبل (كويك تايم/الصور) يعرض الريل كله أفتح 9 من 255 عن تصوير الآيفون.
+    try:
+        from PIL import ImageCms; icc = ImageCms.ImageCmsProfile(ImageCms.createProfile("sRGB")).tobytes()
+    except Exception: icc = None
+    cj = os.path.join(W, "cover.jpg"); im.save(cj, quality=92, **({"icc_profile": icc} if icc else {}))
     # معاينة: الكامل · قصّة 4:5 · قصّة 1:1 — بنفس الارتفاع
     g45 = im.crop((0, 285, 1080, 1635)); g11 = im.crop((0, SQ0, 1080, SQ1)); H = 720
     parts = [im.resize((405, H)), g45.resize((576, H)), g11.resize((H, H))]
@@ -206,14 +212,35 @@ def main():
     if first and os.path.exists(first):
         hold = arg("--hold", 0.1); out = os.path.splitext(first)[0] + "-cover.mp4"
         has_a = bool(subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a", "-show_entries", "stream=index", "-of", "csv=p=0", first], capture_output=True, text=True).stdout.strip())
-        fc = "[1:v]scale=1080:1920,setsar=1,fps=30,format=yuv420p[c];[0:v]scale=1080:1920,setsar=1,fps=30,format=yuv420p[v];"
+        # 🎨 الكفر (JPEG) يتحوّل bt709 بدقة · الفيديو نفسه ما ينلمس لونه.
+        # ⛔ الصورة والصوت كل واحد بفلتر مستقل (-filter_complex مرتين): لو انجمعوا بفلتر واحد ffmpeg يطيّر ملف الألوان (colr prof)
+        # من الناتج ومشغّل أبل يعرض الريل أفتح 9 من 255. الفحص: tools/color-check.sh
+        fc = ["-filter_complex", "[1:v]" + VF_ENCODE + ",scale=1080:1920,setsar=1,fps=30,format=yuv420p[c];[0:v]scale=1080:1920,setsar=1,fps=30,format=yuv420p[v];[c][v]concat=n=2:v=1:a=0[ov]"]
+        maps = ["-map", "[ov]"]
         if has_a:
-            fc += "[2:a]aresample=48000[s];[0:a]aresample=48000[a];[c][s][v][a]concat=n=2:v=1:a=1[ov][oa]"; maps = ["-map", "[ov]", "-map", "[oa]", "-c:a", "aac", "-b:a", "192k"]
-        else:
-            fc += "[c][v]concat=n=2:v=1:a=0[ov]"; maps = ["-map", "[ov]"]
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", first, "-loop", "1", "-t", f"{hold}", "-framerate", "30", "-i", cj,
-                        "-f", "lavfi", "-t", f"{hold}", "-i", "anullsrc=r=48000:cl=stereo", "-filter_complex", fc, *maps,
-                        "-c:v", "libx264", "-crf", "18", "-preset", "medium", "-pix_fmt", "yuv420p", "-movflags", "+faststart", out], check=True)
+            fc += ["-filter_complex", "[2:a]aresample=48000[s];[0:a]aresample=48000[a];[s][a]concat=n=2:v=0:a=1[oa]"]; maps += ["-map", "[oa]", "-c:a", "aac", "-b:a", "192k"]
+        base = ["ffmpeg", "-v", "error", "-y", "-i", first, "-loop", "1", "-t", f"{hold}", "-framerate", "30", "-i", cj,
+                "-f", "lavfi", "-t", f"{hold}", "-i", "anullsrc=r=48000:cl=stereo", *fc, *maps,
+                "-c:v", "libx264", "-pix_fmt", "yuv420p",
+                "-bsf:v", "h264_metadata=colour_primaries=1:transfer_characteristics=1:matrix_coefficients=1:video_full_range_flag=0"]   # وسوم bt709 داخل الفيديو (مثل 06_encode) — ما تمس ملف ألوان الحاوية
+        # 6.1 الحجم (ريل «1000$ بيوم» 124 ث: CRF 18 طلّعه فوق 60 ميقا): هذا ملف التسليم — لازم تحت 30 ميقا.
+        # أطول من 90 ث أو الناتج أكبر من MAXMB (افتراضي 29) ← ترميز بمرحلتين بمعدل محسوب من المدة، من النسخة العالية (مرة وحدة)
+        maxmb = float(os.environ.get("MAXMB", 29))
+        dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", first],
+                                   capture_output=True, text=True).stdout.strip() or 0) + hold
+        two = dur > 90
+        if not two:
+            subprocess.run(base + ["-crf", "18", "-preset", "medium", "-movflags", "+faststart+prefer_icc", out], check=True)
+            two = os.path.getsize(out) > maxmb * 1048576
+        if two:
+            vb = max(600, min(6000, int((maxmb * 8388608 / dur - 192000) * 0.97 / 1000)))   # صوت 192k + هامش الحاوية 3٪
+            lg = os.path.join(W, ".x264cover")
+            rc = ["-preset", "slow", "-b:v", f"{vb}k", "-maxrate", f"{vb * 2}k", "-bufsize", f"{vb * 4}k", "-passlogfile", lg]
+            subprocess.run(base + rc + ["-pass", "1", "-f", "null", "-"], check=True)
+            subprocess.run(base + rc + ["-pass", "2", "-movflags", "+faststart+prefer_icc", out], check=True)
+            for f in (lg + "-0.log", lg + "-0.log.mbtree"):
+                if os.path.exists(f): os.remove(f)
+            msg += f" · بمرحلتين {vb}k ({os.path.getsize(out) / 1048576:.1f} ميقا)"
         msg += f" · والكفر صار أول فريم ← {os.path.basename(out)}"
     print(msg + (f" · تيك توك: الثانية {t:.2f}" if t >= 0 and not photo else ""))
 

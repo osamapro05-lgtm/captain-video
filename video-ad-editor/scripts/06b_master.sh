@@ -65,7 +65,7 @@ for TRY in 1 2 3; do
   LL=$("$PY" -c "print(round(10**($LDB/20),4))")
   ffmpeg -v error -nostats -i "$NRM" -af "aresample=192000,alimiter=limit=$LL:attack=1:release=60:level=false,aresample=48000" -y "$LIM"
   ffmpeg -v error -nostats -i "$IN" -i "$LIM" -map 0:v:0 -map 1:a:0 -c:v copy \
-    -c:a aac -b:a 192k -ar 48000 -movflags +faststart -y "$OUT"
+    -c:a aac -b:a 192k -ar 48000 -movflags +faststart+prefer_icc -y "$OUT"   # 🎨 6.5.2 prefer_icc: ملف ألوان الحاوية ينتقل — بلاه مشغّل أبل يفتّح الريل
   OTP=$(ffmpeg -hide_banner -nostats -i "$OUT" -map 0:a:0 -af ebur128=peak=true -f null - 2>&1 | awk '/Peak:/{p=$2}END{print p}')
   if [ -z "$OTP" ] || "$PY" -c "import sys;sys.exit(0 if float('$OTP')<=$TPMAX else 1)" 2>/dev/null; then break; fi
   LDB=$("$PY" -c "print(round($LDB-(float('$OTP')-($TPMAX))-0.2,2))")

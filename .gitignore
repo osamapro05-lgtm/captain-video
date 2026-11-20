@@ -15,3 +15,6 @@ video-ad-editor/bin/
 
 # كاروسيلات المستخدم (شغل مش جزء من البلقن)
 carousels/
+
+# رسم أمثلة الموشن يتولّد محلياً (node render.js) — ما يدخل المستودع
+video-ad-editor/motion/examples/*/renders/
