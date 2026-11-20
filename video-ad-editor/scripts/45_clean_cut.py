@@ -239,7 +239,12 @@ def build():
             for s, e, _ in spec['sentences']:
                 x, y = max(a, s - 0.08), min(b, e + 0.12)
                 if y > x: keep.append([x, y])
-        keep = subtract(sorted(keep), cuts)
+        m = []
+        for x, y in sorted(keep):   # جملتين لازقين: الهامش بيداخلهم ← دمج، وإلا جزء من الصوت بيتعاد
+            if m and x <= m[-1][1]: m[-1][1] = max(m[-1][1], y)
+            else: m.append([x, y])
+        keep = subtract(m, cuts)
+        assert all(a[1] <= b[0] for a, b in zip(keep, keep[1:])), keep
     keep_t = lambda t: any(a <= t <= b for a, b in keep)
     segs = []
     for s, e, txt in spec['sentences']:

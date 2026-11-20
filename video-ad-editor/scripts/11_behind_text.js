@@ -40,7 +40,7 @@ const words=c=>c.w.map(w=>w.t).join(' ');
    (مقارنة ريل البطاريات). يكمّل من وين وقف، وأي فشل (rembg مو منصّب) يخلّي قصّ الماك كما هو. MATTE=apple = الماك بس. */
 function refineMatte(f0,f1){
   if(String(process.env.MATTE||'').toLowerCase()==='apple') return;
-  const r=cp.spawnSync('python3',[SC+'44_matte.py',W,String(f0),String(f1)],{stdio:'inherit'});
+  const r=cp.spawnSync(PY,[SC+'44_matte.py',W,String(f0),String(f1)],{stdio:'inherit'});
   if(r.status!==0) console.log('ℹ️ باقي على قصّ الماك للفريمات '+f0+'–'+f1);
 }
 if(MODE==='off'){ try{fs.unlinkSync(W+'behind.json');}catch(e){} console.log('انلغى التأثير.'); process.exit(0); }
