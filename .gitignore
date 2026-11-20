@@ -18,3 +18,7 @@ carousels/
 
 # رسم أمثلة الموشن يتولّد محلياً (node render.js) — ما يدخل المستودع
 video-ad-editor/motion/examples/*/renders/
+
+# معاينات ستايلات الموشن (صفحة البلجن)
+!video-ad-editor/motion/styles/previews/*.mp4
+__pycache__/
