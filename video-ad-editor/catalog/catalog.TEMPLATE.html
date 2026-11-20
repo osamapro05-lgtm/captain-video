@@ -102,13 +102,87 @@ li{margin:3px 0}
 .skill h3{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .rules li{margin:5px 0}
 .empty{color:var(--mut)}
+
+/* ═══ Captain page v2 — الستايلات أول حاجة ═══ */
+:root{--glow:rgba(184,134,11,.16)}
+@media (prefers-color-scheme:dark){:root{--glow:rgba(224,184,74,.14)}}
+html{scroll-behavior:smooth}
+main{max-width:1240px}
+nav .in{max-width:1240px}
+nav .ver{margin-inline-start:auto;font:600 12px Inter,ui-monospace,monospace;color:var(--mut);direction:ltr}
+.hero{display:grid;gap:18px;padding:34px 0 8px}
+.hero h1{font:900 clamp(40px,7vw,76px)/1.05 Alexandria,"Readex Pro",sans-serif;margin:0}
+.hero h1 span{color:var(--acc)}
+.hero .lead{font-size:18px;margin:0}
+.stats{display:flex;flex-wrap:wrap;gap:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 16px;min-width:120px}
+.stat b{display:block;font:800 28px Inter,sans-serif;color:var(--acc)}
+.stat span{font-size:13px;color:var(--mut)}
+.tabs{display:flex;gap:8px;margin:26px 0 6px;flex-wrap:wrap;position:sticky;top:45px;z-index:4;background:var(--bg);padding:10px 0}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 15px "Readex Pro",sans-serif;padding:10px 18px;border-radius:999px;cursor:pointer;display:flex;gap:8px;align-items:center}
+.tab small{font:600 12px Inter,sans-serif;color:var(--mut)}
+.tab[aria-selected=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tab[aria-selected=true] small{color:var(--bg);opacity:.7}
+.tab:focus-visible,.tile:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.panel-lead{color:var(--mut);margin:4px 0 16px;max-width:760px;font-size:15px}
+.gal{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.tile{all:unset;box-sizing:border-box;cursor:pointer;display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:transform .18s,box-shadow .18s}
+.tile:hover{transform:translateY(-3px);box-shadow:0 10px 30px var(--glow)}
+.tile .v{position:relative;aspect-ratio:9/16;background:#111}
+.tile video{width:100%;height:100%;object-fit:cover;display:block}
+.tile .badge{position:absolute;top:8px;inset-inline-start:8px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px}
+.tile .t{padding:10px 12px 12px}
+.tile h3{font-size:16px;font-weight:800;margin:0}
+.tile p{font-size:12.5px;color:var(--mut);margin:4px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5}
+.tile .nov{display:grid;place-items:center;height:100%;color:#888;font-size:13px}
+dialog{border:0;border-radius:20px;padding:0;max-width:min(1040px,94vw);width:100%;background:var(--card);color:var(--ink);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+.dlg{display:grid;grid-template-columns:minmax(220px,300px) 1fr}
+.dlg .media{background:#000;display:flex;flex-direction:column;gap:6px;padding:10px;max-height:86vh;overflow:auto}
+.dlg .media video{width:100%;border-radius:12px;aspect-ratio:9/16;object-fit:cover}
+.dlg .body{padding:22px 24px;max-height:86vh;overflow:auto}
+.dlg .body h2{margin:0 0 4px;font-size:26px}
+.dlg .close{position:sticky;top:0;float:left;border:0;background:var(--chip);color:var(--ink);width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer}
+.use{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--chip);border-radius:12px;padding:10px 12px;margin:12px 0;font-size:14px}
+.use q{font-weight:700;quotes:"«" "»"}
+.copy{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:4px 10px;font:600 12px "Readex Pro",sans-serif;cursor:pointer}
+details.more{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 18px;margin-top:14px}
+details.more summary{cursor:pointer;font-weight:800}
+.news{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.news .card b{display:inline-block;font:700 11px Inter,sans-serif;background:var(--acc);color:#fff;border-radius:6px;padding:1px 7px;margin-bottom:6px;direction:ltr}
+@media (max-width:720px){.dlg{grid-template-columns:1fr}.dlg .media{flex-direction:row;overflow-x:auto;max-height:none}.dlg .media video{width:46vw;flex:none}.tabs{top:41px}.gal{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:reduce){.tile{transition:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
-<nav><div class="in"><b>Captain Video</b><a href="#captions">الكابشن</a><a href="#fx">حركات الكلمة</a><a href="#styles">ستايلات المونتاج</a><a href="#skills">المهارات</a><a href="#features">أهم المزايا</a><a href="#rules">القواعد</a></div></nav>
+<nav><div class="in"><b>Captain Video</b><a href="#gallery">الستايلات</a><a href="#new">الجديد</a><a href="#skills">المهارات</a><a href="#captions">الكابشن</a><a href="#fx">حركات الكلمة</a><a href="#features">المزايا</a><a href="#rules">القواعد</a><span class="ver" id="ver"></span></div></nav>
 <main>
-<h1>Captain Video</h1>
-<p class="lead">بلجن مونتاج عربي لـClaude Code. بتديله الفيديو وبيطلّعلك ريل جاهز بالكابشن والجرافيك والصوت. الصفحة دي فيها كل اللي تقدر تختاره.</p>
+<section class="hero">
+  <h1>Captain <span>Video</span></h1>
+  <p class="lead">بتديله الفيديو أو الصوت — وبيطلّعلك ريل جاهز بالكابشن والجرافيك والموشن والصوت. اختار الستايل من هنا وقول اسمه لـClaude.</p>
+  <div class="stats" id="stats"></div>
+</section>
+
+<div class="tabs" role="tablist" id="gallery">
+  <button class="tab" role="tab" aria-selected="true" data-tab="edit">Editing Styles <small id="nEdit"></small></button>
+  <button class="tab" role="tab" aria-selected="false" data-tab="motion">Motion Editing Styles <small id="nMotion"></small></button>
+</div>
+<section data-panel="edit">
+  <p class="panel-lead">ستايلات مونتاج لفيديو فيه متكلم أو لقطات: كابشن + جرافيك + قص + تقسيم شاشة + صوت. دوس على أي ستايل تشوف فيديوهاته وقواعده.</p>
+  <div class="gal" id="galEdit"></div>
+</section>
+<section data-panel="motion" hidden>
+  <p class="panel-lead">ستايلات موشن — فويس أوفر بس (صوتك أو صوت مولّد) والفيديو كله موشن جرافيكس، أو كلمسة جوه ريل كلام. ممكن تدمج اتنين، ولون هويتك بيفضل إلا في الستايلات اللي لونها جزء منها.</p>
+  <div class="gal" id="galMotion"></div>
+</section>
+
+<h2 id="new">الجديد في النسخة دي</h2>
+<p class="lead">كل ميزة بجملة — وكلها شغالة على جهازك دلوقتي.</p>
+<div class="news" id="news"></div>
+
+<h2 id="skills">المهارات</h2>
+<p class="lead">كل مهارة بتشتغل لوحدها لما تقول الكلام اللي يخصها.</p>
+<div class="grid" id="skillGrid"></div>
 
 <h2 id="captions">ستايلات الكابشن</h2>
 <p class="lead">بتختار واحد منهم في الثيم (<code>capStyle</code>). الكلمة اللي بتتقال بتتلوّن لحظة نطقها.</p>
@@ -119,22 +193,16 @@ li{margin:3px 0}
 <p class="lead">حركة لكلمة معينة لحظة ما بيقولها، والحروف بتفضل متصلة.</p>
 <div class="grid" id="fxGrid"></div>
 
-<h2 id="styles">ستايلات المونتاج</h2>
-<p class="lead">كل ستايل مفاهيم مش قالب: اللغة البصرية، وطريقة القص، ومنطق تقسيم الشاشة، ولغة الصوت، والكابشن. كل فيديو جديد بيطلع بعناصره هو من كلامه، بنفس الروح. الفيديوهات دي اتعملت بيه.</p>
-<div id="styleList"></div>
-
-<h2 id="skills">المهارات الست</h2>
-<p class="lead">كل مهارة بتشتغل لوحدها لما تقول الكلام اللي يخصها.</p>
-<div class="grid" id="skillGrid"></div>
-
 <h2 id="features">أهم المزايا</h2>
 <div class="grid" id="featGrid"></div>
 
-<h2 id="rules">قواعد ثابتة</h2>
-<div class="card"><ul class="rules" id="rules"></ul></div>
+<details class="more" id="rules"><summary>قواعد ثابتة في كل فيديو</summary><ul class="rules" id="rulesList" style="margin-top:10px"></ul></details>
 </main>
+<dialog id="dlg" aria-label="تفاصيل الستايل"><div class="dlg"><div class="media" id="dMedia"></div><div class="body"><button class="close" id="dClose" aria-label="قفل">✕</button><div id="dBody"></div></div></div></dialog>
 <script>
 const STYLES = /*STYLES_JSON*/[];
+const MSTYLES = /*MOTION_JSON*/[];
+const VERSION = '/*VERSION*/';
 const SENT = ['كل','حاجة','بتشوفها','في','الفيديو'];
 const CAPS = [
   ['card','كارت','الافتراضي، كارت بلون هويتك'],
@@ -157,8 +225,10 @@ const SKILLS = [
   ['video-ad-editor','ريل من فيديو كلام','«منتج المقطع ده»، «شيّل السكتات»','قص السكتات، كابشن بتوقيت الكلمة، موشن وجرافيك، صوت مظبوط'],
   ['editing-style','ستايلات المونتاج','«وريني الستايلات»، «بستايل بيطري فيجن»','يطبّق ستايل محفوظ، أو يحفظ فيديو خلص كستايل جديد'],
   ['podcast-video','بودكاست ومقابلات','«بودكاست»، «ريلات من الحلقة»','كاميرتين أو أكتر، ريلات بهوك مكتوب، أو الحلقة كاملة بالعرض'],
-  ['motion-video','موشن من غير تصوير','«فيديو موشن»، «اشرح الموقع ده»','فيلم 3D من نص أو فكرة، وشرح موقع أو تطبيق جوه موبايل'],
+  ['motion-video','موشن على الفويس أوفر','«عندي فويس أوفر اعمله موشن»، «فيديو موشن»','صوتك (أو صوت مولّد) والفيديو كله موشن 3D بستايل من الـ17 — من غير تصوير'],
   ['montage-video','مونتاج على الإيقاع','«مونتاج من المقاطع دي»','بيختار أحلى لحظة من كل مقطع ويقطع على النبضة'],
+  ['review-video','مراجعة منتج بفويس أوفر','«راجع المنتج ده»، «ريفيو بصوتي»','لقطات المنتج + تعليقك الصوتي ← ريل مراجعة كامل'],
+  ['carousel','كاروسيل إنستجرام','«اعمل كاروسيل»','سلايدات بهويتك جاهزة للنشر'],
   ['thumbnail-video','كفر وثمبنيل','«اعمل كفر»، «ثمبنيل يوتيوب»','كفر أول فريم بيتقري في شبكة البروفايل، و3 أفكار ثمبنيل']
 ];
 const FEATS = [
@@ -166,7 +236,7 @@ const FEATS = [
   ['كابشن بتوقيت الكلمة','Whisper بيفرّغ، وClaude بيصحح العامية كلمة كلمة'],
   ['مراجعة النص قبل المونتاج','بتشوف كلامك مرقّم وتشيل الجمل اللي مش عاجباك'],
   ['تقسيم الشاشة','ملء الشاشة، أو جرافيك فوق وإنت تحت، أو جرافيك بس'],
-  ['بنك حركات','لوحة حركات لكل فيديو: 3 أساسية بيدور حواليها ولمسات للحظات المهمة'],
+  ['بنك 108 حركة','لوحة حركات لكل فيديو، ولو مفيش حركة تناسب بيجيب فكرة من برّا ويرسمها بألوانك'],
   ['مؤثرات صوتية بمعنى','بتتحط في لحظة ليها معنى، مش على كل كلمة'],
   ['صوت بمستوى المنصات','-14 LUFS، والخلفية الصوتية بتوطى لوحدها لما تتكلم'],
   ['ترجمة وكفر','ملف srt ونص البوست، وكفر بيبقى أول فريم'],
@@ -228,36 +298,91 @@ const SOUND = [['character','الطابع'],['role','دوره'],['when','امت�
   ['silence','السكوت'],['loudness','العلو'],['variety','التنويع']];
 const list = a => (a || []).map(x => `<li>${esc(x)}</li>`).join('');
 const dl = (o, keys) => keys.filter(([k]) => o[k]).map(([k,l]) => `<dt>${l}</dt><dd>${esc(o[k])}</dd>`).join('');
-document.getElementById('styleList').innerHTML = STYLES.length ? STYLES.map(s => {
-  const look = s.look || {}, lay = s.layout || {}, th = s.theme || {}, cut = s.cut || {}, snd = s.sound || {}, cam = s.camera || {};
-  const cols = Object.entries((s.brand || {}).colors || {}).map(([k,v]) => `<span class="sw" title="${esc(k)}" style="background:${esc(v)}"></span>`).join('');
-  const vids = (s.previews || []).map(p => `<figure><video src="styles/${esc(s.id)}/${esc(p.video)}" ${p.poster ? `poster="styles/${esc(s.id)}/${esc(p.poster)}"` : ''} controls playsinline preload="metadata"></video><figcaption>${esc(p.title)}</figcaption></figure>`).join('');
-  const lookDl = dl(look, LOOK);
-  const tools = Object.entries(lay.tools || {}).map(([k,v]) => `<li><code>${esc(k)}</code> ${esc(v)}</li>`).join('');
-  return `<section class="style" id="style-${esc(s.id)}">
-    <header><h3>${esc(s.name)}</h3><code>${esc(s.id)}</code><span class="tag">نسخة ${esc(s.version || 1)}</span>${s.fits ? `<span class="tag">${esc(s.fits)}</span>` : ''}</header>
-    <p class="mut">${esc(s.summary)}</p>
-    <div class="vids">${vids}</div>
-    <div class="cols">
-      <div><h3>اللغة البصرية</h3><dl>${lookDl}</dl>${look.avoid ? `<dt>ممنوع</dt><dd><ul>${list(look.avoid)}</ul></dd>` : ''}</div>
-      <div>
-        <h3>الكابشن</h3><p class="mut"><code>${esc(th.capStyle)}</code> · ${esc(th.font)} · إيقاع ${esc(th.pace || 'عادي')} ${cols}</p>
-        <ul>${list((s.captions || {}).rules)}</ul>
-        <h3 style="margin-top:14px">القص</h3><ul>${list(cut.notes)}</ul>
-        <h3 style="margin-top:14px">تقسيم الشاشة</h3><dl>${dl(lay, LAYOUT)}</dl>${tools ? `<p class="mut" style="margin-top:6px">الأشكال المتاحة:</p><ul>${tools}</ul>` : ''}
-        ${(s.keyMoments||{}).what ? `<h3 style="margin-top:14px">اللحظات المهمة</h3><dl>${dl(s.keyMoments, KEYM)}</dl>` : ''}
-        ${cam.principle ? `<h3 style="margin-top:14px">الكاميرا</h3><dl>${dl(cam, CAMERA)}</dl>` : ''}
-        <h3 style="margin-top:14px">لغة الصوت</h3><dl>${dl(snd, SOUND)}</dl>${snd.avoid ? `<dt>ممنوع</dt><dd><ul>${list(snd.avoid)}</ul></dd>` : ''}
-      </div>
-    </div>
-    <p class="say">استخدمه: قول لـClaude «منتج الفيديو ده بستايل ${esc(s.name)}»</p>
-  </section>`;
-}).join('') : '<p class="empty">مفيش ستايلات لسه. خلّص فيديو وقول «احفظه كستايل».</p>';
-
 document.getElementById('skillGrid').innerHTML = SKILLS.map(([id,name,say,what]) =>
   `<div class="card skill"><h3>${name}</h3><p class="mut"><code>${id}</code></p><p style="font-size:14px;margin:8px 0 4px">${what}</p><p class="mut">${say}</p></div>`).join('');
 document.getElementById('featGrid').innerHTML = FEATS.map(([t,d]) => `<div class="card"><h3>${t}</h3><p class="mut">${d}</p></div>`).join('');
-document.getElementById('rules').innerHTML = list(RULES);
+document.getElementById('rulesList').innerHTML = list(RULES);
+
+const NEWS = [
+  ['6.7','6 حركات موشن جديدة','نقاط بتتحول من شكل لشكل، خطوط بترسم الرقم، قطرات بتندمج، مكعبات 3D، شكل ماشي مع صوتك، وصورة بتنبني من حروف.'],
+  ['6.6','أفكار من برّا وقت الحاجة','قول «أبي أفكار»: بيدوّر في مكتبة 700+ فيديو موشن، ياخد الفكرة بس، ويرسمها بألوانك وطريقتك.'],
+  ['6.5','قص شعر ناعم','تحط نفسك فوق أي خلفية من غير هالة حوالين الراس (على جهازك ومجاني).'],
+  ['6.5','العمق','كلام ورا راسك وقدامك، وكلمة منوّرة بتنوّر الحيطة وراك.'],
+  ['6.5','الكلمة على النطق بالظبط','توقيت كل كلمة من موجة الصوت نفسها، مش تقدير.'],
+  ['6.5.2','ألوان الآيفون زي ما هي','الريل بيطلع بنفس ألوان التصوير ومش بيفتّح على أجهزة أبل.'],
+  ['6.4','ريل مراجعة منتج','لقطات المنتج + تعليقك الصوتي ← ريل مراجعة كامل.'],
+  ['6.3','«اشرح لي إزاي بيشتغل…»','أي جهاز بيترسم بالحبر وبعدين بيشتغل قدامك بخطوات.'],
+  ['6.2','كابشن chunk','قطع لحد 4 كلمات في كبسولة، والكلمة المنطوقة بلونك.'],
+  ['6.1','17 ستايل موشن','كينوت، ورق مقصوص، مجلة، بلوبرنت، تيرمنال… — في تبويب Motion Editing Styles فوق.'],
+];
+const $ = id => document.getElementById(id);
+$('ver').textContent = VERSION;
+$('stats').innerHTML = [[STYLES.length,'ستايل مونتاج'],[MSTYLES.length,'ستايل موشن'],[108,'حركة موشن'],[SKILLS.length,'مهارة'],[CAPS.length,'ستايل كابشن']]
+  .map(([n,l]) => `<div class="stat"><b>${n}</b><span>${l}</span></div>`).join('');
+$('nEdit').textContent = STYLES.length; $('nMotion').textContent = MSTYLES.length;
+$('news').innerHTML = NEWS.map(([v,t,d]) => `<div class="card"><b>${v}</b><h3>${esc(t)}</h3><p class="mut">${esc(d)}</p></div>`).join('');
+
+const vsrc = (s,p) => `styles/${encodeURIComponent(s.id)}/${encodeURIComponent(p)}`;
+const msrc = (id,ext) => `motion-previews/${encodeURIComponent(id)}.${ext}`;
+const tile = (kind, id, name, desc, video, poster, badge) => `<button class="tile" data-kind="${kind}" data-id="${esc(id)}" aria-label="${esc(name)}">
+  <div class="v">${video ? `<video muted loop playsinline preload="none" ${poster ? `poster="${poster}"` : ''} data-src="${video}"></video>` : '<div class="nov">من غير معاينة</div>'}${badge ? `<span class="badge">${esc(badge)}</span>` : ''}</div>
+  <div class="t"><h3>${esc(name)}</h3><p>${esc(desc)}</p></div></button>`;
+$('galEdit').innerHTML = STYLES.length ? STYLES.map(s => { const p = (s.previews || [])[0];
+  return tile('edit', s.id, s.name, s.summary, p ? vsrc(s, p.video) : '', p && p.poster ? vsrc(s, p.poster) : '', (s.previews||[]).length > 1 ? (s.previews.length + ' فيديو') : ''); }).join('')
+  : '<p class="empty">مفيش ستايلات لسه. خلّص فيديو وقول «احفظه كستايل».</p>';
+$('galMotion').innerHTML = MSTYLES.map(m => tile('motion', m.id, m.name, m.desc, m.preview ? msrc(m.id,'mp4') : '', m.preview ? msrc(m.id,'jpg') : '', m.moment ? 'لحظة بس' : '')).join('');
+
+// الفيديو بيشتغل لما يبان بس، عشان الصفحة تفضل خفيفة
+const io = new IntersectionObserver(es => es.forEach(e => { const v = e.target;
+  if (e.isIntersecting) { if (!v.getAttribute('src')) v.src = v.dataset.src; v.play().catch(() => {}); } else v.pause(); }), { threshold: .35 });
+document.querySelectorAll('.tile video').forEach(v => io.observe(v));
+
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === b));
+  document.querySelectorAll('[data-panel]').forEach(p => p.hidden = p.dataset.panel !== b.dataset.tab);
+  try { localStorage.setItem('cv-tab', b.dataset.tab); } catch (e) {}
+});
+try { const t = localStorage.getItem('cv-tab'); if (t) { const b = document.querySelector(`.tab[data-tab="${t}"]`); if (b) b.click(); } } catch (e) {}
+
+const useBox = say => `<div class="use">قول لـClaude: <q>${esc(say)}</q> <button class="copy" data-say="${esc(say)}">نسخ</button></div>`;
+function editDetail(s) {
+  const look = s.look || {}, lay = s.layout || {}, th = s.theme || {}, cut = s.cut || {}, snd = s.sound || {}, cam = s.camera || {};
+  const cols = Object.entries((s.brand || {}).colors || {}).map(([k,v]) => `<span class="sw" title="${esc(k)}" style="background:${esc(v)}"></span>`).join('');
+  const tools = Object.entries(lay.tools || {}).map(([k,v]) => `<li><code>${esc(k)}</code> ${esc(v)}</li>`).join('');
+  $('dMedia').innerHTML = (s.previews || []).map(p => `<video src="${vsrc(s,p.video)}" ${p.poster ? `poster="${vsrc(s,p.poster)}"` : ''} controls playsinline preload="metadata"></video>`).join('');
+  $('dBody').innerHTML = `<h2>${esc(s.name)}</h2><p class="mut"><code>${esc(s.id)}</code> · نسخة ${esc(s.version || 1)}</p><p>${esc(s.summary)}</p>
+    ${useBox('منتج الفيديو ده بستايل ' + s.name)}
+    ${s.fits ? `<p class="mut">بيناسب: ${esc(s.fits)}</p>` : ''}
+    <details class="more"><summary>اللغة البصرية</summary><dl>${dl(look, LOOK)}</dl>${look.avoid ? `<dt>ممنوع</dt><dd><ul>${list(look.avoid)}</ul></dd>` : ''}</details>
+    <details class="more"><summary>الكابشن والقص</summary><p class="mut"><code>${esc(th.capStyle)}</code> · ${esc(th.font)} ${cols}</p><ul>${list((s.captions || {}).rules)}</ul><h3 style="margin-top:12px">القص</h3><ul>${list(cut.notes)}</ul></details>
+    <details class="more"><summary>تقسيم الشاشة</summary><dl>${dl(lay, LAYOUT)}</dl>${tools ? `<ul>${tools}</ul>` : ''}</details>
+    ${(s.keyMoments||{}).what ? `<details class="more"><summary>اللحظات المهمة</summary><dl>${dl(s.keyMoments, KEYM)}</dl></details>` : ''}
+    ${cam.principle ? `<details class="more"><summary>الكاميرا</summary><dl>${dl(cam, CAMERA)}</dl></details>` : ''}
+    <details class="more"><summary>لغة الصوت</summary><dl>${dl(snd, SOUND)}</dl>${snd.avoid ? `<ul>${list(snd.avoid)}</ul>` : ''}</details>`;
+}
+const FAM = {calm:'هادي',onetake:'ون تيك',editorial:'تحريري',punch:'ضربات',tech:'تقني'};
+function motionDetail(m) {
+  const blend = (m.blend || []).map(b => (MSTYLES.find(x => x.id === b) || {}).name || b);
+  $('dMedia').innerHTML = m.preview ? `<video src="${msrc(m.id,'mp4')}" poster="${msrc(m.id,'jpg')}" controls autoplay muted loop playsinline></video>` : '';
+  $('dBody').innerHTML = `<h2>${esc(m.name)}</h2><p class="mut"><code>${esc(m.id)}</code> · ستايل موشن</p><p>${esc(m.desc)}</p>
+    ${useBox('اعمل فيديو موشن على الفويس أوفر ده بستايل ' + m.name)}
+    ${useBox('منتج الريل ده بلمسات موشن بستايل ' + m.name)}
+    ${m.moment ? '<p class="mut">⚡ ستايل «لحظة»: 1–3 ثواني للهوك أو الطلب، مش للفيديو كله.</p>' : ''}
+    ${m.needsCut ? '<p class="mut">✂️ في ريل الكلام بيبدّل الخلفية وإنت مقصوص فوقها.</p>' : ''}
+    <details class="more"><summary>امتى يناسب</summary><p>${(m.cues || []).map(c => `<span class="tag">${esc(c)}</span>`).join('')}</p>
+    <p class="mut">العيلة: ${(m.families || []).map(f => FAM[f] || f).join('، ')}</p></details>
+    ${blend.length ? `<details class="more"><summary>أحلى دمج</summary><p>${blend.map(b => `<span class="tag">${esc(m.name)} + ${esc(b)}</span>`).join('')}</p></details>` : ''}`;
+}
+const dlg = $('dlg');
+document.addEventListener('click', e => {
+  const t = e.target.closest('.tile');
+  if (t) { if (t.dataset.kind === 'edit') editDetail(STYLES.find(s => s.id === t.dataset.id)); else motionDetail(MSTYLES.find(s => s.id === t.dataset.id)); dlg.showModal(); return; }
+  const c = e.target.closest('.copy');
+  if (c && navigator.clipboard) navigator.clipboard.writeText(c.dataset.say).then(() => { c.textContent = 'اتنسخ ✓'; setTimeout(() => c.textContent = 'نسخ', 1400); }).catch(() => {});
+});
+$('dClose').onclick = () => dlg.close();
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+dlg.addEventListener('close', () => dlg.querySelectorAll('video').forEach(v => v.pause()));
 </script>
 </body>
 </html>

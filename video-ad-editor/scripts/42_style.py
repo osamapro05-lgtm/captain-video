@@ -35,6 +35,8 @@ except Exception:
 SKILL = Path(__file__).resolve().parent.parent
 BUILTIN = SKILL / "styles"
 TEMPLATE = SKILL / "catalog" / "catalog.TEMPLATE.html"
+MOTION_CATALOG = SKILL / "motion" / "styles" / "catalog.json"      # الـ17 ستايل موشن (node motion/styles.js --catalog)
+MOTION_PREVIEWS = SKILL / "motion" / "styles" / "previews"         # <id>.mp4 + <id>.jpg (motion/styles/preview/render-previews.sh)
 HOME = Path(os.environ.get("VAE_HOME") or (Path.home() / ".video-ad-editor"))
 LOCAL = HOME / "styles"
 BRAND_KEYS = ("bg", "ink", "acc", "clay", "mut", "onAcc", "logo", "font", "handle")
@@ -89,11 +91,22 @@ def cmd_list(_):
     if not dirs:
         print("مفيش ستايلات لسه.")
         return 0
+    print("== Editing Styles ==")
     for sid, d in dirs.items():
         s = read_json(d / "style.json", {})
         where = "البلجن" if d.parent == BUILTIN else "الجهاز"
         print(f"{sid}\t{s.get('name', sid)}\t{where}\t{s.get('summary', '')}")
+    print("== Motion Editing Styles ==  (motion-video: project.json ← style · ريل الكلام: MV.useStyle)")
+    for m in motion_styles():
+        print(f"{m['id']}\t{m['name']}\t{'لحظة' if m.get('moment') else 'فيديو كامل'}\t{m.get('desc', '')}")
     return 0
+
+
+def motion_styles():
+    ms = (read_json(MOTION_CATALOG, {}) or {}).get("styles", [])
+    for m in ms:
+        m["preview"] = (MOTION_PREVIEWS / f"{m['id']}.mp4").exists()
+    return ms
 
 
 def cmd_show(a):
@@ -251,8 +264,10 @@ def cmd_save(a):
 
 def catalog_html():
     styles = [read_json(d / "style.json", {}) for d in style_dirs().values()]
-    data = json.dumps(styles, ensure_ascii=False).replace("</", "<\\/")
-    return TEMPLATE.read_text(encoding="utf-8").replace("/*STYLES_JSON*/[]", data)
+    js = lambda o: json.dumps(o, ensure_ascii=False).replace("</", "<\\/")
+    ver = (read_json(SKILL.parent / ".claude-plugin" / "plugin.json", {}) or {}).get("version", "")
+    return (TEMPLATE.read_text(encoding="utf-8").replace("/*STYLES_JSON*/[]", js(styles))
+            .replace("/*MOTION_JSON*/[]", js(motion_styles())).replace("/*VERSION*/", str(ver).replace("'", "")))
 
 
 def cmd_catalog(a):
@@ -278,8 +293,12 @@ def cmd_serve(a):
                 body, ctype = catalog_html().encode("utf-8"), "text/html; charset=utf-8"
             else:
                 parts = path.strip("/").split("/")
-                d = style_dirs().get(parts[1]) if len(parts) >= 3 and parts[0] == "styles" else None
-                f = (d / "/".join(parts[2:])).resolve() if d else None
+                if len(parts) == 2 and parts[0] == "motion-previews":
+                    d, rel = MOTION_PREVIEWS, parts[1]
+                else:
+                    d = style_dirs().get(parts[1]) if len(parts) >= 3 and parts[0] == "styles" else None
+                    rel = "/".join(parts[2:])
+                f = (d / rel).resolve() if d else None
                 if not f or not f.is_file() or d.resolve() not in f.parents:
                     self.send_error(404)
                     return

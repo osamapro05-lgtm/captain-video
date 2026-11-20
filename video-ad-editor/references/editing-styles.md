@@ -16,6 +16,16 @@
 ⛔ **كل حاجة في الستايل مفهوم، مش copy paste.** الفيديو الجديد بيطلع بعناصره وأصواته وتقسيمه هو من كلامه، بنفس الروح. `examples` (اللي فيها `seen` و`seenLayout` و`seenSound`) بتوريك المفاهيم دي اتطبقت إزاي مرة، ومتتنسخش.
 - **معاينة:** ريلات حقيقية اتعملت بيه.
 
+## قسمين: Editing Styles و Motion Editing Styles
+
+| القسم | فيه | بيتطبّق إزاي |
+|---|---|---|
+| **Editing Styles** | الستايلات اللي تحت (`video-ad-editor/styles/<id>/`) | `42_style.py apply` على ريل كلام أو لقطات |
+| **Motion Editing Styles** | الـ17 بتوع `motion/styles.js` (كينوت، ورق مقصوص، مجلة…) — معايناتهم `motion/styles/previews/<id>.mp4` | فويس أوفر بس / فيلم موشن: سكل `motion-video` و`project.json ← "style"`. ريل كلام: `MV.useStyle('<id>')`. الدليل `references/styles.md` |
+
+- `42_style.py list` بيطبع القسمين. صفحة البلجن (`serve`) بتوريهم في تبويبين، الفيديو والاسم الأول والقواعد لما يدوس.
+- اتعدّل ستايل موشن في `styles.js`؟ `node motion/styles.js --catalog` وبعدين `bash motion/styles/preview/render-previews.sh <id>`.
+
 ## المكان
 
 | المكان | فيه | بيتنقل؟ |

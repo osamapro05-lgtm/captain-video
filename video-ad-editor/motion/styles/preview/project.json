@@ -1,0 +1,12 @@
+{
+ "name": "معاينة ستايل موشن — render-previews.sh بيبدّل style",
+ "fps": 30,
+ "width": 1080,
+ "height": 1920,
+ "duration": 4,
+ "style": "keynote",
+ "keepBrand": false,
+ "palette": { "bg": "#F0EBE0", "ink": "#1B1A17", "acc": "#D97757", "mut": "#8A847A", "card": "#FFFFFF", "onAcc": "#FFFFFF" },
+ "fonts": { "display": "IBM Plex Sans Arabic", "body": "IBM Plex Sans Arabic", "num": "Inter" },
+ "scenes": [ { "id": "sample", "file": "scenes/sample.js", "start": 0, "end": 4 } ]
+}
