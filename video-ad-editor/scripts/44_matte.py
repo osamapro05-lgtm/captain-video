@@ -9,13 +9,17 @@
    python3 44_matte.py <work> <من> <إلى> --from-apple         ← ⚡ سريع (ثواني): قصّ الماك نفسه بس ننظّف حوافه
         (نضيّقه بكسل ونشيل لون الغرفة من الأطراف) — للمقاطع اللي ما فيها شي ورا الراس (قرار ماجد: بيريف نت للي ورا الراس بس)
    الفريمات من bt/src (11_behind_text.js يجهّزها) أو vfr.
-   ينادى تلقائياً من 11_behind_text.js (build/stack/cutout/headout/person). MATTE=apple يرجّع قصّ الماك.
+   ينادى من 11_behind_text.js (build/stack/cutout/headout/person) بس لما MATTE=best — الافتراضي القصّ الأساسي من غيره.
 
    ⏱️ السرعة: حوالي 13 ث للفريم على معالج الماك (ثانية كلام = 30 فريم ≈ 6–7 دقايق) — يكمّل من وين وقف.
+   🎮 كرت إنفيديا + torch بـCUDA + transformers؟ بيستخدم PyTorch أول (RTX 4060: 0.3 ث/فريم قصّ + ~0.3 تنضيف). وإلا:
    🎮 فيه كرت شاشة إنفيديا (ويندوز/لينكس)؟ يستخدمه تلقائياً لو منصّب onnxruntime-gpu (00_setup.sh --extras يركّبه لحاله) — أسرع بواجد.
    القصّ الخام ينحفظ بـbt/bf_raw فإعادة التشغيل ما تعيد شي جاهز.
    يحتاج: pip3 install rembg onnxruntime pymatting (أول مرة ينزّل الموديل ~970 ميقا لـ~/.u2net)."""
 import os, sys, json, time
+for _s in (sys.stdout, sys.stderr):   # ويندوز: الطرفية cp1252 وكانت بتقع على أول سطر عربي قبل القصّ
+    try: _s.reconfigure(encoding='utf-8')
+    except Exception: pass
 import numpy as np
 from PIL import Image
 
@@ -35,7 +39,32 @@ print(f"قصّ بيريف نت: {len(ids)} فريم — ناقص {len(todo)} (�
 if CHECK: sys.exit(0)
 
 # 1) القصّ الخام (يكمّل من وين وقف)
-if todo:
+def torch_cut(todo):
+    """بيريف نت بورتريه على كرت إنفيديا بـPyTorch (21 نوفمبر، RTX 4060: 0.24 ث/فريم بدل 13 على المعالج).
+       نسخة ONNX على CUDA كانت 17 ث/فريم وDirectML وقع — عشان كده PyTorch. يرجّع False لو مفيش كرت أو مكتبات."""
+    if os.environ.get("GPU") == "0": return False
+    try:
+        import torch
+        from transformers import AutoModelForImageSegmentation
+        if not torch.cuda.is_available(): return False
+    except Exception: return False
+    print("  القص على: كرت الشاشة (PyTorch CUDA)")
+    # الكود اللي جاي مع الموديل متثبّت على نسخة اتراجعت (trust_remote_code) — متحدّثهاش من غير مراجعة
+    m = AutoModelForImageSegmentation.from_pretrained("ZhengPeng7/BiRefNet-portrait", trust_remote_code=True,
+                                                      revision="b6561965a70070d9143fd9e558f6ca3c481510db").cuda().eval().half()
+    mean = torch.tensor([0.485, 0.456, 0.406], device="cuda").view(1, 3, 1, 1); std = torch.tensor([0.229, 0.224, 0.225], device="cuda").view(1, 3, 1, 1)
+    T = time.time()
+    with torch.no_grad():
+        for k, i in enumerate(todo):
+            im = Image.open(src(i)).convert("RGB")
+            x = torch.from_numpy(np.asarray(im.resize((1024, 1024), Image.BILINEAR))).cuda().permute(2, 0, 1)[None].float() / 255
+            p = m(((x - mean) / std).half())[-1].sigmoid().float()
+            p = torch.nn.functional.interpolate(p, size=(im.height, im.width), mode="bilinear", align_corners=False)[0, 0]
+            o = os.path.join(RAW, i + ".png"); Image.fromarray((p.clamp(0, 1) * 255).byte().cpu().numpy()).save(o + ".tmp.png"); os.replace(o + ".tmp.png", o)
+            if k % 30 == 0:
+                el = (time.time() - T) / (k + 1); print(f"  {k+1}/{len(todo)} · {el:.2f} ث/فريم · باقي ≈ {el*(len(todo)-k-1)/60:.1f} د", flush=True)
+    return True
+if todo and not torch_cut(todo):
     try:
         from rembg import new_session, remove
     except Exception:
@@ -80,10 +109,17 @@ for k, i in enumerate(ids):
     if len(nb) == 3: a = np.median(np.stack(nb), axis=0)
     im = np.asarray(Image.open(src(i)).convert("RGB"), np.float64) / 255
     if a.shape != im.shape[:2]: a = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).resize((im.shape[1], im.shape[0]), Image.LANCZOS), np.float32) / 255
-    F = estimate_foreground_ml(im, a.astype(np.float64)) if estimate_foreground_ml else im
-    Image.fromarray((a * 255).clip(0, 255).astype(np.uint8)).save(os.path.join(MASK, i + ".png"))
+    F = im
+    if estimate_foreground_ml:   # بنص الدقة وعلى الأطراف بس: 4× أسرع (0.6 ← ~0.15 ث/فريم) والجوه زي ما هو بدقته
+        h2, w2 = im.shape[0] // 2, im.shape[1] // 2
+        sm = lambda x: np.asarray(Image.fromarray(x).resize((w2, h2), Image.BILINEAR))
+        Fh = estimate_foreground_ml(sm((im * 255).astype(np.uint8)) / 255.0, sm((a * 255).astype(np.uint8)) / 255.0)
+        Fu = np.asarray(Image.fromarray((Fh.clip(0, 1) * 255).astype(np.uint8)).resize((im.shape[1], im.shape[0]), Image.BILINEAR)) / 255.0
+        edge = ((a > 0.02) & (a < 0.98))[..., None]
+        F = np.where(edge, Fu, im)
+    Image.fromarray((a * 255).clip(0, 255).astype(np.uint8)).save(os.path.join(MASK, i + ".png"), compress_level=1)
     rgba = np.dstack([(F * 255).clip(0, 255), a[..., None] * 255]).astype(np.uint8)
-    Image.fromarray(rgba).save(os.path.join(PERS, i + ".png"))
+    Image.fromarray(rgba).save(os.path.join(PERS, i + ".png"), compress_level=1)   # الضغط الأقل: 0.15 ← ~0.03 ث، ومفيش فقد
     if k % 10 == 0:   # 4) لون الغرفة حولك (حلقة برّا حدودك) — للخلفية الجديدة: لون قريب منه ما يطلّع هالة (ملاحظة ماجد)
         sm = a[::4, ::4]; out = sm < 0.02
         from numpy.lib.stride_tricks import sliding_window_view as _sw

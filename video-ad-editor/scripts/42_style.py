@@ -35,7 +35,7 @@ except Exception:
 SKILL = Path(__file__).resolve().parent.parent
 BUILTIN = SKILL / "styles"
 TEMPLATE = SKILL / "catalog" / "catalog.TEMPLATE.html"
-MOTION_CATALOG = SKILL / "motion" / "styles" / "catalog.json"      # الـ17 ستايل موشن (node motion/styles.js --catalog)
+MOTION_CATALOG = SKILL / "motion" / "styles" / "catalog.json"      # ستايلات الموشن (node motion/styles.js --catalog)
 MOTION_PREVIEWS = SKILL / "motion" / "styles" / "previews"         # <id>.mp4 + <id>.jpg (motion/styles/preview/render-previews.sh)
 HOME = Path(os.environ.get("VAE_HOME") or (Path.home() / ".video-ad-editor"))
 LOCAL = HOME / "styles"

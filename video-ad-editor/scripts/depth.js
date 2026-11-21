@@ -6,7 +6,7 @@
    + مربع ينرسم بالضبط على المعلومة (43_textbox.py) وصوت القلم معه                        DEPTH.box({…})
    كل حركة تسجّل صوتها بـMV.cue (قلم، تكّة، ضربة…) ← `node 04_render_frames.js <work> cues` ← 05_sfx.py
 
-   يحتاج القصّ لفريمات اللقطة: node scripts/11_behind_text.js <work> person <من-إلى>   (بيريف نت تلقائياً — 44_matte.py)
+   يحتاج القصّ لفريمات اللقطة: node scripts/11_behind_text.js <work> person <من-إلى>   (MATTE=best = بيريف نت لو طلب أفضل قصّ)
    التحميل: compose.html ← <script src="depth.js"></script> بعد moves-compose.js (04_render_frames.js ينسخه لو ناقص)
 
    الاستخدام (بملف مشاهدك):

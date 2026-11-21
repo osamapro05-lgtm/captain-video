@@ -29,6 +29,7 @@
     'Lalezar': [['Lalezar-Regular.ttf', '400']], 'Aref Ruqaa': [['ArefRuqaa-Regular.ttf', '400'], ['ArefRuqaa-Bold.ttf', '700']],
     'Readex Pro': [['ReadexPro-VF.ttf', '160 700']], 'Noto Kufi Arabic': [['NotoKufiArabic-VF.ttf', '100 900']], 'Cairo': [['Cairo-VF.ttf', '200 1000']],
     'Tajawal': [['Tajawal-Regular.ttf', '400'], ['Tajawal-Bold.ttf', '700'], ['Tajawal-Black.ttf', '900']], 'Inter': [['Inter-VF.ttf', '100 900']],
+    'Amiri Quran': [['AmiriQuran-Regular.ttf', '400']],
   };
   const MONO = 'ui-monospace, Menlo, Consolas, monospace';
 
@@ -87,6 +88,12 @@
     devCard: { name: 'كرت أداة', desc: 'كريمي بشبكة وأشعة، كرت أبيض، breadcrumb، كلمة أكسنت بالرقعة وchips', families: ['calm', 'editorial'], personality: 'clean',
       palette: { bg: '#F4EFE6', ink: '#1F1D1A', acc: '#C8643B', mut: '#8A847A', paper: '#FFFFFF', line: '#E7E0D4' }, fonts: { display: 'IBM Plex Sans Arabic', body: 'IBM Plex Sans Arabic', num: 'Inter', accent: 'Aref Ruqaa', mono: MONO },
       post: { grain: 0, vignette: 0.06 }, surface: 'devgrid', card: 'white', label: 'chip', person: 'plain', needsCut: true, cues: ['tool', 'skill', 'free', 'launch', 'fact'], blend: ['keynote', 'terminal', 'studio3D'] },
+    monoWire: { lockAcc: true, name: 'مونو واير', desc: 'أبيض وأسود بس على أسود بنجوم باهتة: رسومات خطوط رفيعة بتتبني مع الكلام، عنوان تقيل، وكلمة سيريف واحدة تحت', families: ['editorial', 'calm'], personality: 'clean',
+      palette: { bg: '#050505', ink: '#FFFFFF', acc: '#FFFFFF', mut: 'rgba(255,255,255,.38)', hi: '#BDBDBD', line: 'rgba(255,255,255,.9)' }, fonts: { display: 'Cairo', body: 'IBM Plex Sans Arabic', num: 'Inter', accent: 'Amiri Quran' },
+      post: { grain: 0, vignette: 0.3 }, surface: 'stars', vfx: 'stars', card: 'wire', label: 'invert', person: 'plain', needsCut: false, cues: ['explain', 'data', 'number', 'steps', 'compare'], blend: ['keynote', 'glassUI'] },
+    monoWireY: { lockAcc: true, name: 'مونو واير أصفر', desc: 'مونو واير بلمسة أصفر: أبيض على أسود، والحاجة المهمة بس (الكلمة المعكوسة، البار الكسبان، ✓، الرقم) أصفر فاقع — ومعاه جرافيك HyperFrames للحظات الكبيرة', families: ['editorial', 'calm'], personality: 'clean',
+      palette: { bg: '#050505', ink: '#FFFFFF', acc: '#FFD60A', mut: 'rgba(255,255,255,.38)', hi: '#BDBDBD', line: 'rgba(255,255,255,.9)' }, fonts: { display: 'Cairo', body: 'IBM Plex Sans Arabic', num: 'Inter', accent: 'Amiri Quran' },
+      post: { grain: 0, vignette: 0.3 }, surface: 'stars', vfx: 'stars', card: 'wire', label: 'invert', person: 'plain', needsCut: false, cues: ['explain', 'data', 'number', 'steps', 'compare'], blend: ['keynote', 'glassUI'] },
   };
 
   /* ══ أدوات مشتركة ══ */
@@ -141,6 +148,11 @@
     pastel(X, t, S) { X.fillStyle = S.P.bg; X.fillRect(0, 0, S.W, S.H); if (!S._pb) { S._pb = mk(S.W, S.H); const g = S._pb.getContext('2d'), r = rng(12); g.filter = 'blur(60px)';
         for (let n = 0; n < 5; n++) { g.fillStyle = n % 2 ? 'rgba(255,255,255,.35)' : 'rgba(200,80,130,.18)'; g.beginPath(); g.ellipse(r() * S.W, r() * S.H, 160 + r() * 200, 120 + r() * 160, r() * 3, 0, TAU); g.fill(); } }
       X.drawImage(S._pb, 0, 0); },
+    // مونو واير: أسود بنور خفيف بالنص ونجوم باهتة بتلمع ببطء
+    stars(X, t, S) { X.fillStyle = S.P.bg; X.fillRect(0, 0, S.W, S.H); const g = X.createRadialGradient(S.W / 2, S.H * 0.45, 30, S.W / 2, S.H * 0.45, S.H * 0.6);
+      g.addColorStop(0, ha(S.P.ink, .07)); g.addColorStop(1, ha(S.P.ink, 0)); X.fillStyle = g; X.fillRect(0, 0, S.W, S.H);
+      if (!S._st) { const r = rng(61); S._st = Array.from({ length: 140 }, () => [r() * S.W, r() * S.H, 0.8 + r() * 1.6, r() * TAU]); }
+      X.save(); X.fillStyle = S.P.ink; for (const [x, y, rad, ph] of S._st) { X.globalAlpha = 0.12 + 0.18 * (0.5 + 0.5 * Math.sin(t * 0.8 + ph)); X.beginPath(); X.arc(x, y, rad, 0, TAU); X.fill(); } X.restore(); },
     devgrid(X, t, S) { X.fillStyle = S.P.bg; X.fillRect(0, 0, S.W, S.H); X.save(); X.strokeStyle = 'rgba(0,0,0,.06)'; X.lineWidth = 1.5;
       for (let x = 0; x <= S.W; x += 40) { X.beginPath(); X.moveTo(x, 0); X.lineTo(x, S.H); X.stroke(); } for (let y = 0; y <= S.H; y += 40) { X.beginPath(); X.moveTo(0, y); X.lineTo(S.W, y); X.stroke(); }
       const cx = S.W / 2, cy = S.H * 0.3, rot = t * 0.04; X.globalAlpha = 0.07; X.fillStyle = S.P.acc;
@@ -149,6 +161,7 @@
   /* ══ معالجة الفيديو لما ما نبدّل الخلفية — (X, t, S, video) ══ */
   const VID = {
     plain(X, t, S, v) { v(X); },
+    stars(X, t, S, v) { SURF.stars(X, t, S); v(X); },   // الخلفية نجوم، والفيديو (لو فيه) فوقها
     film(X, t, S, v) { const k = cl(S.kb ?? 0), z = 1 + 0.06 * E.sineInOut(k), fl = 1 + (rng(Math.floor(t * 24) * 31)() - 0.5) * 0.05;
       X.save(); X.translate(S.W / 2, S.H / 2); X.scale(z, z); X.translate(-S.W / 2 - 10 * k, -S.H / 2);
       X.filter = `grayscale(1) sepia(.55) contrast(1.12) brightness(${(0.9 * fl).toFixed(3)})`; v(X); X.filter = 'none'; X.restore(); },
@@ -198,6 +211,9 @@
     brutal(X, x, y, w, h, o, S) { X.save(); X.fillStyle = S.P.ink; X.fillRect(x + 14, y + 14, w, h); X.fillStyle = o.fill || S.P.paper; X.fillRect(x, y, w, h); X.lineWidth = 9; X.strokeStyle = S.P.ink; X.strokeRect(x, y, w, h); X.restore(); },
     toon(X, x, y, w, h, o, S) { X.save(); X.lineJoin = 'round'; X.fillStyle = S.P.ink; X.beginPath(); X.roundRect(x + 8, y + 9, w, h, o.r ?? 34); X.fill();
       X.fillStyle = o.fill || S.P.paper; X.beginPath(); X.roundRect(x, y, w, h, o.r ?? 34); X.fill(); X.lineWidth = 7; X.strokeStyle = S.P.ink; X.stroke(); X.restore(); },
+    // كرت خطوط رفيعة: الشغّال أبيض بتوهج، والباقي (o.dim) رمادي باهت
+    wire(X, x, y, w, h, o, S) { X.save(); X.beginPath(); X.roundRect(x, y, w, h, o.r ?? 28); X.fillStyle = o.fill || S.P.card || 'rgba(8,8,8,.92)'; X.fill();
+      if (!o.dim) { X.shadowColor = ha(S.P.ink, .45); X.shadowBlur = o.glow ?? 22; } X.lineWidth = o.lw || 2.5; X.strokeStyle = o.dim ? ha(S.P.ink, .28) : S.P.line; X.stroke(); X.restore(); },
     white(X, x, y, w, h, o, S) { X.save(); X.shadowColor = 'rgba(0,0,0,.08)'; X.shadowBlur = 30; X.shadowOffsetY = 8; X.fillStyle = S.P.paper; X.beginPath(); X.roundRect(x, y, w, h, o.r ?? 32); X.fill();
       X.shadowColor = 'transparent'; X.lineWidth = 2; X.strokeStyle = S.P.line || '#E7E0D4'; X.stroke(); X.restore(); },
   };
@@ -254,6 +270,10 @@
     pill(X, s, x, y, o, S) { const k = o.k ?? 1, size = o.size || 72, w = measure(X, s, size, S.fonts.display, 400) + 90, h = size * 1.5, sq = 1 + 0.12 * Math.sin(cl(k) * Math.PI);
       X.save(); X.translate(x, y); X.scale(sq * cl(k * 1.4), (2 - sq) * cl(k * 1.4)); CARD.toon(X, -w / 2, -h / 2, w, h, { r: h / 2, fill: o.bg || S.P.paper }, S);
       txt(X, s, 0, size * 0.1, { family: S.fonts.display, weight: 400, size, color: o.color || S.P.ink, baseline: 'middle' }); X.restore(); },
+    // كلمة معكوسة: أسود على مستطيل أبيض بينفرد من اليمين
+    invert(X, s, x, y, o, S) { const k = o.k ?? 1; if (k <= 0) return; const size = o.size || 96, w = measure(X, s, size, S.fonts.display, 900) + 44, h = size * 1.25, x1 = x + w / 2;
+      X.save(); X.fillStyle = o.bg || S.P.acc; X.fillRect(x1 - w * S.ease(k), y - size * 0.92, w * S.ease(k), h); X.beginPath(); X.rect(x1 - w * S.ease(k), y - size, w, h + size); X.clip();
+      txt(X, s, x, y, { family: S.fonts.display, weight: 900, size, color: o.color || S.P.bg }); X.restore(); },
     chip(X, s, x, y, o, S) { const k = o.k ?? 1, size = o.size || 46, w = measure(X, s, size, S.fonts.body, 700) + 64, h = size * 1.7, sc = 0.8 + 0.2 * E.backOut(cl(k));
       X.save(); X.translate(x, y); X.scale(sc, sc); X.globalAlpha *= cl(k * 2); X.beginPath(); X.roundRect(-w / 2, -h / 2, w, h, h / 2); X.fillStyle = o.bg || (o.solid ? S.P.acc : S.P.paper); X.fill();
       if (!o.solid) { X.lineWidth = 2; X.strokeStyle = S.P.line || '#E7E0D4'; X.stroke(); } txt(X, s, 0, size * 0.08, { family: S.fonts.body, size, color: o.color || (o.solid ? '#FFFFFF' : S.P.ink), baseline: 'middle' }); X.restore(); },
@@ -296,6 +316,26 @@
     // سهم أبعاد بلوبرنت — o: {x1,x2,y,label,k}
     dimension(X, t, o, S) { const k = o.k ?? 1, x2 = lerp(o.x1, o.x2, k); X.save(); X.strokeStyle = S.P.ink; X.lineWidth = 2.5; X.beginPath(); X.moveTo(o.x1, o.y - 20); X.lineTo(o.x1, o.y + 20); X.moveTo(o.x1, o.y); X.lineTo(x2, o.y);
       if (k > 0.98) { X.moveTo(o.x2, o.y - 20); X.lineTo(o.x2, o.y + 20); } X.stroke(); if (k > 0.98 && o.label) txt(X, o.label, (o.x1 + o.x2) / 2, o.y - 22, { family: S.fonts.num, weight: 500, size: 40, color: S.P.hi, dir: 'ltr' }); X.restore(); },
+    /* ── مونو واير ── */
+    // كلمة الكابشن: سيريف واحدة بالنص تحت — o: {word, x, y, size, k}
+    serifWord(X, t, o, S) { const k = o.k ?? 1; if (k <= 0 || !o.word) return; X.save(); X.globalAlpha *= cl(k * 1.6); X.filter = k < 0.99 ? `blur(${((1 - k) * 6).toFixed(1)}px)` : 'none';
+      txt(X, o.word, o.x ?? 540, (o.y ?? 1500) + (1 - k) * 14, { family: S.fonts.accent || S.fonts.display, weight: 400, size: o.size || 72, color: o.color || S.P.ink, dir: o.dir || 'rtl' }); X.restore(); },
+    // قايمة «جاي في الفيديو»: دواير بتتعلّم ✓ — o: {items, done, active, x (يمين), y, gap, size, k}
+    checklist(X, t, o, S) { const size = o.size || 44, gap = o.gap || size * 1.9, k = o.k ?? 1;
+      o.items.forEach((s, i) => { const ki = cl(k * o.items.length - i); if (ki <= 0) return; const y = o.y + i * gap, done = i < (o.done || 0), on = i === o.active || done;
+        X.save(); X.globalAlpha *= ki * (o.active == null || on ? 1 : 0.4); X.strokeStyle = S.P.ink; X.lineWidth = 2.5; X.beginPath(); X.arc(o.x - size * 0.4, y - size * 0.35, size * 0.38, 0, TAU);
+        if (done) { X.fillStyle = S.P.acc; X.fill(); X.strokeStyle = S.P.bg; X.lineWidth = 4; X.beginPath(); X.moveTo(o.x - size * 0.58, y - size * 0.36); X.lineTo(o.x - size * 0.44, y - size * 0.2); X.lineTo(o.x - size * 0.2, y - size * 0.52); }
+        X.stroke(); txt(X, s, o.x - size * 1.1, y, { family: S.fonts.body, weight: 600, size, color: S.P.ink, align: 'right' }); X.restore(); }); },
+    // بار تشارت بيطلع — o: {values (0..1), labels, x, y (القاعدة), w, h, k, active}
+    bars(X, t, o, S) { const n = o.values.length, bw = o.w / (n * 1.8), k = o.k ?? 1; X.save(); X.strokeStyle = S.P.mut; X.lineWidth = 2; X.beginPath(); X.moveTo(o.x, o.y); X.lineTo(o.x + o.w, o.y); X.stroke();
+      o.values.forEach((v, i) => { const bx = o.x + i * (o.w / n) + (o.w / n - bw) / 2, bh = o.h * v * S.ease(cl(k * n - i * 0.6)), on = o.active == null || o.active === i;
+        X.save(); X.fillStyle = on ? S.P.acc : S.P.hi; X.globalAlpha *= on ? 1 : 0.55; X.fillRect(bx, o.y - bh, bw, bh); X.restore();
+        if (o.labels) txt(X, o.labels[i], bx + bw / 2, o.y + 56, { family: S.fonts.body, weight: 600, size: 40, color: S.P.ink }); }); X.restore(); },
+    // سحابة نقط = جمهور — o: {x, y, r, n, k, seed, lit (كام نقطة منوّرة)}
+    dots(X, t, o, S) { const r = rng(o.seed || 17), n = o.n || 160, k = o.k ?? 1; X.save();
+      for (let i = 0; i < n; i++) { const a = r() * TAU, d = Math.sqrt(r()) * o.r, ph = r() * TAU, ki = cl(k * 1.4 - (d / o.r) * 0.4); if (ki <= 0) continue;
+        const lit = i < (o.lit || 0); X.globalAlpha = ki * (lit ? 1 : 0.35 + 0.25 * Math.sin(t * 2 + ph)); X.fillStyle = lit ? S.P.acc : S.P.ink;
+        X.beginPath(); X.arc(o.x + Math.cos(a) * d, o.y + Math.sin(a) * d, lit ? 5 : 3, 0, TAU); X.fill(); } X.restore(); },
     // اهتزاز للضربة — يرجّع {dx,dy} تحطه بـtranslate — o: {s, amp}
     shake(X, t, o, S) { const k = cl((t - o.s) / 0.3); if (k >= 1 || k <= 0) return { dx: 0, dy: 0 }; const a = (o.amp || 18) * (1 - k), r = rng(Math.floor(t * 60)); return { dx: (r() - 0.5) * 2 * a, dy: (r() - 0.5) * 2 * a }; },
     // لفّة جريدة (الكلاسيكية) — ترجّع scale/rotate تطبقها قبل رسم الصفحة — o: {s, dur}
@@ -303,6 +343,8 @@
   };
 
   /* ══ المصنع ══ */
+  // hex → rgba بشفافية (ألوان monoWire من الباليت بدل أبيض ثابت)
+  function ha(c, a) { const m = /^#([0-9a-f]{6})$/i.exec(c || ''); if (!m) return c; const n = parseInt(m[1], 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; }
   function resolve(spec) {
     if (spec && typeof spec === 'object') return spec;
     const [a, b] = String(spec || 'keynote').split('+').map(s => s.trim()), A = TOK[a];

@@ -12,6 +12,24 @@ const SIG = {   // توقيع واحد يعرّف كل ستايل
   blueprint: (S, X, t, k) => S.sig.dimension(X, t, { k, x1: 190, x2: 890, y: 1650, label: '700 مم' }),
   newsprint: (S, X, t) => S.sig.redact(X, t, { s: 1.6, dur: 0.6, x: 300, y: 1630, w: 480, h: 60 }),
 };
+/* مونو واير: مفيش متكلم — عنوان + كلمة معكوسة + كروت خطوط + بار بيطلع + قايمة بتتعلّم + كلمة سيريف تحت */
+function monoWire(S, X, t, E) {
+  S.background(X, t, {});
+  S.text(X, 'ليه إعلانك', 540, 300, { size: 92, weight: 900, alpha: E(t / 0.4) });
+  S.label(X, 'غالي؟', 540, 420, { k: E((t - 0.3) / 0.5), size: 92 });
+  const kc = E((t - 0.6) / 0.6);
+  X.save(); X.globalAlpha = kc; X.translate(0, (1 - kc) * 40);
+  S.card(X, 140, 560, 380, 470, { dim: t > 2.2 }); S.card(X, 560, 560, 380, 470, {});
+  [[330, 'إعلان أ'], [750, 'إعلان ب']].forEach(([cx, s]) => { X.save(); X.strokeStyle = S.P.ink; X.lineWidth = 2; X.globalAlpha *= .6;
+    X.beginPath(); X.arc(cx - 130, 620, 18, 0, 6.283); X.stroke(); X.globalAlpha /= .6; X.fillStyle = S.P.ink; X.globalAlpha *= .16; X.fillRect(cx - 150, 670, 300, 230); X.globalAlpha /= .16; X.fillStyle = S.P.ink; X.globalAlpha *= .5; X.fillRect(cx - 150, 930, 200, 8); X.restore();
+    S.text(X, s, cx, 990, { role: 'body', size: 40, weight: 600 }); });
+  X.restore();
+  S.sig.bars(X, t, { values: [0.25, 0.9], labels: ['أ', 'ب'], x: 240, y: 1330, w: 600, h: 260, k: E((t - 1.2) / 1), active: t > 2.2 ? 1 : null });
+  S.sig.checklist(X, t, { items: ['مين كسب', 'رقمين تبص عليهم'], done: t > 2.8 ? 1 : 0, active: 1, x: 860, y: 1480, size: 42, k: E((t - 1.6) / 0.8) });
+  const words = [['السعر', 0.2], ['بيتحدد', 1.1], ['بالجودة', 2.0], ['مش', 2.7], ['بالمبلغ', 3.2]], cur = words.filter(w => t >= w[1]).pop();
+  if (cur) S.sig.serifWord(X, t, { word: cur[0], y: 1720, size: 76, k: E((t - cur[1]) / 0.25) });
+  S.post(X, t);
+}
 MOTION.scene({
   id: 'sample',
   draw(t, lt, ctx) {
@@ -28,6 +46,7 @@ MOTION.scene({
       Y.fillStyle = g; Y.fillRect(0, 0, 1080, 1920); person(Y);
     };
     if (!S) { video(X); return; }
+    if (S.id.startsWith('monoWire')) return monoWire(S, X, tq, E);
     S.background(X, tq, { video, person, behind: Y => S.text(Y, S.name.split(' × ')[0], 540, 760, { size: 170, weight: 900, color: P.acc, alpha: E((tq - 0.2) / 0.6) }) });
     const kc = E((tq - 0.7) / 0.6);
     if (kc > 0) {

@@ -355,6 +355,50 @@
    ],
    "moment": false,
    "needsCut": true
+  },
+  {
+   "id": "monoWire",
+   "name": "مونو واير",
+   "desc": "أبيض وأسود بس على أسود بنجوم باهتة: رسومات خطوط رفيعة بتتبني مع الكلام، عنوان تقيل، وكلمة سيريف واحدة تحت",
+   "families": [
+    "editorial",
+    "calm"
+   ],
+   "cues": [
+    "explain",
+    "data",
+    "number",
+    "steps",
+    "compare"
+   ],
+   "blend": [
+    "keynote",
+    "glassUI"
+   ],
+   "moment": false,
+   "needsCut": false
+  },
+  {
+   "id": "monoWireY",
+   "name": "مونو واير أصفر",
+   "desc": "مونو واير بلمسة أصفر: أبيض على أسود، والحاجة المهمة بس (الكلمة المعكوسة، البار الكسبان، ✓، الرقم) أصفر فاقع — ومعاه جرافيك HyperFrames للحظات الكبيرة",
+   "families": [
+    "editorial",
+    "calm"
+   ],
+   "cues": [
+    "explain",
+    "data",
+    "number",
+    "steps",
+    "compare"
+   ],
+   "blend": [
+    "keynote",
+    "glassUI"
+   ],
+   "moment": false,
+   "needsCut": false
   }
  ]
 }

@@ -36,6 +36,8 @@ function init(d){
   if(typeof t.capStill==='boolean') CAP_STILL=t.capStill;
   if(typeof t.bar==='boolean') BAR=t.bar;
   if(t.big) BIG_T={...BIG_T,...t.big};
+  if(BIG_T.font){ const l=document.createElement('link'); l.rel='stylesheet';   /* Rectangle Cutout: big.font = خط الكلمة (سيريف Amiri) */
+    l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(BIG_T.font)+':wght@400;700&display=swap'; document.head.appendChild(l); }
   if(typeof t.hookZoom==='number') HOOK_END=t.hookZoom;
   if(t.outro){ OUTRO_T={...OUTRO_T,...t.outro}; if(Array.isArray(t.outro.chips)) RECAP=t.outro.chips.map(c=>[c]); }   /* v3.5: كرت الختام من الثيم (الافتراضي إعلان السكل — ريل بودكاست لازم يغيّره) */   /* زوم الهوك + انتقال بعده (ثواني) — شوف hookZoom تحت */
   if(t.logo){const L=document.getElementById('LOGO'); if(L.getAttribute('src')!==t.logo) L.src=t.logo;}
@@ -651,13 +653,15 @@ function caption(t){
     if(CAPSTYLE==='big'){ /* كلمة وحدة ضخمة بالنص — الكلمة المنطوقة الحين */
       if(CAP_OFF.some(r=>t>=r[0]&&t<r[1])) return;
       const cur=c.w.filter(w=>t>=w.s).slice(-1)[0]; if(!cur) return;
-      let fs=BIG_T.fs; X.font=BIG_T.w+' '+fs+'px '+FONT; while(X.measureText(cur.t).width>960&&fs>40){fs-=10;X.font=BIG_T.w+' '+fs+'px '+FONT;}
+      const BF=BIG_T.font?'"'+BIG_T.font+'"':FONT;
+      let fs=BIG_T.fs; X.font=BIG_T.w+' '+fs+'px '+BF; while(X.measureText(cur.t).width>960&&fs>40){fs-=10;X.font=BIG_T.w+' '+fs+'px '+BF;}
       const wv={...cur,w:X.measureText(cur.t).width}; const k=ease(Math.min(1,(t-cur.s)/0.18));
-      const _Rb=vtarget(t), _yb=(_Rb.y>700&&!_Rb.off)?Math.max(260,_Rb.y-120):(BIG_T.y||1200);   /* 23 سبتمبر: ما يطيح على وجهه بوضع الكرت */
+      const _Rb=vtarget(t), _yb=(_Rb.y>700&&!_Rb.off)?Math.max(260,_Rb.y+(BIG_T.dy??-120)):(BIG_T.y||1200);   /* 23 سبتمبر: ما يطيح على وجهه بوضع الكرت */
+      const _xb=(_Rb.y>700&&!_Rb.off&&BIG_T.x!=null)?Math.max(BIG_T.x,wv.w/2+60):540;   /* الكلمة الطويلة ما تطلع برّا الشاشة */   /* big.x: الكلمة جنب الراس بدل فوقه (Rectangle Cutout) */
       X.save(); X.globalAlpha=a*k; X.textAlign='right'; X.textBaseline='middle';
       const bs=CAP_STILL?1:0.85+0.15*k;   /* capStill: الكلمة الضخمة تطلع بالشفافية بس */
-      X.translate(540,_yb); X.scale(bs,bs); X.translate(-540,-_yb);
-      drawWord(wv,540+wv.w/2,_yb,fs); X.restore(); return; }
+      X.translate(_xb,_yb); X.scale(bs,bs); X.translate(-_xb,-_yb);
+      X.font=BIG_T.w+' '+fs+'px '+BF; drawWord(wv,_xb+wv.w/2,_yb,fs); X.restore(); return; }
     let FS2=84, LL=null; const src=CAPSTYLE==='type'?c.w.filter(w=>t>=w.s):c.w;
     if(!src.length) return;
     for(let tr=0;tr<6;tr++){ X.font='900 '+FS2+'px '+FONT;
@@ -1113,11 +1117,13 @@ function headOut(t){
   const ph=Math.max(1,B.y1-B.y0), cx=(B.x0+B.x1)/2;
   const cover=Math.max(Rt.w/W,Rt.h/H);                  /* لا تصغّر تحت ما يملأ الكرت */
   const sc1=Math.max(cover,Math.min(2.2,(Rt.h*1.20)/ph));
-  let dx1=Rt.x+Rt.w/2-cx*sc1; const dy1=(Rt.y+Rt.h+30)-B.y1*sc1;  /* قدماه تحت حافة الكرت بقليل */
+  let dx1=Rt.x+Rt.w/2-cx*sc1; let dy1=(Rt.y+Rt.h+30)-B.y1*sc1;  /* قدماه تحت حافة الكرت بقليل */
+  const HR=THEME_RAW&&THEME_RAW.headRise; if(HR) dy1=Math.max(dy1,Rt.y-HR-B.y0*sc1);   /* theme.headRise: أقصى طلعة للراس فوق الكرت (السيلفي القريب كان بيطلع ~490) */
   dx1=Math.min(Rt.x, Math.max(Rt.x+Rt.w-W*sc1, dx1));      /* اضمن تغطية عرض الكرت */
   const sc=lerp(1,sc1,kt); let dx=lerp(0,dx1,kt); const dy=lerp(0,dy1,kt);
   X.save();                                          /* 1) الكرت: الخلفية والجسم داخله */
-  sh(70,26,0.26); X.fillStyle=cBG(1); rr(R.x,R.y,R.w,R.h,R.r); X.fill(); nsh();
+  if(THEME_RAW&&THEME_RAW.cardGlow){ X.shadowColor='rgba(255,255,255,'+THEME_RAW.cardGlow+')'; X.shadowBlur=44; X.shadowOffsetY=0; } else sh(70,26,0.26);   /* theme.cardGlow: توهج أبيض (Rectangle Cutout) */
+  X.fillStyle=cBG(1); rr(R.x,R.y,R.w,R.h,R.r); X.fill(); nsh();
   rr(R.x,R.y,R.w,R.h,R.r); X.clip();
   X.translate(dx,dy); X.scale(sc,sc); X.drawImage(VF,0,0,W,H);
   X.restore();

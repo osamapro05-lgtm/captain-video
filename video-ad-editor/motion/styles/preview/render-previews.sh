@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # يطلّع معاينة 4ث لكل ستايل موشن ← ../previews/<id>.mp4 + <id>.jpg (صفحة البلجن بتعرضهم في «Motion Editing Styles»)
-#   bash render-previews.sh            كل الـ17
+#   bash render-previews.sh            كل الستايلات
 #   bash render-previews.sh keynote    ستايل واحد
 set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"; MOTION="$HERE/../.."; OUT="$HERE/../previews"; mkdir -p "$OUT"

@@ -37,9 +37,10 @@ function maskCmd(bin){
 
 const words=c=>c.w.map(w=>w.t).join(' ');
 /* 🆕 6.5 حواف الشعر: بعد قصّ الماك نعيد القصّ ببيريف نت (44_matte.py) — أنعم بوضوح على الشعر وبلا هالة من لون الغرفة
-   (مقارنة ريل البطاريات). يكمّل من وين وقف، وأي فشل (rembg مو منصّب) يخلّي قصّ الماك كما هو. MATTE=apple = الماك بس. */
+   (مقارنة ريل البطاريات). يكمّل من وين وقف، وأي فشل يخلّي القصّ الأساسي كما هو.
+   Captain Video: بيشتغل بس لما المستخدم يطلب «أفضل قصّ» — MATTE=best (أبطأ ~3 أضعاف). الافتراضي القصّ الأساسي (Vision/MediaPipe). */
 function refineMatte(f0,f1){
-  if(String(process.env.MATTE||'').toLowerCase()==='apple') return;
+  if(String(process.env.MATTE||'').toLowerCase()!=='best') return;
   const r=cp.spawnSync(PY,[SC+'44_matte.py',W,String(f0),String(f1)],{stdio:'inherit'});
   if(r.status!==0) console.log('ℹ️ باقي على قصّ الماك للفريمات '+f0+'–'+f1);
 }

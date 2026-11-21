@@ -21,7 +21,7 @@
 | القسم | فيه | بيتطبّق إزاي |
 |---|---|---|
 | **Editing Styles** | الستايلات اللي تحت (`video-ad-editor/styles/<id>/`) | `42_style.py apply` على ريل كلام أو لقطات |
-| **Motion Editing Styles** | الـ17 بتوع `motion/styles.js` (كينوت، ورق مقصوص، مجلة…) — معايناتهم `motion/styles/previews/<id>.mp4` | فويس أوفر بس / فيلم موشن: سكل `motion-video` و`project.json ← "style"`. ريل كلام: `MV.useStyle('<id>')`. الدليل `references/styles.md` |
+| **Motion Editing Styles** | الـ19 بتوع `motion/styles.js` (كينوت، ورق مقصوص، مجلة…) — معايناتهم `motion/styles/previews/<id>.mp4` | فويس أوفر بس / فيلم موشن: سكل `motion-video` و`project.json ← "style"`. ريل كلام: `MV.useStyle('<id>')`. الدليل `references/styles.md` |
 
 - `42_style.py list` بيطبع القسمين. صفحة البلجن (`serve`) بتوريهم في تبويبين، الفيديو والاسم الأول والقواعد لما يدوس.
 - اتعدّل ستايل موشن في `styles.js`؟ `node motion/styles.js --catalog` وبعدين `bash motion/styles/preview/render-previews.sh <id>`.
