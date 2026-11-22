@@ -155,7 +155,8 @@ def main():
         src = os.path.abspath(a.own); x = decode(src); x = x if x.ndim == 1 else x.mean(1)
         print(f'🎙  صوتك: {os.path.basename(src)} ({len(x)/SR:.1f}s) → وِسبر {a.whisper_model} …', flush=True)
         tmpw = os.path.join(VO, '_own_48k.wav'); write_wav(tmpw, x)
-        heard = whisper_words(tmpw, a.whisper_model, prompt=' '.join(L['text'] for L in script)[:600])
+        # بلا prompt: السكربت كـprompt بيبوّظ توقيت الكلمات (21 نوفمبر: كل الكلام اتأخر 1.6 ث وبعدين 14 ث)
+        heard = whisper_words(tmpw, a.whisper_model)
         allw, owner = [], []
         for li, L in enumerate(script):
             for w in split_words(L['text']): allw.append(w); owner.append(li)

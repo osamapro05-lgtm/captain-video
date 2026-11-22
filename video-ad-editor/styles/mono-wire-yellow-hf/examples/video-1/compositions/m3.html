@@ -1,0 +1,333 @@
+<template>
+  <style>
+@font-face { font-family: 'Cairo'; src: url('assets/fonts/Cairo-VF.ttf'); font-weight: 200 1000; }
+@font-face { font-family: 'Plex'; src: url('assets/fonts/IBMPlexSansArabic-Bold.ttf'); font-weight: 700; }
+@font-face { font-family: 'Amiri'; src: url('assets/fonts/AmiriQuran-Regular.ttf'); }
+
+#root { position: absolute; inset: 0; color: #fff; font-family: 'Cairo'; direction: rtl; overflow: hidden; }
+.ttl { position: absolute; left: 0; right: 0; text-align: center; font-weight: 900; font-size: 84px; line-height: 1.1; }
+.inv { position: absolute; left: 50%; transform: translateX(-50%); font-weight: 900; font-size: 84px; line-height: 1.18; padding: 0 22px; white-space: nowrap; }
+.inv.y { background: #FFD60A; color: #050505; } .inv.r { background: #FF3B30; color: #fff; }
+.lab { position: absolute; font-family: 'Plex'; font-weight: 700; font-size: 38px; color: rgba(255,255,255,.72); text-align: center; white-space: nowrap; }
+.num { position: absolute; font-family: 'Inter'; font-weight: 800; direction: ltr; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.card { position: absolute; background: rgba(10,10,10,.92); border: 2px solid rgba(255,255,255,.9); border-radius: 30px; box-shadow: 0 0 26px rgba(255,255,255,.28), inset 0 0 18px rgba(255,255,255,.05); }
+.card.dim { border-color: rgba(255,255,255,.25); box-shadow: none; }
+
+#pips { position: absolute; left: 470px; top: 168px; width: 140px; height: 10px; }
+#pips i { position: absolute; top: 0; width: 40px; height: 8px; border-radius: 4px; background: rgba(255,255,255,.22); }
+#chap { left: 0; right: 0; top: 190px; color: #FF3B30; font-size: 36px; }
+#nlab { left: 0; right: 0; top: 1100px; } #nnum { left: 0; right: 0; top: 1150px; font-size: 120px; }
+
+#floor { position: absolute; left: 90px; top: 470px; width: 900px; height: 900px; perspective: 1400px; }
+#plane { position: absolute; inset: 0; transform-style: preserve-3d; }
+#plane svg { width: 900px; height: 900px; overflow: visible; }
+.dt { fill: #fff; } .ring { fill: none; }
+#big { stroke: rgba(255,255,255,.6); stroke-width: 3; filter: drop-shadow(0 0 6px rgba(255,255,255,.5)); }
+#small { stroke: #FFD60A; stroke-width: 6; filter: drop-shadow(0 0 12px rgba(255,214,10,.8)); }
+#grid line { stroke: rgba(255,255,255,.08); stroke-width: 1.5; }
+
+.phone { position: absolute; width: 170px; height: 310px; border-radius: 30px; }
+.phone .notch { position: absolute; left: 60px; top: 14px; width: 50px; height: 7px; border-radius: 4px; background: rgba(255,255,255,.5); }
+.phone svg { position: absolute; left: 35px; top: 60px; width: 100px; height: 100px; overflow: visible; }
+.phone svg * { fill: none; stroke: currentColor; stroke-width: 5; }
+.phone i { position: absolute; right: 26px; height: 8px; border-radius: 4px; background: rgba(255,255,255,.45); }
+.phone .l1 { top: 220px; width: 118px; } .phone .l2 { top: 244px; width: 72px; }
+
+#ret circle, #ret line { fill: none; stroke-width: 4; }
+#beams line { stroke: #FFD60A; stroke-width: 2; opacity: .55; }
+#cr { position: absolute; left: 455px; top: 640px; color: #FFD60A; border-color: #fff; }
+#eq { position: absolute; left: 0; right: 0; top: 1120px; height: 140px; text-align: center; font: 900 66px 'Cairo'; direction: rtl; }
+#eq span { padding: 0 16px; } #eq .y { background: #FFD60A; color: #050505; }
+</style>
+  <div id="root" data-composition-id="m3" data-width="1080" data-height="1920">
+<div id="pips"><i style="right:0px;background:#FF3B30"></i><i style="right:50px;background:#FF3B30"></i><i style="right:100px;background:#FF3B30"></i></div><div id="chap" class="lab">غلطة 3 من 3</div>    <div id="m3t0" class="ttl" data-layout-allow-overlap style="top:255px;opacity:0">الاستهداف</div><div id="m3l0" class="inv r" data-layout-allow-overlap style="top:355px;opacity:0">الضيق</div>
+    <div id="m3t1" class="ttl" data-layout-allow-overlap style="top:255px;opacity:0">افتحها</div><div id="m3l1" class="inv y" data-layout-allow-overlap style="top:355px;opacity:0">برود</div>
+    <div id="floor"><div id="plane"><svg viewBox="0 0 900 900">
+      <g id="grid"><line x1="-60" y1="-60" x2="-60" y2="960"/><line x1="-60" y1="-60" x2="960" y2="-60"/><line x1="8" y1="-60" x2="8" y2="960"/><line x1="-60" y1="8" x2="960" y2="8"/><line x1="76" y1="-60" x2="76" y2="960"/><line x1="-60" y1="76" x2="960" y2="76"/><line x1="144" y1="-60" x2="144" y2="960"/><line x1="-60" y1="144" x2="960" y2="144"/><line x1="212" y1="-60" x2="212" y2="960"/><line x1="-60" y1="212" x2="960" y2="212"/><line x1="280" y1="-60" x2="280" y2="960"/><line x1="-60" y1="280" x2="960" y2="280"/><line x1="348" y1="-60" x2="348" y2="960"/><line x1="-60" y1="348" x2="960" y2="348"/><line x1="416" y1="-60" x2="416" y2="960"/><line x1="-60" y1="416" x2="960" y2="416"/><line x1="484" y1="-60" x2="484" y2="960"/><line x1="-60" y1="484" x2="960" y2="484"/><line x1="552" y1="-60" x2="552" y2="960"/><line x1="-60" y1="552" x2="960" y2="552"/><line x1="620" y1="-60" x2="620" y2="960"/><line x1="-60" y1="620" x2="960" y2="620"/><line x1="688" y1="-60" x2="688" y2="960"/><line x1="-60" y1="688" x2="960" y2="688"/><line x1="756" y1="-60" x2="756" y2="960"/><line x1="-60" y1="756" x2="960" y2="756"/><line x1="824" y1="-60" x2="824" y2="960"/><line x1="-60" y1="824" x2="960" y2="824"/><line x1="892" y1="-60" x2="892" y2="960"/><line x1="-60" y1="892" x2="960" y2="892"/><line x1="960" y1="-60" x2="960" y2="960"/><line x1="-60" y1="960" x2="960" y2="960"/></g>
+      <g id="spin"><g id="dots"><circle class="dt in" data-ph="4.09" data-d="155" cx="380.5" cy="588.9" r="5"/>
+<circle class="dt" data-ph="2.30" data-d="293" cx="713.0" cy="578.7" r="4"/>
+<circle class="dt" data-ph="0.24" data-d="285" cx="716.2" cy="551.6" r="4"/>
+<circle class="dt in" data-ph="0.57" data-d="106" cx="353.3" cy="492.8" r="5"/>
+<circle class="dt" data-ph="0.78" data-d="364" cx="126.4" cy="616.1" r="4"/>
+<circle class="dt" data-ph="5.95" data-d="317" cx="503.0" cy="762.4" r="4"/>
+<circle class="dt" data-ph="6.13" data-d="252" cx="227.1" cy="332.7" r="4"/>
+<circle class="dt" data-ph="1.82" data-d="371" cx="804.9" cy="556.9" r="4"/>
+<circle class="dt in" data-ph="1.94" data-d="137" cx="534.6" cy="558.1" r="5"/>
+<circle class="dt" data-ph="3.65" data-d="170" cx="518.6" cy="294.4" r="4"/>
+<circle class="dt" data-ph="3.44" data-d="244" cx="293.1" cy="263.0" r="4"/>
+<circle class="dt in" data-ph="1.29" data-d="98" cx="540.2" cy="487.5" r="5"/>
+<circle class="dt" data-ph="1.97" data-d="262" cx="339.2" cy="213.1" r="4"/>
+<circle class="dt" data-ph="1.88" data-d="269" cx="218.7" cy="312.1" r="4"/>
+<circle class="dt" data-ph="1.53" data-d="334" cx="542.1" cy="128.5" r="4"/>
+<circle class="dt" data-ph="5.50" data-d="290" cx="191.2" cy="319.3" r="4"/>
+<circle class="dt" data-ph="6.16" data-d="215" cx="422.4" cy="237.1" r="4"/>
+<circle class="dt" data-ph="4.75" data-d="259" cx="640.7" cy="624.8" r="4"/>
+<circle class="dt" data-ph="0.25" data-d="280" cx="611.6" cy="678.3" r="4"/>
+<circle class="dt" data-ph="3.60" data-d="350" cx="278.1" cy="145.4" r="4"/>
+<circle class="dt" data-ph="4.37" data-d="224" cx="608.9" cy="292.0" r="4"/>
+<circle class="dt" data-ph="2.86" data-d="305" cx="197.4" cy="279.8" r="4"/>
+<circle class="dt" data-ph="2.98" data-d="389" cx="658.3" cy="121.7" r="4"/>
+<circle class="dt in" data-ph="4.41" data-d="99" cx="399.4" cy="365.5" r="5"/>
+<circle class="dt" data-ph="5.16" data-d="399" cx="209.9" cy="131.8" r="4"/>
+<circle class="dt" data-ph="4.20" data-d="248" cx="396.4" cy="692.6" r="4"/>
+<circle class="dt" data-ph="1.06" data-d="272" cx="719.1" cy="488.4" r="4"/>
+<circle class="dt in" data-ph="4.82" data-d="97" cx="522.0" cy="515.2" r="5"/>
+<circle class="dt" data-ph="2.46" data-d="199" cx="586.9" cy="594.5" r="4"/>
+<circle class="dt in" data-ph="2.82" data-d="114" cx="528.5" cy="367.9" r="5"/>
+<circle class="dt" data-ph="5.15" data-d="376" cx="92.0" cy="335.1" r="4"/>
+<circle class="dt" data-ph="2.61" data-d="211" cx="588.6" cy="290.8" r="4"/>
+<circle class="dt" data-ph="6.01" data-d="376" cx="212.5" cy="741.7" r="4"/>
+<circle class="dt" data-ph="1.46" data-d="168" cx="547.9" cy="586.4" r="4"/>
+<circle class="dt" data-ph="3.70" data-d="279" cx="479.1" cy="727.0" r="4"/>
+<circle class="dt in" data-ph="2.63" data-d="26" cx="448.0" cy="475.5" r="5"/>
+<circle class="dt" data-ph="5.99" data-d="301" cx="245.0" cy="670.4" r="4"/>
+<circle class="dt" data-ph="3.88" data-d="287" cx="345.1" cy="182.6" r="4"/>
+<circle class="dt in" data-ph="5.65" data-d="93" cx="408.4" cy="366.9" r="5"/>
+<circle class="dt" data-ph="5.01" data-d="374" cx="520.0" cy="82.6" r="4"/>
+<circle class="dt" data-ph="0.65" data-d="253" cx="252.9" cy="608.1" r="4"/>
+<circle class="dt in" data-ph="0.42" data-d="100" cx="383.7" cy="375.4" r="5"/>
+<circle class="dt in" data-ph="2.14" data-d="161" cx="491.3" cy="605.8" r="5"/>
+<circle class="dt in" data-ph="0.95" data-d="6" cx="455.8" cy="452.0" r="5"/>
+<circle class="dt" data-ph="0.16" data-d="241" cx="643.8" cy="593.6" r="4"/>
+<circle class="dt" data-ph="0.93" data-d="313" cx="670.7" cy="227.4" r="4"/>
+<circle class="dt" data-ph="2.29" data-d="236" cx="446.7" cy="685.7" r="4"/>
+<circle class="dt" data-ph="6.24" data-d="369" cx="714.1" cy="707.0" r="4"/>
+<circle class="dt" data-ph="0.54" data-d="278" cx="178.1" cy="509.0" r="4"/>
+<circle class="dt" data-ph="1.66" data-d="234" cx="637.5" cy="590.2" r="4"/>
+<circle class="dt in" data-ph="0.15" data-d="161" cx="526.4" cy="308.6" r="5"/>
+<circle class="dt" data-ph="0.92" data-d="291" cx="727.0" cy="361.9" r="4"/>
+<circle class="dt in" data-ph="3.32" data-d="66" cx="386.6" cy="432.4" r="5"/>
+<circle class="dt" data-ph="4.37" data-d="372" cx="818.3" cy="400.0" r="4"/>
+<circle class="dt" data-ph="1.05" data-d="242" cx="433.1" cy="691.6" r="4"/>
+<circle class="dt" data-ph="4.89" data-d="292" cx="490.1" cy="160.9" r="4"/>
+<circle class="dt" data-ph="5.10" data-d="189" cx="359.3" cy="615.7" r="4"/>
+<circle class="dt" data-ph="5.06" data-d="369" cx="817.7" cy="415.1" r="4"/>
+<circle class="dt" data-ph="1.42" data-d="344" cx="593.2" cy="137.2" r="4"/>
+<circle class="dt" data-ph="0.18" data-d="239" cx="212.9" cy="423.6" r="4"/>
+<circle class="dt" data-ph="1.63" data-d="211" cx="658.2" cy="486.9" r="4"/>
+<circle class="dt" data-ph="2.81" data-d="391" cx="311.8" cy="84.0" r="4"/>
+<circle class="dt" data-ph="6.00" data-d="398" cx="816.9" cy="296.7" r="4"/>
+<circle class="dt" data-ph="1.42" data-d="188" cx="326.1" cy="591.2" r="4"/>
+<circle class="dt" data-ph="3.92" data-d="181" cx="509.4" cy="620.8" r="4"/>
+<circle class="dt" data-ph="3.01" data-d="367" cx="747.1" cy="235.0" r="4"/>
+<circle class="dt" data-ph="0.53" data-d="358" cx="245.2" cy="156.7" r="4"/>
+<circle class="dt" data-ph="4.91" data-d="382" cx="246.8" cy="127.1" r="4"/>
+<circle class="dt" data-ph="1.12" data-d="277" cx="450.2" cy="173.4" r="4"/>
+<circle class="dt" data-ph="5.03" data-d="231" cx="506.2" cy="226.3" r="4"/>
+<circle class="dt" data-ph="2.52" data-d="252" cx="697.7" cy="405.4" r="4"/>
+<circle class="dt" data-ph="1.07" data-d="341" cx="771.7" cy="338.3" r="4"/>
+<circle class="dt in" data-ph="5.68" data-d="156" cx="558.5" cy="561.4" r="5"/>
+<circle class="dt in" data-ph="5.19" data-d="153" cx="503.2" cy="306.6" r="5"/>
+<circle class="dt" data-ph="2.20" data-d="324" cx="771.8" cy="410.0" r="4"/>
+<circle class="dt in" data-ph="0.09" data-d="145" cx="311.9" cy="406.4" r="5"/>
+<circle class="dt" data-ph="3.31" data-d="322" cx="767.0" cy="391.4" r="4"/>
+<circle class="dt" data-ph="5.47" data-d="263" cx="690.9" cy="343.3" r="4"/>
+<circle class="dt" data-ph="1.58" data-d="184" cx="534.6" cy="286.9" r="4"/>
+<circle class="dt" data-ph="3.68" data-d="196" cx="397.7" cy="639.1" r="4"/>
+<circle class="dt" data-ph="0.82" data-d="259" cx="434.8" cy="708.5" r="4"/>
+<circle class="dt" data-ph="2.88" data-d="238" cx="650.9" cy="322.5" r="4"/>
+<circle class="dt" data-ph="2.64" data-d="380" cx="120.6" cy="259.8" r="4"/>
+<circle class="dt" data-ph="3.34" data-d="283" cx="696.3" cy="310.0" r="4"/>
+<circle class="dt in" data-ph="2.76" data-d="55" cx="395.9" cy="441.9" r="5"/>
+<circle class="dt in" data-ph="5.02" data-d="25" cx="460.2" cy="472.9" r="5"/>
+<circle class="dt" data-ph="4.55" data-d="275" cx="579.0" cy="693.1" r="4"/>
+<circle class="dt" data-ph="3.26" data-d="228" cx="235.8" cy="370.6" r="4"/>
+<circle class="dt" data-ph="0.67" data-d="354" cx="117.0" cy="329.1" r="4"/>
+<circle class="dt" data-ph="1.74" data-d="199" cx="264.7" cy="376.3" r="4"/>
+<circle class="dt" data-ph="3.53" data-d="285" cx="489.7" cy="167.8" r="4"/>
+<circle class="dt" data-ph="2.78" data-d="382" cx="474.0" cy="68.7" r="4"/>
+<circle class="dt" data-ph="3.22" data-d="284" cx="233.8" cy="265.3" r="4"/>
+<circle class="dt" data-ph="3.35" data-d="269" cx="355.3" cy="198.2" r="4"/>
+<circle class="dt" data-ph="4.39" data-d="388" cx="65.6" cy="503.4" r="4"/>
+<circle class="dt" data-ph="1.63" data-d="388" cx="727.2" cy="178.1" r="4"/>
+<circle class="dt" data-ph="5.28" data-d="388" cx="88.4" cy="308.1" r="4"/>
+<circle class="dt in" data-ph="2.78" data-d="139" cx="540.8" cy="555.9" r="5"/>
+<circle class="dt" data-ph="0.46" data-d="196" cx="626.2" cy="536.4" r="4"/>
+<circle class="dt" data-ph="5.63" data-d="354" cx="278.4" cy="140.2" r="4"/>
+<circle class="dt" data-ph="4.15" data-d="338" cx="641.2" cy="729.3" r="4"/>
+<circle class="dt" data-ph="6.08" data-d="376" cx="684.1" cy="744.0" r="4"/>
+<circle class="dt" data-ph="2.50" data-d="390" cx="524.1" cy="833.3" r="4"/>
+<circle class="dt" data-ph="5.23" data-d="398" cx="53.3" cy="481.8" r="4"/>
+<circle class="dt" data-ph="3.24" data-d="263" cx="588.7" cy="673.1" r="4"/>
+<circle class="dt" data-ph="2.00" data-d="177" cx="356.0" cy="599.9" r="4"/>
+<circle class="dt in" data-ph="3.48" data-d="56" cx="440.3" cy="395.0" r="5"/>
+<circle class="dt in" data-ph="2.08" data-d="54" cx="399.9" cy="469.7" r="5"/>
+<circle class="dt" data-ph="0.40" data-d="286" cx="246.2" cy="248.9" r="4"/>
+<circle class="dt" data-ph="6.10" data-d="355" cx="803.6" cy="416.8" r="4"/>
+<circle class="dt" data-ph="0.25" data-d="206" cx="613.1" cy="576.1" r="4"/>
+<circle class="dt" data-ph="0.81" data-d="208" cx="487.7" cy="245.4" r="4"/>
+<circle class="dt" data-ph="5.14" data-d="382" cx="112.8" cy="629.2" r="4"/>
+<circle class="dt in" data-ph="5.77" data-d="155" cx="441.6" cy="604.4" r="5"/>
+<circle class="dt" data-ph="0.56" data-d="335" cx="147.6" cy="306.3" r="4"/>
+<circle class="dt" data-ph="2.67" data-d="332" cx="760.4" cy="567.3" r="4"/>
+<circle class="dt" data-ph="3.98" data-d="387" cx="798.1" cy="620.3" r="4"/>
+<circle class="dt in" data-ph="5.38" data-d="116" cx="486.9" cy="340.3" r="5"/>
+<circle class="dt" data-ph="2.85" data-d="372" cx="789.5" cy="601.0" r="4"/>
+<circle class="dt" data-ph="5.82" data-d="297" cx="291.9" cy="702.0" r="4"/>
+<circle class="dt in" data-ph="3.31" data-d="144" cx="433.9" cy="592.9" r="5"/>
+<circle class="dt in" data-ph="1.01" data-d="132" cx="459.6" cy="582.0" r="5"/>
+<circle class="dt" data-ph="1.96" data-d="180" cx="620.7" cy="505.9" r="4"/>
+<circle class="dt" data-ph="1.82" data-d="349" cx="331.9" cy="778.0" r="4"/>
+<circle class="dt" data-ph="2.18" data-d="169" cx="281.3" cy="449.9" r="4"/>
+<circle class="dt" data-ph="0.10" data-d="200" cx="648.9" cy="472.8" r="4"/>
+<circle class="dt" data-ph="1.19" data-d="297" cx="418.5" cy="154.7" r="4"/>
+<circle class="dt" data-ph="0.67" data-d="387" cx="68.1" cy="511.1" r="4"/>
+<circle class="dt" data-ph="3.11" data-d="263" cx="560.3" cy="211.3" r="4"/>
+<circle class="dt" data-ph="3.18" data-d="251" cx="577.1" cy="233.8" r="4"/>
+<circle class="dt" data-ph="2.15" data-d="396" cx="298.8" cy="83.5" r="4"/>
+<circle class="dt" data-ph="3.99" data-d="336" cx="616.2" cy="157.7" r="4"/>
+<circle class="dt" data-ph="0.34" data-d="236" cx="255.2" cy="582.9" r="4"/>
+<circle class="dt in" data-ph="4.65" data-d="106" cx="522.9" cy="527.5" r="5"/>
+<circle class="dt in" data-ph="0.53" data-d="162" cx="444.3" cy="611.5" r="5"/>
+<circle class="dt" data-ph="4.21" data-d="373" cx="652.5" cy="136.5" r="4"/>
+<circle class="dt" data-ph="1.84" data-d="197" cx="410.8" cy="642.9" r="4"/>
+<circle class="dt in" data-ph="2.80" data-d="159" cx="296.4" cy="490.0" r="5"/>
+<circle class="dt" data-ph="6.11" data-d="392" cx="417.4" cy="840.9" r="4"/>
+<circle class="dt" data-ph="6.06" data-d="198" cx="260.8" cy="392.4" r="4"/>
+<circle class="dt" data-ph="0.01" data-d="239" cx="362.7" cy="672.3" r="4"/>
+<circle class="dt" data-ph="3.16" data-d="276" cx="247.2" cy="636.6" r="4"/>
+<circle class="dt" data-ph="0.03" data-d="284" cx="536.1" cy="720.8" r="4"/>
+<circle class="dt in" data-ph="2.51" data-d="120" cx="439.3" cy="569.4" r="5"/>
+<circle class="dt in" data-ph="1.91" data-d="60" cx="507.9" cy="465.5" r="5"/>
+<circle class="dt" data-ph="3.32" data-d="306" cx="483.0" cy="754.3" r="4"/>
+<circle class="dt" data-ph="4.50" data-d="324" cx="451.1" cy="125.6" r="4"/>
+<circle class="dt" data-ph="2.05" data-d="250" cx="631.0" cy="278.1" r="4"/>
+<circle class="dt in" data-ph="4.55" data-d="155" cx="603.9" cy="435.2" r="5"/>
+<circle class="dt in" data-ph="5.25" data-d="84" cx="398.0" cy="384.4" r="5"/>
+<circle class="dt" data-ph="4.61" data-d="317" cx="696.6" cy="251.1" r="4"/>
+<circle class="dt in" data-ph="3.29" data-d="149" cx="506.9" cy="312.0" r="5"/>
+<circle class="dt" data-ph="5.05" data-d="365" cx="84.6" cy="440.0" r="4"/>
+<circle class="dt" data-ph="5.61" data-d="306" cx="591.2" cy="178.9" r="4"/>
+<circle class="dt" data-ph="1.44" data-d="333" cx="313.7" cy="146.1" r="4"/>
+<circle class="dt in" data-ph="2.27" data-d="146" cx="593.1" cy="478.4" r="5"/>
+<circle class="dt" data-ph="3.51" data-d="366" cx="739.1" cy="674.0" r="4"/>
+<circle class="dt" data-ph="4.27" data-d="317" cx="230.1" cy="222.3" r="4"/>
+<circle class="dt in" data-ph="5.01" data-d="23" cx="427.0" cy="451.5" r="5"/>
+<circle class="dt" data-ph="3.36" data-d="284" cx="446.9" cy="166.3" r="4"/>
+<circle class="dt in" data-ph="4.63" data-d="103" cx="394.5" cy="363.4" r="5"/>
+<circle class="dt in" data-ph="1.67" data-d="109" cx="448.5" cy="559.1" r="5"/>
+<circle class="dt" data-ph="4.65" data-d="181" cx="426.5" cy="270.3" r="4"/>
+<circle class="dt" data-ph="2.40" data-d="281" cx="727.9" cy="407.3" r="4"/>
+<circle class="dt" data-ph="4.82" data-d="331" cx="122.1" cy="493.5" r="4"/>
+<circle class="dt" data-ph="0.49" data-d="321" cx="212.1" cy="235.0" r="4"/>
+<circle class="dt" data-ph="4.67" data-d="202" cx="571.1" cy="611.1" r="4"/>
+<circle class="dt" data-ph="0.08" data-d="301" cx="348.9" cy="734.0" r="4"/>
+<circle class="dt" data-ph="4.22" data-d="207" cx="642.5" cy="527.1" r="4"/>
+<circle class="dt" data-ph="1.83" data-d="329" cx="333.2" cy="142.6" r="4"/>
+<circle class="dt" data-ph="2.93" data-d="273" cx="178.8" cy="421.7" r="4"/>
+<circle class="dt" data-ph="1.25" data-d="378" cx="728.1" cy="706.2" r="4"/>
+<circle class="dt" data-ph="0.11" data-d="387" cx="833.4" cy="397.0" r="4"/>
+<circle class="dt" data-ph="6.08" data-d="362" cx="99.8" cy="542.3" r="4"/>
+<circle class="dt" data-ph="1.32" data-d="207" cx="253.0" cy="514.7" r="4"/>
+<circle class="dt" data-ph="3.65" data-d="184" cx="623.0" cy="388.4" r="4"/>
+<circle class="dt" data-ph="5.98" data-d="290" cx="632.1" cy="675.1" r="4"/>
+<circle class="dt" data-ph="3.19" data-d="362" cx="693.6" cy="718.1" r="4"/>
+<circle class="dt" data-ph="1.45" data-d="335" cx="704.2" cy="231.1" r="4"/>
+<circle class="dt" data-ph="0.16" data-d="279" cx="673.2" cy="282.8" r="4"/>
+<circle class="dt" data-ph="2.83" data-d="280" cx="730.4" cy="456.3" r="4"/>
+<circle class="dt in" data-ph="2.16" data-d="150" cx="401.9" cy="592.1" r="5"/>
+<circle class="dt" data-ph="0.01" data-d="367" cx="302.1" cy="785.5" r="4"/>
+<circle class="dt" data-ph="0.75" data-d="366" cx="451.7" cy="83.6" r="4"/>
+<circle class="dt" data-ph="5.66" data-d="338" cx="752.3" cy="299.3" r="4"/>
+<circle class="dt" data-ph="2.47" data-d="244" cx="389.6" cy="686.4" r="4"/>
+<circle class="dt" data-ph="2.27" data-d="307" cx="757.0" cy="447.7" r="4"/>
+<circle class="dt" data-ph="0.30" data-d="210" cx="261.3" cy="541.7" r="4"/>
+<circle class="dt" data-ph="1.79" data-d="365" cx="743.3" cy="668.0" r="4"/>
+<circle class="dt" data-ph="1.67" data-d="200" cx="633.6" cy="371.4" r="4"/>
+<circle class="dt" data-ph="2.34" data-d="174" cx="276.1" cy="438.0" r="4"/>
+<circle class="dt" data-ph="5.10" data-d="376" cx="812.0" cy="347.7" r="4"/>
+<circle class="dt" data-ph="5.91" data-d="382" cx="189.9" cy="169.8" r="4"/>
+<circle class="dt" data-ph="0.31" data-d="339" cx="126.8" cy="346.7" r="4"/>
+<circle class="dt" data-ph="4.73" data-d="269" cx="420.3" cy="183.1" r="4"/>
+<circle class="dt" data-ph="0.31" data-d="214" cx="318.3" cy="281.3" r="4"/>
+<circle class="dt in" data-ph="2.97" data-d="143" cx="577.9" cy="386.6" r="5"/>
+<circle class="dt" data-ph="4.64" data-d="218" cx="328.8" cy="631.6" r="4"/>
+<circle class="dt" data-ph="4.12" data-d="204" cx="651.8" cy="419.7" r="4"/>
+<circle class="dt" data-ph="2.48" data-d="299" cx="356.2" cy="733.5" r="4"/>
+<circle class="dt in" data-ph="1.31" data-d="161" cx="529.8" cy="589.6" r="5"/>
+<circle class="dt" data-ph="1.38" data-d="282" cx="684.2" cy="292.9" r="4"/>
+<circle class="dt" data-ph="2.83" data-d="399" cx="782.0" cy="228.2" r="4"/>
+<circle class="dt" data-ph="0.57" data-d="175" cx="562.2" cy="584.9" r="4"/>
+<circle class="dt in" data-ph="1.50" data-d="121" cx="384.1" cy="551.1" r="5"/>
+<circle class="dt" data-ph="5.57" data-d="302" cx="434.2" cy="751.5" r="4"/>
+<circle class="dt" data-ph="2.60" data-d="257" cx="449.4" cy="193.0" r="4"/>
+<circle class="dt" data-ph="2.12" data-d="246" cx="207.3" cy="412.9" r="4"/>
+<circle class="dt" data-ph="6.08" data-d="211" cx="644.9" cy="530.1" r="4"/>
+<circle class="dt" data-ph="3.95" data-d="284" cx="649.6" cy="651.8" r="4"/>
+<circle class="dt" data-ph="1.70" data-d="186" cx="571.0" cy="308.9" r="4"/>
+<circle class="dt" data-ph="2.80" data-d="253" cx="452.5" cy="702.9" r="4"/>
+<circle class="dt" data-ph="5.48" data-d="368" cx="803.2" cy="344.9" r="4"/>
+<circle class="dt in" data-ph="4.46" data-d="72" cx="521.2" cy="459.8" r="5"/>
+<circle class="dt" data-ph="3.69" data-d="275" cx="668.2" cy="282.3" r="4"/>
+<circle class="dt" data-ph="5.82" data-d="250" cx="700.3" cy="450.3" r="4"/>
+<circle class="dt" data-ph="6.11" data-d="370" cx="619.2" cy="121.0" r="4"/>
+<circle class="dt in" data-ph="0.97" data-d="132" cx="451.3" cy="582.1" r="5"/>
+<circle class="dt" data-ph="5.91" data-d="330" cx="122.9" cy="403.7" r="4"/>
+<circle class="dt" data-ph="4.80" data-d="322" cx="393.1" cy="133.2" r="4"/>
+<circle class="dt" data-ph="0.25" data-d="297" cx="163.6" cy="528.7" r="4"/>
+<circle class="dt" data-ph="5.78" data-d="193" cx="488.9" cy="261.1" r="4"/>
+<circle class="dt" data-ph="0.80" data-d="220" cx="315.4" cy="275.4" r="4"/>
+<circle class="dt" data-ph="4.39" data-d="319" cx="446.4" cy="769.1" r="4"/>
+<circle class="dt in" data-ph="3.29" data-d="106" cx="530.8" cy="518.7" r="5"/>
+<circle class="dt" data-ph="1.40" data-d="249" cx="233.9" cy="326.0" r="4"/>
+<circle class="dt in" data-ph="1.89" data-d="41" cx="417.1" cy="425.7" r="5"/>
+<circle class="dt" data-ph="4.05" data-d="392" cx="70.2" cy="545.8" r="4"/>
+<circle class="dt" data-ph="1.47" data-d="276" cx="655.4" cy="266.0" r="4"/>
+<circle class="dt" data-ph="4.43" data-d="392" cx="457.2" cy="842.0" r="4"/></g>
+      <path id="big" class="ring" d="M450,50 a400,400 0 1,1 -0.01,0" pathLength="1" stroke-dasharray="1 1"/>
+      <path id="small" class="ring" d="M450,280 a170,170 0 1,1 -0.01,0" pathLength="1" stroke-dasharray="1 1"/><g id="ret"><circle id="r1" cx="0" cy="0" r="1"/><circle id="r2" cx="0" cy="0" r="1"/><line id="x1"/><line id="x2"/><line id="x3"/><line id="x4"/></g><g id="beams"></g></g>
+    </svg></div></div><div id="cr" class="phone card"><div class="notch"></div><svg viewBox="0 0 100 100"><path d="M34,20 L80,50 L34,80 Z"/></svg><i class="l1"></i><i class="l2"></i></div>
+    <div id="eq" style="opacity:0"><span>الكرييتيف =</span><span id="eqy" class="y">الاستهداف</span></div>
+    <div id="nlab" class="lab"></div><div id="nnum" class="num"></div>
+  </div>
+  <script>
+    
+const cl = v => Math.max(0, Math.min(1, v));
+const k = (t, a, d = 0.5) => { const x = cl((t - a) / d); return 1 - Math.pow(1 - x, 3); };
+const kb = (t, a, d = 0.45) => { const x = cl((t - a) / d), s = 1.7; return x <= 0 ? 0 : 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2); };
+const lin = (t, a, b) => cl((t - a) / (b - a));
+const jit = (t, f = 9) => Math.sin(t * f * 1.3) * 0.6 + Math.sin(t * f * 2.7 + 1) * 0.4;
+const $ = id => document.getElementById(id);
+const fmt = v => Math.round(v).toLocaleString('en-US');
+const show = (el, a, dy = 0, sc = 1) => { el.style.opacity = a; el.style.transform = (el.dataset.base || '') + ` translateY(${dy}px) scale(${sc})`; };
+const reveal = (el, a) => { el.style.opacity = a > 0 ? 1 : 0; el.style.clipPath = `inset(0 0 0 ${(1 - a) * 100}%)`; };
+
+    const tl = gsap.timeline({ paused: true });
+    const S = { t: 0 };
+    function render(t) {
+
+      const setNum = (l, v, c = '#fff', lc) => { $('nlab').textContent = l; $('nlab').style.color = lc || (c === '#fff' ? 'rgba(255,255,255,.72)' : c); $('nnum').textContent = v; $('nnum').style.color = c;
+        $('nnum').style.textShadow = c === '#fff' ? 'none' : `0 0 26px ${c === '#FF3B30' ? 'rgba(255,59,48,.6)' : 'rgba(255,214,10,.5)'}`; };
+
+      const phase = (pre, i, t, a, b, ls) => { const kin = k(t, a, 0.35), kout = b == null ? 0 : k(t, b, 0.3), al = kin * (1 - kout);
+        $(pre + 't' + i).style.opacity = al; $(pre + 't' + i).style.transform = `translateY(${(1 - kin) * 30}px)`;
+        reveal($(pre + 'l' + i), ls == null ? 0 : k(t, ls, 0.45)); $(pre + 'l' + i).style.opacity = (ls != null && t > ls) ? al : 0; return al; };
+
+      const T = t + 44.02;
+      const kc = k(t, 0.05, 0.4); $('pips').style.opacity = kc; $('chap').style.opacity = kc;
+      phase('m3', 0, t, 1.23 - 0.15, 2.605 - 0.25, 1.77 - 0.08); phase('m3', 1, t, 2.605 - 0.2, null, 3.19 - 0.08);
+      $('plane').style.transform = `rotateX(${58 + 3 * Math.sin(t * 0.7)}deg) rotateZ(${T * 7}deg)`;
+      $('small').style.opacity = 0; $('big').style.strokeDashoffset = 0; $('big').style.opacity = 0.5;
+      const open = k(t, 3.19 - 0.1, 0.6), R = 70 + 330 * open, sel = lin(t, 3.99, 5.47 + 0.3);
+      const cx = 450 + 150 * (1 - open) * Math.cos(t * 0.9), cy = 450 + 150 * (1 - open) * Math.sin(t * 1.3), col = open > 0.5 ? 'rgba(255,255,255,.75)' : '#FF3B30';
+      $('ret').setAttribute('transform', `translate(${cx},${cy})`);
+      $('r1').setAttribute('r', R); $('r2').setAttribute('r', R * 0.55); [$('r1'), $('r2')].forEach(c => { c.style.stroke = col; c.style.filter = `drop-shadow(0 0 8px ${col})`; });
+      [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([x, y], i) => { const l = $('x' + (i + 1)); l.setAttribute('x1', x * R * 0.75); l.setAttribute('y1', y * R * 0.75); l.setAttribute('x2', x * R * 1.3); l.setAttribute('y2', y * R * 1.3); l.style.stroke = col; l.style.opacity = 1 - open; });
+      const picked = []; let idx = 0;
+      document.querySelectorAll('.dt').forEach(d => { const ph = +d.dataset.ph, tw = 0.6 + 0.4 * Math.sin(T * 2.5 + ph), x = +d.getAttribute('cx'), y = +d.getAttribute('cy');
+        const inR = Math.hypot(x - cx, y - cy) < R, pick = (idx * 37) % 6 === 0 && (idx % 13) / 13 < sel; idx++;
+        if (pick) { picked.push([x, y]); d.style.fill = '#FFD60A'; d.setAttribute('r', 8); d.style.opacity = 1; return; }
+        d.setAttribute('r', 4); d.style.fill = inR && open < 0.5 ? '#FF3B30' : '#fff'; d.style.opacity = (inR ? 1 : 0.25) * tw; });
+      $('beams').innerHTML = picked.map(([x, y]) => `<line x1="450" y1="450" x2="${x}" y2="${y}"/>`).join('');
+      const kp = kb(t, 3.99 - 0.1, 0.45); $('cr').style.opacity = cl(kp); $('cr').style.boxShadow = '0 0 30px rgba(255,214,10,.5)';
+      $('cr').style.transform = `translateY(${-20 + 14 * Math.sin(t * 2)}px) rotateY(${25 * Math.sin(t * 0.9)}deg) scale(${0.4 + 0.6 * kp})`;
+      const ke = k(t, 6.29 - 0.1, 0.45); $('eq').style.opacity = ke; reveal($('eqy'), k(t, 7.65 - 0.05, 0.45));
+      $('nlab').style.opacity = 1 - ke; $('nnum').style.opacity = 1 - ke;
+      setNum('حجم الجمهور', fmt(1200 + 46800 * open + 500 * jit(t, 3) * open), open > 0.5 ? '#fff' : '#FF3B30');
+
+    }
+    tl.to(S, { t: 8.28, duration: 8.28, ease: 'none', onUpdate: () => render(S.t) }, 0);
+    render(0);
+    window.__timelines["m3"] = tl;
+  </script>
+</template>

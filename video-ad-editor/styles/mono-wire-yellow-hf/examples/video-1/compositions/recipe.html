@@ -1,0 +1,78 @@
+<template>
+  <style>
+@font-face { font-family: 'Cairo'; src: url('assets/fonts/Cairo-VF.ttf'); font-weight: 200 1000; }
+@font-face { font-family: 'Plex'; src: url('assets/fonts/IBMPlexSansArabic-Bold.ttf'); font-weight: 700; }
+@font-face { font-family: 'Amiri'; src: url('assets/fonts/AmiriQuran-Regular.ttf'); }
+
+#root { position: absolute; inset: 0; color: #fff; font-family: 'Cairo'; direction: rtl; overflow: hidden; }
+.ttl { position: absolute; left: 0; right: 0; text-align: center; font-weight: 900; font-size: 84px; line-height: 1.1; }
+.inv { position: absolute; left: 50%; transform: translateX(-50%); font-weight: 900; font-size: 84px; line-height: 1.18; padding: 0 22px; white-space: nowrap; }
+.inv.y { background: #FFD60A; color: #050505; } .inv.r { background: #FF3B30; color: #fff; }
+.lab { position: absolute; font-family: 'Plex'; font-weight: 700; font-size: 38px; color: rgba(255,255,255,.72); text-align: center; white-space: nowrap; }
+.num { position: absolute; font-family: 'Inter'; font-weight: 800; direction: ltr; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.card { position: absolute; background: rgba(10,10,10,.92); border: 2px solid rgba(255,255,255,.9); border-radius: 30px; box-shadow: 0 0 26px rgba(255,255,255,.28), inset 0 0 18px rgba(255,255,255,.05); }
+.card.dim { border-color: rgba(255,255,255,.25); box-shadow: none; }
+
+.it { position: absolute; left: 110px; width: 860px; height: 170px; }
+.it .tx { position: absolute; right: 150px; top: 50px; font: 900 50px 'Cairo'; }
+.it .ck { position: absolute; right: 44px; top: 45px; width: 80px; height: 80px; border-radius: 50%; border: 4px solid rgba(255,255,255,.6); }
+.it .ck svg { position: absolute; inset: 12px; } .it .ck path { fill: none; stroke: #050505; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.it .ic { position: absolute; left: 34px; top: 45px; width: 80px; height: 80px; color: #fff; }
+.it .ic * { fill: none; stroke: currentColor; stroke-width: 5; }
+#chw { position: absolute; left: 110px; top: 560px; width: 860px; height: 470px; perspective: 1400px; }
+#chc { position: absolute; inset: 0; }
+.bb { position: absolute; bottom: 60px; width: 100px; border: 3px solid #fff; border-bottom: 0; border-radius: 8px 8px 0 0; background: rgba(255,255,255,.07); transform-origin: bottom; }
+#cline { position: absolute; left: 60px; right: 60px; height: 6px; bottom: 150px; background: #FFD60A; box-shadow: 0 0 20px rgba(255,214,10,.8); transform-origin: left; }
+#cdot { position: absolute; width: 22px; height: 22px; border-radius: 50%; background: #FFD60A; bottom: 142px; box-shadow: 0 0 20px #FFD60A; }
+.cn { position: absolute; top: 1120px; width: 440px; text-align: center; }
+.cn .lab { position: static; } .cn .num { position: static; font-size: 100px; }
+</style>
+  <div id="root" data-composition-id="recipe" data-width="1080" data-height="1920">
+
+    <div id="rct" class="ttl" style="top:255px">الوصفة</div>
+    <div id="rcl" class="inv y" data-layout-allow-overlap style="top:290px;opacity:0;font-size:76px">ساعتها</div>
+    <div id="it0" class="it card"><div class="tx">زوايا جديدة طول الوقت</div><div class="ck" id="ck0"><svg viewBox="0 0 56 56"><path id="cp0" d="M12,29 L24,40 L44,16" pathLength="1" stroke-dasharray="1 1"/></svg></div><svg class="ic" id="ic0" viewBox="0 0 100 100"><path d="M50,10 L86,30 L86,70 L50,90 L14,70 L14,30 Z"/></svg></div>
+    <div id="it1" class="it card"><div class="tx">زيادة بالراحة</div><div class="ck" id="ck1"><svg viewBox="0 0 56 56"><path id="cp1" d="M12,29 L24,40 L44,16" pathLength="1" stroke-dasharray="1 1"/></svg></div><svg class="ic" id="ic1" viewBox="0 0 100 100"><path d="M10,90 H35 V65 H60 V40 H85 V15"/></svg></div>
+    <div id="it2" class="it card"><div class="tx">استهداف مفتوح</div><div class="ck" id="ck2"><svg viewBox="0 0 56 56"><path id="cp2" d="M12,29 L24,40 L44,16" pathLength="1" stroke-dasharray="1 1"/></svg></div><svg class="ic" id="ic2" viewBox="0 0 100 100"><path d="M72,22 A40,40 0 1,0 86,50"/><circle cx="50" cy="50" r="6"/></svg></div>
+    <div id="chw"><div id="chc" class="card"><div id="bb0" class="bb" style="left:80px;height:60px"></div><div id="bb1" class="bb" style="left:230px;height:120px"></div><div id="bb2" class="bb" style="left:380px;height:180px"></div><div id="bb3" class="bb" style="left:530px;height:240px"></div><div id="bb4" class="bb" style="left:680px;height:300px"></div><div id="cline"></div><div id="cdot"></div></div></div>
+    <div class="cn" id="cn1" style="right:90px"><div class="lab">البودجت / يوم</div><div id="bv" class="num">$500</div></div>
+    <div class="cn" id="cn2" style="left:90px"><div class="lab" style="color:#FFD60A">تكلفة العميل</div><div id="cv" class="num" style="color:#FFD60A">$42</div></div>
+  </div>
+  <script>
+    
+const cl = v => Math.max(0, Math.min(1, v));
+const k = (t, a, d = 0.5) => { const x = cl((t - a) / d); return 1 - Math.pow(1 - x, 3); };
+const kb = (t, a, d = 0.45) => { const x = cl((t - a) / d), s = 1.7; return x <= 0 ? 0 : 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2); };
+const lin = (t, a, b) => cl((t - a) / (b - a));
+const jit = (t, f = 9) => Math.sin(t * f * 1.3) * 0.6 + Math.sin(t * f * 2.7 + 1) * 0.4;
+const $ = id => document.getElementById(id);
+const fmt = v => Math.round(v).toLocaleString('en-US');
+const show = (el, a, dy = 0, sc = 1) => { el.style.opacity = a; el.style.transform = (el.dataset.base || '') + ` translateY(${dy}px) scale(${sc})`; };
+const reveal = (el, a) => { el.style.opacity = a > 0 ? 1 : 0; el.style.clipPath = `inset(0 0 0 ${(1 - a) * 100}%)`; };
+
+    const tl = gsap.timeline({ paused: true });
+    const S = { t: 0 };
+    function render(t) {
+
+      const on = [0.35, 2.11, 3.19].map(s => k(t, s - 0.1, 0.3)), sw = k(t, 4.45 - 0.3, 0.45);
+      $('rct').style.opacity = 1 - sw;
+      for (let i = 0; i < 3; i++) { const kin = k(t, -0.2 + i * 0.12, 0.45), el = $('it' + i), y = 560 + i * 200;
+        el.style.top = y + 'px'; el.style.opacity = kin * (1 - sw);
+        el.style.transform = `perspective(1200px) rotateY(${6 * Math.sin(t * 0.8 + i)}deg) translateX(${(1 - kin) * 80}px) scale(${1 + 0.04 * on[i] * Math.max(0, Math.sin((t - [0.35, 2.11, 3.19][i]) * 5))})`;
+        el.style.borderColor = on[i] > 0.5 ? '#FFD60A' : 'rgba(255,255,255,.9)'; el.style.boxShadow = on[i] > 0.5 ? '0 0 26px rgba(255,214,10,.45)' : '0 0 26px rgba(255,255,255,.2)';
+        $('ck' + i).style.background = on[i] > 0.5 ? '#FFD60A' : 'transparent'; $('ck' + i).style.borderColor = on[i] > 0.5 ? '#FFD60A' : 'rgba(255,255,255,.6)';
+        $('cp' + i).style.strokeDashoffset = 1 - on[i]; $('ic' + i).style.color = on[i] > 0.5 ? '#FFD60A' : '#fff'; $('ic' + i).style.transform = `rotate(${t * 30 + i * 40}deg)`; }
+      reveal($('rcl'), k(t, 4.45 - 0.2, 0.45));
+      $('chw').style.opacity = sw; $('chc').style.transform = `rotateX(${8 + 3 * Math.sin(t)}deg) rotateY(${-12 * Math.sin(t * 0.6)}deg) scale(${0.9 + 0.1 * sw})`;
+      const kb2 = k(t, 5.03 - 0.1, 1.2), kc2 = k(t, 5.95 - 0.1, 0.6);
+      for (let i = 0; i < 5; i++) $('bb' + i).style.transform = `scaleY(${0.25 + 0.75 * cl(kb2 * 1.6 - i * 0.15)})`;
+      $('cline').style.transform = `scaleX(${kc2})`; $('cdot').style.opacity = k(t, 6.53, 0.3); $('cdot').style.left = (60 + 720 * ((t * 0.35) % 1)) + 'px';
+      $('cn1').style.opacity = sw; $('cn2').style.opacity = sw * k(t, 5.95 - 0.1, 0.4);
+      $('bv').textContent = '$' + fmt(500 + 2000 * kb2); $('cv').textContent = '$' + fmt(42 + 0.4 * jit(t, 5));
+
+    }
+    tl.to(S, { t: 7.19, duration: 7.19, ease: 'none', onUpdate: () => render(S.t) }, 0);
+    render(0);
+    window.__timelines["recipe"] = tl;
+  </script>
+</template>

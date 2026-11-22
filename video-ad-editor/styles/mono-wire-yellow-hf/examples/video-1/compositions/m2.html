@@ -1,0 +1,87 @@
+<template>
+  <style>
+@font-face { font-family: 'Cairo'; src: url('assets/fonts/Cairo-VF.ttf'); font-weight: 200 1000; }
+@font-face { font-family: 'Plex'; src: url('assets/fonts/IBMPlexSansArabic-Bold.ttf'); font-weight: 700; }
+@font-face { font-family: 'Amiri'; src: url('assets/fonts/AmiriQuran-Regular.ttf'); }
+
+#root { position: absolute; inset: 0; color: #fff; font-family: 'Cairo'; direction: rtl; overflow: hidden; }
+.ttl { position: absolute; left: 0; right: 0; text-align: center; font-weight: 900; font-size: 84px; line-height: 1.1; }
+.inv { position: absolute; left: 50%; transform: translateX(-50%); font-weight: 900; font-size: 84px; line-height: 1.18; padding: 0 22px; white-space: nowrap; }
+.inv.y { background: #FFD60A; color: #050505; } .inv.r { background: #FF3B30; color: #fff; }
+.lab { position: absolute; font-family: 'Plex'; font-weight: 700; font-size: 38px; color: rgba(255,255,255,.72); text-align: center; white-space: nowrap; }
+.num { position: absolute; font-family: 'Inter'; font-weight: 800; direction: ltr; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.card { position: absolute; background: rgba(10,10,10,.92); border: 2px solid rgba(255,255,255,.9); border-radius: 30px; box-shadow: 0 0 26px rgba(255,255,255,.28), inset 0 0 18px rgba(255,255,255,.05); }
+.card.dim { border-color: rgba(255,255,255,.25); box-shadow: none; }
+
+#pips { position: absolute; left: 470px; top: 168px; width: 140px; height: 10px; }
+#pips i { position: absolute; top: 0; width: 40px; height: 8px; border-radius: 4px; background: rgba(255,255,255,.22); }
+#chap { left: 0; right: 0; top: 190px; color: #FF3B30; font-size: 36px; }
+#nlab { left: 0; right: 0; top: 1100px; } #nnum { left: 0; right: 0; top: 1150px; font-size: 120px; }
+
+.phone { position: absolute; width: 170px; height: 310px; border-radius: 30px; }
+.phone .notch { position: absolute; left: 60px; top: 14px; width: 50px; height: 7px; border-radius: 4px; background: rgba(255,255,255,.5); }
+.phone svg { position: absolute; left: 35px; top: 60px; width: 100px; height: 100px; overflow: visible; }
+.phone svg * { fill: none; stroke: currentColor; stroke-width: 5; }
+.phone i { position: absolute; right: 26px; height: 8px; border-radius: 4px; background: rgba(255,255,255,.45); }
+.phone .l1 { top: 220px; width: 118px; } .phone .l2 { top: 244px; width: 72px; }
+
+#row { position: absolute; left: 0; right: 0; top: 560px; height: 360px; perspective: 1400px; }
+.hk { position: absolute; top: -26px; height: 10px; border-radius: 5px; background: #fff; }
+#ring { position: absolute; left: 340px; top: 920px; width: 400px; height: 400px; border-radius: 50%; border: 5px solid #FFD60A; box-shadow: 0 0 24px rgba(255,214,10,.6), inset 0 0 24px rgba(255,214,10,.25); }
+</style>
+  <div id="root" data-composition-id="m2" data-width="1080" data-height="1920">
+<div id="pips"><i style="right:0px;background:#FF3B30"></i><i style="right:50px;background:#FF3B30"></i><i style="right:100px"></i></div><div id="chap" class="lab">غلطة 2 من 3</div>    <div id="m2t0" class="ttl" data-layout-allow-overlap style="top:255px;opacity:0">إعلان واحد</div><div id="m2l0" class="inv r" data-layout-allow-overlap style="top:355px;opacity:0">بتحلبه</div>
+    <div id="m2t1" class="ttl" data-layout-allow-overlap style="top:255px;opacity:0">5 فيديوهات بنفس الكلام</div><div id="m2l1" class="inv r" data-layout-allow-overlap style="top:355px;opacity:0">نفس الدايرة</div>
+    <div id="m2t2" class="ttl" data-layout-allow-overlap style="top:255px;opacity:0;font-size:60px;color:#9A9A9A">محتاج</div><div id="m2l2" class="inv y" data-layout-allow-overlap style="top:355px;opacity:0">زوايا جديدة</div>
+    <div id="row"><div id="p0" class="phone card"><div class="notch"></div><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34"/></svg><i class="l1"></i><i class="l2"></i></div><div id="p1" class="phone card"><div class="notch"></div><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34"/></svg><i class="l1"></i><i class="l2"></i></div><div id="p2" class="phone card"><div class="notch"></div><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34"/></svg><i class="l1"></i><i class="l2"></i></div><div id="p3" class="phone card"><div class="notch"></div><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34"/></svg><i class="l1"></i><i class="l2"></i></div><div id="p4" class="phone card"><div class="notch"></div><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34"/></svg><i class="l1"></i><i class="l2"></i></div><div id="hk0" class="hk"></div><div id="hk1" class="hk"></div><div id="hk2" class="hk"></div><div id="hk3" class="hk"></div><div id="hk4" class="hk"></div><div id="n0" class="phone card"><div class="notch"></div><svg viewBox="0 0 100 100"><path d="M50,12 L90,84 L10,84 Z"/></svg><i class="l1"></i><i class="l2"></i></div><div id="n1" class="phone card"><div class="notch"></div><svg viewBox="0 0 100 100"><rect x="16" y="16" width="68" height="68"/></svg><i class="l1"></i><i class="l2"></i></div><div id="n2" class="phone card"><div class="notch"></div><svg viewBox="0 0 100 100"><path d="M50,10 L86,30 L86,70 L50,90 L14,70 L14,30 Z"/></svg><i class="l1"></i><i class="l2"></i></div></div><div id="ring"></div>
+    <div id="nlab" class="lab"></div><div id="nnum" class="num"></div>
+  </div>
+  <script>
+    
+const cl = v => Math.max(0, Math.min(1, v));
+const k = (t, a, d = 0.5) => { const x = cl((t - a) / d); return 1 - Math.pow(1 - x, 3); };
+const kb = (t, a, d = 0.45) => { const x = cl((t - a) / d), s = 1.7; return x <= 0 ? 0 : 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2); };
+const lin = (t, a, b) => cl((t - a) / (b - a));
+const jit = (t, f = 9) => Math.sin(t * f * 1.3) * 0.6 + Math.sin(t * f * 2.7 + 1) * 0.4;
+const $ = id => document.getElementById(id);
+const fmt = v => Math.round(v).toLocaleString('en-US');
+const show = (el, a, dy = 0, sc = 1) => { el.style.opacity = a; el.style.transform = (el.dataset.base || '') + ` translateY(${dy}px) scale(${sc})`; };
+const reveal = (el, a) => { el.style.opacity = a > 0 ? 1 : 0; el.style.clipPath = `inset(0 0 0 ${(1 - a) * 100}%)`; };
+
+    const tl = gsap.timeline({ paused: true });
+    const S = { t: 0 };
+    function render(t) {
+
+      const setNum = (l, v, c = '#fff', lc) => { $('nlab').textContent = l; $('nlab').style.color = lc || (c === '#fff' ? 'rgba(255,255,255,.72)' : c); $('nnum').textContent = v; $('nnum').style.color = c;
+        $('nnum').style.textShadow = c === '#fff' ? 'none' : `0 0 26px ${c === '#FF3B30' ? 'rgba(255,59,48,.6)' : 'rgba(255,214,10,.5)'}`; };
+
+      const phase = (pre, i, t, a, b, ls) => { const kin = k(t, a, 0.35), kout = b == null ? 0 : k(t, b, 0.3), al = kin * (1 - kout);
+        $(pre + 't' + i).style.opacity = al; $(pre + 't' + i).style.transform = `translateY(${(1 - kin) * 30}px)`;
+        reveal($(pre + 'l' + i), ls == null ? 0 : k(t, ls, 0.45)); $(pre + 'l' + i).style.opacity = (ls != null && t > ls) ? al : 0; return al; };
+
+      const kc = k(t, 0.05, 0.4); $('pips').style.opacity = kc; $('chap').style.opacity = kc;
+      $('m2t1').style.fontSize = '68px';
+      phase('m2', 0, t, 1.11 - 0.15, 2.75 - 0.25, 1.93 - 0.08); phase('m2', 1, t, 2.75 - 0.2, 6.37 - 0.25, 5.17 - 0.08); phase('m2', 2, t, 6.37 - 0.2, null, 6.83 - 0.08);
+      const fan = k(t, 2.75 - 0.15, 0.6), same = t > 5.17 - 0.05, sw = k(t, 6.37 - 0.2, 0.45);
+      for (let i = 0; i < 5; i++) { const x = 455 + (i - 2) * 200 * fan, show = i === 2 ? 1 : fan, el = $('p' + i);
+        el.style.left = '0px'; el.style.top = '20px'; el.style.color = same ? '#FF3B30' : '#fff'; el.style.opacity = show * (1 - sw);
+        el.style.transform = `translateX(${x}px) translateY(${10 * Math.sin(t * 1.6 + i)}px) rotateY(${18 * Math.sin(t * 0.8 + i * 0.5)}deg) scale(${i === 2 ? 1.15 - 0.15 * fan : 1})`;
+        el.style.borderColor = same ? 'rgba(255,59,48,.8)' : 'rgba(255,255,255,.9)';
+        const hk = $('hk' + i); hk.style.left = (x + 30) + 'px'; hk.style.width = (50 + (i * 37) % 80) + 'px'; hk.style.opacity = k(t, 4.29 - 0.1 + i * 0.06, 0.3) * (1 - sw); }
+      ['tri', 'sq', 'hex'].forEach((s, i) => { const el = $('n' + i), kk = kb(t, 6.83 + i * 0.18, 0.4);
+        el.style.left = '0px'; el.style.top = '10px'; el.style.color = '#FFD60A'; el.style.opacity = cl(kk) * sw; el.style.borderColor = '#FFD60A'; el.style.boxShadow = '0 0 26px rgba(255,214,10,.45)';
+        el.style.transform = `translateX(${655 - i * 260}px) translateY(${12 * Math.sin(t * 1.4 + i)}px) rotate(${(1 - i) * 6}deg) rotateY(${20 * Math.sin(t * 0.7 + i)}deg) scale(${0.5 + 0.5 * kk})`; });
+      const grow = k(t, 8.15 - 0.2, 1.2), kr = k(t, 5.17 - 0.2, 0.4);
+      $('ring').style.opacity = kr; $('ring').style.transform = `perspective(900px) rotateX(62deg) scale(${0.55 + 0.6 * grow})`;
+      $('ring').style.borderColor = sw > 0.5 ? '#FFD60A' : '#FF3B30'; $('ring').style.boxShadow = sw > 0.5 ? '0 0 24px rgba(255,214,10,.6)' : '0 0 24px rgba(255,59,48,.6)';
+      if (t < 2.75 - 0.2) { const ctr = 2.4 - 1.8 * lin(t, 1.11, 2.75) + 0.03 * jit(t, 9); setNum('نسبة الضغط', ctr.toFixed(1) + '%', ctr < 1.5 ? '#FF3B30' : '#fff'); }
+      else if (sw < 0.5) setNum('هوكس مختلفة بس', '', '#fff');
+      else setNum('نوع جديد من الناس', fmt(12000 + 36000 * grow + 200 * jit(t, 4) * grow), '#FFD60A');
+      const ph3 = sw > 0.5; $('nlab').style.top = (ph3 ? 940 : 980) + 'px'; $('nnum').style.top = (ph3 ? 1075 : 1030) + 'px'; $('nnum').style.fontSize = (ph3 ? 96 : 120) + 'px';
+
+    }
+    tl.to(S, { t: 9.36, duration: 9.36, ease: 'none', onUpdate: () => render(S.t) }, 0);
+    render(0);
+    window.__timelines["m2"] = tl;
+  </script>
+</template>

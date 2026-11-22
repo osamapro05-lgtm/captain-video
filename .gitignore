@@ -22,3 +22,6 @@ video-ad-editor/motion/examples/*/renders/
 # معاينات ستايلات الموشن (صفحة البلجن)
 !video-ad-editor/motion/styles/previews/*.mp4
 __pycache__/
+
+# downloaded third-party YouTube videos + transcripts used for research (large, not ours)
+research/sandcastles/videos/

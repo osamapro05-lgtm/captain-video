@@ -1,0 +1,69 @@
+<template>
+  <style>
+@font-face { font-family: 'Cairo'; src: url('assets/fonts/Cairo-VF.ttf'); font-weight: 200 1000; }
+@font-face { font-family: 'Plex'; src: url('assets/fonts/IBMPlexSansArabic-Bold.ttf'); font-weight: 700; }
+@font-face { font-family: 'Amiri'; src: url('assets/fonts/AmiriQuran-Regular.ttf'); }
+
+#root { position: absolute; inset: 0; color: #fff; font-family: 'Cairo'; direction: rtl; overflow: hidden; }
+.ttl { position: absolute; left: 0; right: 0; text-align: center; font-weight: 900; font-size: 84px; line-height: 1.1; }
+.inv { position: absolute; left: 50%; transform: translateX(-50%); font-weight: 900; font-size: 84px; line-height: 1.18; padding: 0 22px; white-space: nowrap; }
+.inv.y { background: #FFD60A; color: #050505; } .inv.r { background: #FF3B30; color: #fff; }
+.lab { position: absolute; font-family: 'Plex'; font-weight: 700; font-size: 38px; color: rgba(255,255,255,.72); text-align: center; white-space: nowrap; }
+.num { position: absolute; font-family: 'Inter'; font-weight: 800; direction: ltr; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.card { position: absolute; background: rgba(10,10,10,.92); border: 2px solid rgba(255,255,255,.9); border-radius: 30px; box-shadow: 0 0 26px rgba(255,255,255,.28), inset 0 0 18px rgba(255,255,255,.05); }
+.card.dim { border-color: rgba(255,255,255,.25); box-shadow: none; }
+
+#bmw { position: absolute; left: 440px; top: 560px; width: 200px; height: 260px; }
+#bm path { fill: rgba(255,214,10,.12); stroke: #FFD60A; stroke-width: 6; stroke-linejoin: round; filter: drop-shadow(0 0 14px rgba(255,214,10,.8)); }
+#box { position: absolute; left: 80px; width: 920px; top: 860px; height: 150px; border-radius: 75px; }
+#qt { position: absolute; right: 60px; left: 60px; top: 46px; font: 700 42px 'Plex'; direction: rtl; white-space: nowrap; overflow: hidden; }
+#cur { display: inline-block; width: 4px; height: 46px; background: #FFD60A; vertical-align: middle; margin-right: 6px; }
+.key { position: absolute; top: 1060px; width: 110px; height: 100px; border-radius: 18px; }
+#big { }
+</style>
+  <div id="root" data-composition-id="cta" data-width="1080" data-height="1920">
+
+    <div id="ctt" class="ttl" style="top:255px">احفظ الفيديو</div>
+    <div id="ctt2" class="ttl" data-layout-allow-overlap style="top:255px;opacity:0">واكتب لي</div>
+    <div id="bmw"><svg id="bm" viewBox="0 0 200 260"><path d="M30,20 H170 V240 L100,180 L30,240 Z"/></svg></div>
+    <div id="box" class="card"><div id="qt"><span id="cur"></span><span id="qs">اكتب كومنت…</span></div></div><div id="ky0" class="key card" style="left:150px"></div><div id="ky1" class="key card" style="left:280px"></div><div id="ky2" class="key card" style="left:410px"></div><div id="ky3" class="key card" style="left:540px"></div><div id="ky4" class="key card" style="left:670px"></div><div id="ky5" class="key card" style="left:800px"></div>
+    <div id="ctl" class="inv y" data-layout-allow-overlap style="top:1180px;opacity:0;font-size:84px">أنهي ميزانية؟</div>
+  </div>
+  <script>
+    
+const cl = v => Math.max(0, Math.min(1, v));
+const k = (t, a, d = 0.5) => { const x = cl((t - a) / d); return 1 - Math.pow(1 - x, 3); };
+const kb = (t, a, d = 0.45) => { const x = cl((t - a) / d), s = 1.7; return x <= 0 ? 0 : 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2); };
+const lin = (t, a, b) => cl((t - a) / (b - a));
+const jit = (t, f = 9) => Math.sin(t * f * 1.3) * 0.6 + Math.sin(t * f * 2.7 + 1) * 0.4;
+const $ = id => document.getElementById(id);
+const fmt = v => Math.round(v).toLocaleString('en-US');
+const show = (el, a, dy = 0, sc = 1) => { el.style.opacity = a; el.style.transform = (el.dataset.base || '') + ` translateY(${dy}px) scale(${sc})`; };
+const reveal = (el, a) => { el.style.opacity = a > 0 ? 1 : 0; el.style.clipPath = `inset(0 0 0 ${(1 - a) * 100}%)`; };
+
+    const tl = gsap.timeline({ paused: true });
+    const S = { t: 0 };
+    function render(t) {
+
+      const QW = [["إنت", 2.76], ["التكلفة", 3.02], ["بتضرب", 3.5], ["معاك", 3.88], ["عند", 4.24], ["أنهي", 4.46], ["ميزانية", 4.74]];
+      const up = k(t, 1.38 - 0.3, 0.5);
+      $('ctt').style.opacity = 1 - k(t, 1.38 - 0.35, 0.25); $('ctt2').style.opacity = k(t, 1.38 - 0.1, 0.35);
+      const kbm = kb(t, -0.3, 0.45);
+      $('bmw').style.transform = `translateY(${-150 * up + 10 * Math.sin(t * 1.7)}px) rotateY(${35 * Math.sin(t * 2.2)}deg) scale(${(0.5 + 0.5 * cl(kbm)) * (1 - 0.35 * up)})`;
+      $('bm').querySelector('path').style.fill = k(t, 0.34 + 0.2, 0.2) > 0.5 ? '#FFD60A' : 'rgba(255,214,10,.12)';
+      const kx = k(t, 1.38 - 0.15, 0.45); $('box').style.opacity = kx; $('box').style.transform = `perspective(1200px) rotateX(${10 + 3 * Math.sin(t)}deg) scale(${0.9 + 0.1 * kx})`;
+      const shown = QW.filter(([w, s]) => t >= s).map(([w]) => w);
+      $('qs').textContent = shown.length ? shown.join(' ') : 'اكتب كومنت…'; $('qs').style.color = shown.length ? '#fff' : 'rgba(255,255,255,.45)';
+      $('cur').style.opacity = Math.floor(t * 2.5) % 2 ? 0 : kx;
+      const typing = t > 2.76 - 0.1 && t < 4.74 + 0.4, kk = t * 7;
+      for (let i = 0; i < 6; i++) { const el = $('ky' + i), s = kb(t, 1.38 + i * 0.06, 0.35), pr = typing && Math.floor(kk) % 6 === i ? Math.sin((kk % 1) * Math.PI) : 0;
+        el.style.opacity = cl(s); el.style.transform = `perspective(900px) rotateX(${35}deg) translateY(${12 * pr}px) scale(${0.6 + 0.4 * cl(s)})`;
+        el.style.borderColor = pr > 0.2 ? '#FFD60A' : 'rgba(255,255,255,.8)'; el.style.boxShadow = pr > 0.2 ? '0 0 22px rgba(255,214,10,.7)' : '0 0 14px rgba(255,255,255,.2)'; }
+      reveal($('ctl'), k(t, 4.46 - 0.05, 0.45)); $('ctl').style.transform = `translateX(-50%) scale(${1 + 0.03 * Math.sin(t * 4)})`;
+
+    }
+    tl.to(S, { t: 6.02, duration: 6.02, ease: 'none', onUpdate: () => render(S.t) }, 0);
+    render(0);
+    window.__timelines["cta"] = tl;
+  </script>
+</template>
